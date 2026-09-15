@@ -10,7 +10,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        roofers: resolve(__dirname, 'roofers.html')
+        roofers: resolve(__dirname, 'roofers.html'),
+        precall: resolve(__dirname, 'roofers/before-your-call/index.html')
       },
       output: {
         manualChunks: undefined
