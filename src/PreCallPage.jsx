@@ -3,7 +3,6 @@ const ADC_RESULT = {
   inspections: '10+',
   sold: 'About $123K',
   timeline: 'Under 60 days',
-  pending: 'About $40K pending insurance — not included above',
 }
 
 const STORM_ACTIONS = [
@@ -16,9 +15,9 @@ const STORM_ACTIONS = [
 
 function BrandMark() {
   return (
-    <div className="flex items-center gap-2.5" aria-label="Reboot Media">
+    <div className="flex items-center gap-3">
       <img src="/logo.svg" alt="" className="h-7 w-7" />
-      <span className="text-[15px] font-bold tracking-tight text-roof-ink">Reboot Media</span>
+      <span className="text-sm font-bold tracking-tight text-roof-ink">Reboot Media</span>
     </div>
   )
 }
@@ -44,7 +43,7 @@ function VideoPanel() {
 
   if (loomUrl) {
     return (
-      <div className="aspect-video overflow-hidden rounded-2xl bg-brand-950 shadow-[0_18px_50px_-24px_rgba(19,10,36,0.65)] ring-1 ring-brand-950/10">
+      <div className="aspect-video overflow-hidden rounded-2xl bg-roof-surface shadow-sm ring-1 ring-roof-border-subtle">
         <iframe
           src={loomUrl}
           title="Reboot Media pre-call overview"
@@ -57,15 +56,14 @@ function VideoPanel() {
   }
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-2xl bg-brand-950 shadow-[0_18px_50px_-24px_rgba(19,10,36,0.65)] ring-1 ring-brand-950/10">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_75%_15%,rgba(124,58,237,0.32),transparent_42%),linear-gradient(135deg,rgba(255,255,255,0.06),transparent_45%)]" />
+    <div className="relative aspect-video overflow-hidden rounded-2xl bg-roof-surface shadow-sm ring-1 ring-roof-border-subtle">
       <div className="relative flex h-full flex-col items-center justify-center px-6 text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white text-accent shadow-lg shadow-black/20">
+        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-bg text-accent-dark ring-1 ring-accent-muted/60">
           <PlayIcon />
         </span>
-        <p className="mt-4 text-base font-semibold text-white sm:text-lg">Your pre-call video goes here</p>
-        <p className="mt-1.5 max-w-sm text-xs leading-relaxed text-roof-ink-muted sm:text-sm">
-          A quick overview before we talk.
+        <p className="mt-4 text-base font-semibold text-roof-ink sm:text-lg">Pre-call video coming soon</p>
+        <p className="mt-2 max-w-sm text-xs leading-relaxed text-roof-muted sm:text-sm">
+          The full overview will appear here before this page is shared.
         </p>
       </div>
     </div>
@@ -95,38 +93,35 @@ function Hero() {
 function CaseStudy() {
   return (
     <section className="mt-10 sm:mt-14" aria-labelledby="case-study-heading">
-      <div className="overflow-hidden rounded-3xl bg-brand-950 text-white shadow-[0_28px_80px_-42px_rgba(19,10,36,0.8)] ring-1 ring-brand-950/10">
-        <div className="relative px-5 py-8 text-center sm:px-10 sm:py-11">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(124,58,237,0.34),transparent_48%)]" aria-hidden="true" />
-          <div className="relative">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent-muted">ADC Roofing · Dallas, Texas</p>
-            <h2 id="case-study-heading" className="mx-auto mt-4 max-w-2xl text-balance text-2xl font-bold leading-tight tracking-tight sm:text-4xl">
-              A real roofing campaign. A result you can verify.
-            </h2>
+      <div className="overflow-hidden rounded-3xl border border-roof-border-subtle bg-roof-surface text-roof-ink">
+        <div className="px-5 py-8 text-center sm:px-10 sm:py-11">
+          <img
+            src="/adc-roofing-logo.png"
+            alt="ADC Roofing logo"
+            className="mx-auto mb-7 h-auto w-48 sm:w-56"
+          />
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-accent-dark">ADC Roofing · Dallas, Texas</p>
+          <h2 id="case-study-heading" className="mx-auto mt-4 max-w-2xl text-balance text-2xl font-bold leading-tight tracking-tight sm:text-4xl">
+            A real roofing campaign. Here’s what it produced.
+          </h2>
 
-            <div className="mx-auto mt-8 max-w-lg rounded-2xl bg-white/[0.07] px-5 py-7 ring-1 ring-white/10 sm:px-8 sm:py-9">
-              <p className="text-sm font-semibold text-roof-ink-muted">Revenue sold from the campaign</p>
-              <p className="mt-2 text-5xl font-extrabold tracking-[-0.05em] text-white sm:text-7xl">{ADC_RESULT.sold}</p>
-              <p className="mt-3 text-sm font-bold uppercase tracking-[0.14em] text-accent-muted">{ADC_RESULT.timeline}</p>
-            </div>
-
-            <div className="mx-auto mt-6 grid max-w-lg grid-cols-2 divide-x divide-white/10 rounded-2xl bg-white/[0.045] ring-1 ring-white/10">
-              <div className="px-4 py-5 sm:px-6">
-                <p className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">{ADC_RESULT.spend}</p>
-                <p className="mt-1 text-xs font-medium uppercase tracking-wide text-roof-ink-muted">Google ad spend</p>
-              </div>
-              <div className="px-4 py-5 sm:px-6">
-                <p className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">{ADC_RESULT.inspections}</p>
-                <p className="mt-1 text-xs font-medium uppercase tracking-wide text-roof-ink-muted">Inspections</p>
-              </div>
-            </div>
-
-            <div className="mx-auto mt-6 flex max-w-lg items-start justify-center gap-2 text-left">
-              <CheckIcon className="mt-0.5 h-4 w-4 shrink-0 text-green-300" />
-              <p className="text-sm font-medium leading-relaxed text-roof-ink-muted">{ADC_RESULT.pending}</p>
-            </div>
-
+          <div className="mx-auto mt-8 max-w-lg">
+            <p className="text-sm font-semibold text-roof-muted">Revenue sold from the campaign</p>
+            <p className="mt-2 text-5xl font-extrabold tracking-[-0.05em] text-roof-ink sm:text-7xl">{ADC_RESULT.sold}</p>
+            <p className="mt-3 text-sm font-bold uppercase tracking-[0.14em] text-accent-dark">{ADC_RESULT.timeline}</p>
           </div>
+
+          <div className="mx-auto mt-8 grid max-w-lg grid-cols-2 divide-x divide-roof-border-subtle border-y border-roof-border-subtle">
+            <div className="px-4 py-5 sm:px-6">
+              <p className="text-2xl font-extrabold tracking-tight text-roof-ink sm:text-3xl">{ADC_RESULT.spend}</p>
+              <p className="mt-1 text-xs font-medium uppercase tracking-wide text-roof-muted">Google ad spend</p>
+            </div>
+            <div className="px-4 py-5 sm:px-6">
+              <p className="text-2xl font-extrabold tracking-tight text-roof-ink sm:text-3xl">{ADC_RESULT.inspections}</p>
+              <p className="mt-1 text-xs font-medium uppercase tracking-wide text-roof-muted">Inspections</p>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -162,29 +157,29 @@ function StormSystem() {
         </p>
       </div>
 
-      <div className="mt-7 rounded-2xl border border-brand-800/15 bg-brand-950 p-4 shadow-[0_24px_70px_-36px_rgba(19,10,36,0.75)] sm:p-6">
-        <div className="mb-4 flex items-center justify-between border-b border-white/10 pb-4">
-          <div className="flex items-center gap-2.5">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="absolute inline-flex h-full w-full rounded-full bg-accent-light opacity-40 motion-safe:animate-ping" />
-              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent-light" />
+      <div className="mt-7 rounded-2xl border border-roof-border-subtle bg-roof-surface p-4 sm:p-6">
+        <div className="mb-4 flex items-center justify-between border-b border-roof-border-subtle pb-4">
+          <div className="flex items-center gap-3">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full rounded-full bg-accent opacity-30 motion-safe:animate-ping" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-muted">System response</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-dark">System response</span>
           </div>
-          <span className="rounded-full bg-success/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-green-300">Confirmed</span>
+          <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-green-800">Confirmed</span>
         </div>
         <div className="grid gap-2 sm:grid-cols-5">
           {STORM_ACTIONS.map((action, index) => (
-            <div key={action.label} className="relative flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.055] p-3 sm:block sm:min-h-32 sm:p-4">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent/20 text-accent-muted">
+            <div key={action.label} className="relative flex items-center gap-3 rounded-xl border border-roof-border-subtle bg-roof-paper p-3 sm:block sm:min-h-32 sm:p-4">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-bg text-accent-dark ring-1 ring-accent-muted/50">
                 <StormIcon type={action.icon} />
               </span>
               <div className="min-w-0 sm:mt-3">
-                <p className="text-sm font-semibold leading-tight text-white">{action.label}</p>
-                <p className="mt-1 text-[11px] leading-snug text-roof-ink-muted">{action.detail}</p>
+                <p className="text-sm font-semibold leading-tight text-roof-ink">{action.label}</p>
+                <p className="mt-1 text-xs leading-snug text-roof-muted">{action.detail}</p>
               </div>
               {index < STORM_ACTIONS.length - 1 && (
-                <span className="absolute -bottom-2.5 left-[1.65rem] z-10 h-3 w-px bg-accent-light/40 sm:-right-[5px] sm:bottom-auto sm:left-auto sm:top-8 sm:h-px sm:w-2" aria-hidden="true" />
+                <span className="absolute -bottom-3 left-7 z-10 h-3 w-px bg-accent-muted sm:-right-1 sm:bottom-auto sm:left-auto sm:top-8 sm:h-px sm:w-2" aria-hidden="true" />
               )}
             </div>
           ))}
@@ -214,10 +209,10 @@ function CallAgenda() {
       <h2 id="agenda-heading" className="mt-3 text-2xl font-bold tracking-tight text-roof-ink sm:text-3xl">A focused conversation. No presentation marathon.</h2>
       <div className="mt-7 grid gap-4 sm:grid-cols-2">
         {steps.map((step) => (
-          <article key={step.number} className="rounded-2xl border border-roof-border-subtle bg-white p-5 sm:p-7">
+          <article key={step.number} className="rounded-2xl border border-roof-border-subtle bg-roof-surface p-5 sm:p-7">
             <span className="text-xs font-extrabold tracking-[0.15em] text-accent">{step.number}</span>
             <h3 className="mt-4 text-lg font-bold tracking-tight text-roof-ink">{step.title}</h3>
-            <p className="mt-2.5 text-sm leading-relaxed text-roof-muted sm:text-[15px]">{step.description}</p>
+            <p className="mt-3 text-sm leading-relaxed text-roof-muted sm:text-base">{step.description}</p>
           </article>
         ))}
       </div>
@@ -227,16 +222,19 @@ function CallAgenda() {
 
 function Commitment() {
   return (
-    <section className="my-16 overflow-hidden rounded-2xl bg-accent-bg ring-1 ring-accent-muted/50 sm:my-20" aria-labelledby="commitment-heading">
+    <section className="my-16 overflow-hidden rounded-2xl border border-roof-border-subtle bg-roof-surface sm:my-20" aria-labelledby="commitment-heading">
       <div className="px-5 py-8 text-center sm:px-10 sm:py-10">
-        <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-accent text-white shadow-lg shadow-accent/20">
+        <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-accent-bg text-accent-dark ring-1 ring-accent-muted/60">
           <CheckIcon className="h-5 w-5" />
         </span>
         <h2 id="commitment-heading" className="mt-4 text-xl font-bold tracking-tight text-roof-ink sm:text-2xl">One quick thing before the call.</h2>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-roof-muted sm:text-base">
           After you finish the video, reply <span className="font-bold text-roof-ink">WATCHED</span> in the same text conversation that sent you this link. That lets us know you’re ready.
         </p>
-        <div className="mx-auto mt-5 inline-flex rounded-lg border border-accent-muted bg-white px-5 py-2.5 font-mono text-sm font-bold tracking-[0.18em] text-accent-dark shadow-sm">WATCHED</div>
+        <div className="mx-auto mt-5 flex w-fit items-center gap-3 rounded-xl bg-accent-bg px-4 py-3 ring-1 ring-accent-muted/50">
+          <span className="text-xs font-semibold uppercase tracking-wide text-roof-muted">Reply with</span>
+          <code className="font-mono text-sm font-bold tracking-[0.18em] text-accent-dark">WATCHED</code>
+        </div>
       </div>
     </section>
   )
