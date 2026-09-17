@@ -1,16 +1,16 @@
 const ADC_RESULT = {
-  spend: 'About $6K',
+  spend: '$6K',
   inspections: '10+',
-  sold: 'About $123K',
+  sold: '$123K–$163K',
   timeline: 'Under 60 days',
 }
 
 const STORM_ACTIONS = [
-  { label: 'Storm confirmed', detail: 'Verified event data', icon: 'check' },
-  { label: 'ZIP codes updated', detail: 'Targeting follows impact', icon: 'pin' },
-  { label: 'Bids adjusted', detail: 'Demand informs bids', icon: 'sliders' },
-  { label: 'Budget shifted', detail: 'Spend moves where needed', icon: 'bolt' },
-  { label: 'Roofer notified', detail: 'You know what changed', icon: 'bell' },
+  { label: 'A storm hits', detail: 'We check real storm reports, not guesses', icon: 'check' },
+  { label: 'Ads move there', detail: 'Your ads show up in the ZIP codes that got hit', icon: 'pin' },
+  { label: 'We push harder', detail: 'We compete harder while homeowners are searching', icon: 'sliders' },
+  { label: 'Budget follows', detail: 'More of your ad money goes to the hit areas', icon: 'bolt' },
+  { label: 'You get a heads-up', detail: 'We tell you what changed and why', icon: 'bell' },
 ]
 
 function BrandMark() {
@@ -107,7 +107,7 @@ function CaseStudy() {
 
           <div className="mx-auto mt-8 max-w-lg">
             <p className="text-sm font-semibold text-roof-muted">Revenue sold from the campaign</p>
-            <p className="mt-2 text-5xl font-extrabold tracking-[-0.05em] text-roof-ink sm:text-7xl">{ADC_RESULT.sold}</p>
+            <p className="mt-2 whitespace-nowrap text-4xl font-extrabold tracking-[-0.05em] text-roof-ink sm:text-7xl">{ADC_RESULT.sold}</p>
             <p className="mt-3 text-sm font-bold uppercase tracking-[0.14em] text-accent-dark">{ADC_RESULT.timeline}</p>
           </div>
 
@@ -153,7 +153,7 @@ function StormSystem() {
           When a storm is confirmed, the system adapts.
         </h2>
         <p className="mt-3 text-base leading-relaxed text-roof-muted">
-          Confirmed event data triggers deliberate changes across the campaign—without pretending anyone can predict the weather.
+          Nobody can predict the weather. But once a storm is confirmed in your area, your ads shift to the neighborhoods that got hit. Here’s what happens, step by step.
         </p>
       </div>
 
@@ -168,7 +168,7 @@ function StormSystem() {
           </div>
           <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-green-800">Confirmed</span>
         </div>
-        <div className="grid gap-2 sm:grid-cols-5">
+        <div className="grid gap-5 sm:grid-cols-5">
           {STORM_ACTIONS.map((action, index) => (
             <div key={action.label} className="relative flex items-center gap-3 rounded-xl border border-roof-border-subtle bg-roof-paper p-3 sm:block sm:min-h-32 sm:p-4">
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accent-bg text-accent-dark ring-1 ring-accent-muted/50">
@@ -179,7 +179,18 @@ function StormSystem() {
                 <p className="mt-1 text-xs leading-snug text-roof-muted">{action.detail}</p>
               </div>
               {index < STORM_ACTIONS.length - 1 && (
-                <span className="absolute -bottom-3 left-7 z-10 h-3 w-px bg-accent-muted sm:-right-1 sm:bottom-auto sm:left-auto sm:top-8 sm:h-px sm:w-2" aria-hidden="true" />
+                <svg
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                  className="absolute -bottom-[18px] left-7 z-10 h-4 w-4 -translate-x-1/2 rotate-90 text-accent sm:-right-[18px] sm:bottom-auto sm:left-auto sm:top-8 sm:-translate-y-1/2 sm:translate-x-0 sm:rotate-0"
+                >
+                  <path d="M2 8h12M9 3l5 5-5 5" />
+                </svg>
               )}
             </div>
           ))}
