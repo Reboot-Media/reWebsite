@@ -5,6 +5,8 @@ const ADC_RESULT = {
   timeline: 'Under 60 days',
 }
 
+const DEFAULT_PRECALL_LOOM_EMBED_URL = 'https://www.loom.com/embed/5d47094d257f4d45a5755d649ea9c8b1'
+
 const STORM_ACTIONS = [
   { label: 'A storm hits', detail: 'We check real storm reports, not guesses', icon: 'check' },
   { label: 'Ads move there', detail: 'Your ads show up in the ZIP codes that got hit', icon: 'pin' },
@@ -39,7 +41,7 @@ function PlayIcon() {
 }
 
 function VideoPanel() {
-  const loomUrl = import.meta.env.VITE_PRECALL_LOOM_EMBED_URL?.trim()
+  const loomUrl = import.meta.env.VITE_PRECALL_LOOM_EMBED_URL?.trim() || DEFAULT_PRECALL_LOOM_EMBED_URL
 
   if (loomUrl) {
     return (
