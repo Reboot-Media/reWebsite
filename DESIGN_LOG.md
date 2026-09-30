@@ -37,3 +37,9 @@
 - Nielsen review: no heuristic scored 3 or below; the flow has one clear task and uses plain language.
 - Build: `npm run build` passes; `git diff --check` passes.
 - Not verified: Axe and Lighthouse were unavailable in the local project.
+
+### 2026-09-29 homepage becomes the roofer funnel
+
+- The homepage becomes the roofer funnel, built from a competitor-funnel teardown (Playwright capture + Jev scoring, per Kendall on 9/29). The 9/15 note about researching competitor funnels through Polar was not applied.
+- `/roofers` and `/roofers/before-your-call` are retired, with 301 redirects to `/` (`public/_redirects`).
+- The ADC case study and its "locked proof anchor" are superseded by the 9/25 Offer Canon ruling: no ADC claims anywhere.

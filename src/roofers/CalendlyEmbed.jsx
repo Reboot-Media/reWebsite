@@ -53,7 +53,7 @@ export default function CalendlyEmbed({ name, email, phone, company, onScheduled
   const utm = buildCalendlyUtm(getAttribution())
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-roof-border-subtle bg-roof-surface">
+    <div className="overflow-hidden rounded-2xl border border-roof-border-subtle bg-roof-surface shadow-sm">
       <InlineWidget
         url={calendlyUrl}
         styles={{ height: '700px', minWidth: '280px' }}
