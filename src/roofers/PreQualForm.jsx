@@ -36,7 +36,7 @@ function TextField({ id, label, type = 'text', value, onChange, error, hint, aut
   const errorId = `${id}-error`
   return (
     <div className="mb-6">
-      <label htmlFor={id} className="mb-2 block text-[17px] font-medium text-roof-ink">
+      <label htmlFor={id} className="mb-2 block text-[15px] font-semibold text-roof-ink">
         {label}
       </label>
       {hint && <p className="mb-2 text-sm text-roof-ink">{hint}</p>}
@@ -49,8 +49,8 @@ function TextField({ id, label, type = 'text', value, onChange, error, hint, aut
         autoComplete={autoComplete}
         aria-invalid={error ? 'true' : 'false'}
         aria-describedby={error ? errorId : undefined}
-        className={`min-h-[48px] w-full rounded-lg border bg-roof-surface px-4 py-3 text-[17px] text-roof-ink outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
-          error ? 'border-danger' : 'border-roof-border-subtle'
+        className={`min-h-[48px] w-full rounded-xl border bg-roof-surface px-4 py-3 text-[17px] text-roof-ink outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+          error ? 'border-danger' : 'border-roof-border-strong'
         }`}
       />
       {error && (
@@ -66,7 +66,7 @@ function TextAreaField({ id, label, value, onChange, error, hint }) {
   const errorId = `${id}-error`
   return (
     <div className="mb-6">
-      <label htmlFor={id} className="mb-2 block text-[17px] font-medium text-roof-ink">
+      <label htmlFor={id} className="mb-2 block text-[15px] font-semibold text-roof-ink">
         {label}
       </label>
       {hint && <p className="mb-2 text-sm text-roof-ink">{hint}</p>}
@@ -78,8 +78,8 @@ function TextAreaField({ id, label, value, onChange, error, hint }) {
         rows={4}
         aria-invalid={error ? 'true' : 'false'}
         aria-describedby={error ? errorId : undefined}
-        className={`w-full min-h-[120px] rounded-lg border bg-roof-surface px-4 py-3 text-[17px] text-roof-ink outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
-          error ? 'border-danger' : 'border-roof-border-subtle'
+        className={`w-full min-h-[120px] rounded-xl border bg-roof-surface px-4 py-3 text-[17px] text-roof-ink outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+          error ? 'border-danger' : 'border-roof-border-strong'
         }`}
       />
       {error && (
@@ -95,7 +95,7 @@ function RadioGroup({ legend, name, options, value, onChange, error, hint }) {
   const errorId = `${name}-error`
   return (
     <fieldset className="mb-6" aria-describedby={error ? errorId : undefined}>
-      <legend className="mb-2 block text-[17px] font-medium text-roof-ink">{legend}</legend>
+      <legend className="mb-2 block text-[15px] font-semibold text-roof-ink">{legend}</legend>
       {hint && <p className="mb-2 text-sm text-roof-ink">{hint}</p>}
       <div className="flex flex-col gap-3">
         {options.map((opt) => {
@@ -105,7 +105,7 @@ function RadioGroup({ legend, name, options, value, onChange, error, hint }) {
             <label
               key={opt}
               htmlFor={optId}
-              className={`flex min-h-[48px] cursor-pointer items-center gap-3 rounded-lg border bg-roof-surface px-4 py-3 text-[17px] text-roof-ink transition-colors ${
+              className={`flex min-h-[48px] cursor-pointer items-center gap-3 rounded-xl border bg-roof-surface px-4 py-3 text-[17px] text-roof-ink transition-colors ${
                 checked ? 'border-accent ring-1 ring-accent' : 'border-roof-border-subtle'
               }`}
             >
@@ -148,7 +148,7 @@ function ProgressIndicator({ step, finalLabel }) {
             aria-current={isCurrent ? 'step' : undefined}
           >
             <span
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
+              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] font-bold ${
                 isDone || isCurrent ? 'bg-accent text-white' : 'bg-roof-border-subtle text-roof-muted'
               }`}
             >
@@ -187,7 +187,7 @@ function ConfirmationMessage() {
   return (
     <div role="status" className="rounded-2xl border border-roof-border-subtle bg-roof-surface p-8 text-center">
       <p className="text-[17px] font-medium text-roof-ink">
-        You're booked. Watch for a confirmation — and we'll call to confirm the day before.
+        You're booked. Watch for a confirmation.
       </p>
     </div>
   )
@@ -389,7 +389,7 @@ export default function PreQualForm() {
               </div>
               <button
                 type="submit"
-                className="min-h-[48px] w-full rounded-lg bg-accent px-6 py-3 text-[17px] font-semibold text-white transition-colors hover:bg-accent-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                className="inline-flex h-14 w-full items-center justify-center rounded-[14px] bg-accent px-7 text-[17px] font-semibold text-white hover:bg-accent-dark transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 Continue →
               </button>
@@ -415,7 +415,7 @@ export default function PreQualForm() {
                 autoComplete="address-level2"
               />
               <RadioGroup
-                legend="Are you running Google Ads now?"
+                legend="Are you running paid ads right now?"
                 name="pq-googleAdsStatus"
                 options={['Running now', 'Ran before, stopped', 'Never have']}
                 value={fields.googleAdsStatus}
@@ -424,7 +424,7 @@ export default function PreQualForm() {
               />
               <RadioGroup
                 legend="What can you put toward ad spend each month?"
-                hint="your money, direct to Google"
+                hint="your money, paid straight to the ad platform"
                 name="pq-adSpend"
                 options={['Under $3K', '$3K–$5K', '$5K–$7K', '$7K+']}
                 value={fields.adSpend}
@@ -442,13 +442,13 @@ export default function PreQualForm() {
                 <button
                   type="button"
                   onClick={goBack}
-                  className="min-h-[48px] flex-1 rounded-lg border border-roof-border-strong px-6 py-3 text-[17px] font-semibold text-roof-ink transition-colors hover:bg-roof-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                  className="h-14 flex-1 rounded-[14px] border border-roof-border-strong px-6 py-3 text-[17px] font-semibold text-roof-ink transition-colors hover:bg-roof-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 >
                   Back
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[48px] flex-1 rounded-lg bg-accent px-6 py-3 text-[17px] font-semibold text-white transition-colors hover:bg-accent-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                  className="inline-flex h-14 flex-1 items-center justify-center rounded-[14px] bg-accent px-7 text-[17px] font-semibold text-white hover:bg-accent-dark transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                 >
                   Submit →
                 </button>

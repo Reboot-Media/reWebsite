@@ -1,10 +1,10 @@
-# /roofers Funnel — Launch Runbook
+# Roofer Funnel — Launch Runbook
 
-Owner: Kendall. This is the checklist for taking the `/roofers` ad-destination page live and verifying it end to end. Follow it in order on launch day.
+Owner: Kendall. This is the checklist for taking the homepage (`/`) ad-destination funnel live and verifying it end to end. Follow it in order on launch day.
 
 ## 1. Architecture
 
-1. Ad click lands on `/roofers` — a static page in the same Vite build as the main site, served by Cloudflare Pages.
+1. Ad click lands on `/` — the homepage, a static page in the same Vite build as the main site, served by Cloudflare Pages.
 2. Visitor completes the 3-step pre-qual form (`src/roofers/PreQualForm.jsx`).
 3. **Qualified** lead (decision-maker — see §3.1): browser fires Meta Pixel `Lead`, and the form POSTs the lead payload to `/api/lead` (a Cloudflare Pages Function).
 4. `/api/lead` (`functions/api/lead.js`) fires Meta Conversions API (CAPI) `Lead` server-side using the **same `event_id`** as the browser event (Meta dedupes them into one), and POSTs the full payload directly to the GHL inbound webhook — no Zapier in the path. GHL creates/updates the contact.
@@ -134,7 +134,7 @@ Calendly-native is also the more complete path regardless — it catches booking
 ## 6. Launch-Day Verification (in order)
 
 1. Merge PR #1 (`minimal-rewrite`), then PR #2 (`roofers-landing`). Cloudflare Pages auto-deploys on merge to the production branch.
-2. Confirm both `https://rebootmedia.us/roofers` and `https://rebootmedia.us/privacy` resolve **extension-less** (no `.html` in the URL, no redirect loop).
+2. Confirm both `https://rebootmedia.us/` and `https://rebootmedia.us/privacy` resolve **extension-less** (no `.html` in the URL, no redirect loop).
 3. Set the environment variables from section 2 in the Cloudflare dashboard, **including `META_TEST_EVENT_CODE`**, then trigger a redeploy so the `VITE_` vars (if changed) pick up.
 4. Submit the form as a qualified test lead (decision-maker = Yes; any ad spend, any city). In Meta Events Manager → Test Events, expect **one `Lead` event with two sources — browser and server — shown as deduplicated**. That's the pass condition; two separate undeduplicated events means the `event_id` isn't lining up. (See "deduplication looks like one row" below before you conclude the server side is broken.)
 5. Check GHL: confirm a contact was created, tagged `Qualified`, with the custom fields populated.
@@ -162,7 +162,7 @@ To confirm the server half actually fired:
 
 | Item | Evidence |
 |---|---|
-| Extension-less `/roofers` and `/privacy` routing | Confirmed in the real Cloudflare workerd runtime AND on production |
+| Extension-less `/privacy` routing | Confirmed in the real Cloudflare workerd runtime AND on production |
 | Meta domain verified | DNS TXT record confirmed |
 | Qualified submit → browser `Lead` + server CAPI `Lead` | Same `event_id`, deduplicated in Test Events |
 | Disqualified submit → nurture screen | Zero `Lead` events on either transport, confirmed |

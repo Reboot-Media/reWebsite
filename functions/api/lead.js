@@ -1,6 +1,6 @@
 // Cloudflare Pages Function — POST /api/lead
 //
-// Same-origin endpoint the /roofers pre-qual form AND the Calendly booking
+// Same-origin endpoint the pre-qual form AND the Calendly booking
 // step post to instead of hitting a client-visible webhook URL directly.
 // On each submit it:
 //
@@ -106,7 +106,7 @@ async function sendCapiEvent(payload, context) {
         event_time: Math.floor(Date.now() / 1000),
         event_id: payload.event_id,
         action_source: 'website',
-        event_source_url: `https://rebootmedia.us${attribution.landing_page || '/roofers'}`,
+        event_source_url: `https://rebootmedia.us${attribution.landing_page || '/'}`,
         user_data: userData,
         custom_data: { content_name: CONTENT_NAME_BY_EVENT[eventName] },
       },

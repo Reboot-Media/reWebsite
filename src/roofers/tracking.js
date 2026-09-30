@@ -1,6 +1,5 @@
 // Tracking utilities for the /roofers ad-destination landing page.
 //
-// - initPixel() loads the Meta Pixel and fires PageView.
 // - captureAttribution() / getAttribution() capture and surface which
 //   ad (UTM + fbclid + fbp/fbc) produced the lead.
 // - trackLead() / trackSchedule() fire Meta standard events with a
@@ -13,12 +12,9 @@
 //   and forwards to Zapier — no webhook URL or token is ever exposed to
 //   the browser.
 //
-// initPixel() falls back to the committed production pixel ID when
-// VITE_META_PIXEL_ID is unset; postLead() swallows all errors (in
+// postLead() swallows all errors (in
 // `vite dev` there is no Pages Functions runtime, so /api/lead 404s —
-// that must stay silent) — neither may throw or block render.
-
-let pixelInitialized = false
+// that must stay silent) — it must never throw or block render.
 
 const ATTRIBUTION_STORAGE_KEY = 'roofers_attribution'
 const ATTRIBUTION_URL_KEYS = [
@@ -108,48 +104,6 @@ export function getAttribution() {
   }
 
   return attribution
-}
-
-/**
- * Load the Meta Pixel base code and fire an initial PageView.
- * Safe to call multiple times — only initializes once.
- * Falls back to the committed default production pixel ID if
- * VITE_META_PIXEL_ID is not set; the env var can still override it.
- */
-export function initPixel() {
-  if (pixelInitialized) return
-  if (typeof window === 'undefined') return
-
-  const pixelId = import.meta.env.VITE_META_PIXEL_ID || '943826127904095'
-  if (!pixelId) return
-
-  try {
-    /* eslint-disable */
-    ;(function (f, b, e, v, n, t, s) {
-      if (f.fbq) return
-      n = f.fbq = function () {
-        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-      }
-      if (!f._fbq) f._fbq = n
-      n.push = n
-      n.loaded = true
-      n.version = '2.0'
-      n.queue = []
-      t = b.createElement(e)
-      t.async = true
-      t.src = v
-      s = b.getElementsByTagName(e)[0]
-      s.parentNode.insertBefore(t, s)
-    })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js')
-    /* eslint-enable */
-
-    window.fbq('init', pixelId)
-    window.fbq('track', 'PageView')
-    pixelInitialized = true
-  } catch (err) {
-    // Never let tracking setup break the page.
-    console.error('[tracking] initPixel failed', err)
-  }
 }
 
 /**

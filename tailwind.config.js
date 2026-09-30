@@ -2,7 +2,6 @@
 export default {
   content: [
     "./index.html",
-    "./roofers.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
@@ -21,6 +20,8 @@ export default {
           muted: '#C4B5FD',
           dark: '#5B21B6',
           bg: '#F5F0FF',
+          border: '#E4D9FF',
+          grid: '#DDD6F3',
         },
         success: '#27A244',
         danger: '#C0392B',
