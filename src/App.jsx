@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import PreQualForm from './roofers/PreQualForm.jsx';
 import { captureAttribution } from './roofers/tracking.js';
 
-const FOUNDER_VIDEO_URL = '';
+const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/7A6Etcubfpw?rel=0';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
 const CTA_LABEL = 'Book my strategy call';
 
@@ -50,14 +50,13 @@ const FAQS = [
     q: 'What happens on the strategy call?',
     a: 'We look at how homeowners reach you today, walk through the three phases for your company, and set the numbers with you.',
   },
-  { q: 'Who works on my account?', a: 'Kendall Reid, the founder, works every account personally.' },
   {
     q: 'What does it cost?',
     a: 'It depends on your service area and what you want to take on. We set the numbers with you on the strategy call.',
   },
   {
     q: "I've worked with an agency before. How is this different?",
-    a: "You deal with Kendall directly. Phase one is an audit of what you have. We keep what works and remove what doesn't.",
+    a: "We're software engineers who know roofing, not a general agency. Phase one is an audit of what you have. We keep what works and remove what doesn't.",
   },
 ];
 
@@ -151,14 +150,15 @@ function FounderVideo() {
       <div className="aspect-video overflow-hidden rounded-[20px] bg-accent-bg shadow-lift ring-8 ring-white">
         <iframe
           src={FOUNDER_VIDEO_URL}
-          title="Kendall explains the three phases"
+          title="How the three phases work"
           loading="lazy"
-          allow="autoplay; fullscreen; picture-in-picture"
+          allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+          referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
           className="h-full w-full border-0"
         />
       </div>
-      <figcaption className="mt-3.5 text-[15px] text-roof-muted">Kendall explains the three phases.</figcaption>
+      <figcaption className="mt-3.5 text-[15px] text-roof-muted">How the three phases work.</figcaption>
     </figure>
   );
 }
@@ -259,7 +259,7 @@ function Phases() {
           ))}
         </ol>
         <div className="mt-12 flex flex-col gap-5 border-t border-roof-border-subtle pt-8 sm:flex-row sm:items-center sm:justify-between">
-          <p className={`font-semibold ${bodyClass}`}>Kendall works each account personally.</p>
+          <p className={`font-semibold ${bodyClass}`}>Built by a team with 10 years of combined experience.</p>
           <CTA className="w-full sm:w-auto" />
         </div>
       </div>
@@ -399,17 +399,17 @@ function OneRoofer() {
   );
 }
 
-function Founder() {
+function Team() {
   return (
     <section className={`bg-roof-paper ${sec}`}>
       <div className={`${wrap} grid gap-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-16`}>
-        <div aria-hidden="true" className="flex h-32 w-32 items-center justify-center rounded-[28px] bg-[linear-gradient(135deg,theme(colors.accent.DEFAULT),theme(colors.accent.dark))] text-[40px] font-extrabold tracking-[-0.03em] text-white shadow-lift lg:h-44 lg:w-44 lg:text-[56px]">
-          KR
+        <div aria-hidden="true" className="flex h-32 w-32 items-center justify-center rounded-[28px] bg-[linear-gradient(135deg,theme(colors.accent.DEFAULT),theme(colors.accent.dark))] shadow-lift lg:h-44 lg:w-44">
+          <img src="/logo.png" alt="" className="h-16 w-16 brightness-0 invert lg:h-20 lg:w-20" />
         </div>
         <div className="max-w-[640px]">
-        <h2 className={`mb-5 ${h2Class}`}>Work with Kendall directly.</h2>
+        <h2 className={`mb-5 ${h2Class}`}>Software engineers who know roofing.</h2>
         <p className={`mb-4 ${mutedClass}`}>
-          I'm Kendall. I run Reboot Media and I work each account personally. You deal with me directly.
+          Our team brings 10 years of combined experience, including software engineering. We know how a roofing company runs, from storm season to the sales call. You talk to the people who build your system.
         </p>
         <p className={bodyClass}>
           Email:{' '}
@@ -506,7 +506,7 @@ export default function App() {
         <AfterYouBook />
         <WhoItsFor />
         <OneRoofer />
-        <Founder />
+        <Team />
         <Faq />
         <FormSection />
       </main>
