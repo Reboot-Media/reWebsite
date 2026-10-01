@@ -9,8 +9,9 @@
 //      SAME event_id the browser pixel used, so Meta dedupes the browser +
 //      server events into one. payload.event_name (validated against an
 //      allowlist, defaulting to 'Lead') picks which standard event fires.
-//   2. Forwards Lead payloads (Qualified and Nurture alike) to the CRM
-//      webhook server-side, so the webhook URL never ships in the public
+//   2. Forwards Lead payloads (Qualified and Nurture alike) to the
+//      GoHighLevel inbound webhook (GHL_WEBHOOK_URL, legacy
+//      ZAPIER_WEBHOOK_URL fallback) server-side, so the webhook URL never ships in the public
 //      JS bundle. Schedule payloads are NOT forwarded — bookings reach the
 //      CRM through the Calendly → GHL webhook subscription (Workflow #2),
 //      and forwarding them here re-runs Workflow #1's Create contact with
@@ -18,7 +19,7 @@
 //      the contact.
 //
 // All secrets (META_CAPI_TOKEN, META_DATASET_ID, META_TEST_EVENT_CODE,
-// ZAPIER_WEBHOOK_URL) are read from context.env — set them in the
+// GHL_WEBHOOK_URL, legacy ZAPIER_WEBHOOK_URL) are read from context.env — set them in the
 // Cloudflare Pages dashboard (Settings → Environment variables), never
 // commit them. The dataset ID default below ('943826127904095') is the
 // public Meta pixel ID, not a secret — Meta dataset IDs equal pixel IDs.
@@ -132,21 +133,24 @@ async function sendCapiEvent(payload, context) {
 }
 
 /**
- * Forward Lead payloads to the CRM inbound webhook, unchanged except for
- * a normalized event_name. Schedule payloads are deliberately NOT
+ * Forward Lead payloads to the GoHighLevel inbound webhook, unchanged except
+ * for a normalized event_name and a flat tags_csv string (GHL maps it without
+ * parsing an array). Schedule payloads are deliberately NOT
  * forwarded: bookings reach the CRM via the Calendly → GHL webhook
  * subscription (Workflow #2), and a Schedule payload re-running
  * Workflow #1's Create contact wipes the qualifier fields it lacks.
- * Skips silently if ZAPIER_WEBHOOK_URL isn't configured. Never throws.
+ * Skips silently if neither GHL_WEBHOOK_URL nor the legacy
+ * ZAPIER_WEBHOOK_URL is configured. Never throws.
  */
-async function forwardToZapier(payload, context) {
-  const webhookUrl = context.env.ZAPIER_WEBHOOK_URL
+async function forwardToCrm(payload, context) {
+  const webhookUrl = context.env.GHL_WEBHOOK_URL || context.env.ZAPIER_WEBHOOK_URL
   if (!webhookUrl) return
 
   const eventName = resolveEventName(payload)
   if (eventName !== 'Lead') return
 
   const forwardPayload = { ...payload, event_name: eventName }
+  if (Array.isArray(payload.tags)) forwardPayload.tags_csv = payload.tags.join(', ')
 
   try {
     const res = await fetch(webhookUrl, {
@@ -157,10 +161,10 @@ async function forwardToZapier(payload, context) {
 
     if (!res.ok) {
       const responseText = await res.text().catch(() => '<unreadable response body>')
-      console.error('[lead] Zapier forward rejected', res.status, responseText)
+      console.error('[lead] CRM forward rejected', res.status, responseText)
     }
   } catch (err) {
-    console.error('[lead] Zapier forward failed', err)
+    console.error('[lead] CRM forward failed', err)
   }
 }
 
@@ -192,7 +196,7 @@ export async function onRequestPost(context) {
   if ((payload.qualified === true && payload.spam !== true) || isSchedule) {
     tasks.push(sendCapiEvent(payload, context))
   }
-  tasks.push(forwardToZapier(payload, context))
+  tasks.push(forwardToCrm(payload, context))
 
   context.waitUntil(Promise.allSettled(tasks))
 

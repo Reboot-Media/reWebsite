@@ -18,7 +18,7 @@ const FAQS = [
     q: 'What happens on the free audit call?',
     a: "We look at how you get customers today and show you how this would work for your company. If it's not a fit, we'll tell you.",
   },
-  { q: 'What does it cost?', a: 'It depends on your area and your goals. We go over it on the call.' },
+  { q: 'What does it cost?', a: "The audit call is free. Pricing depends on your company, and we'll go over it on the call." },
   {
     q: 'How is this different from an agency?',
     a: "We're engineers who know roofing. We start by keeping what already works.",
