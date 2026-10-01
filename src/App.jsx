@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import PreQualForm from './roofers/PreQualForm.jsx';
 import { captureAttribution } from './roofers/tracking.js';
 
-const FOUNDER_VIDEO_URL = '';
+const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/7A6Etcubfpw?rel=0';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
 const CTA_LABEL = 'Book my strategy call';
 
@@ -152,7 +152,8 @@ function FounderVideo() {
           src={FOUNDER_VIDEO_URL}
           title="How the three phases work"
           loading="lazy"
-          allow="autoplay; fullscreen; picture-in-picture"
+          allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+          referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
           className="h-full w-full border-0"
         />
