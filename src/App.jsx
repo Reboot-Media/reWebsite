@@ -20,6 +20,10 @@ const FAQS = [
   },
   { q: 'What does it cost?', a: "The audit call is free. Pricing depends on your company, and we'll go over it on the call." },
   {
+    q: 'Is there a contract?',
+    a: 'Yes, 90 days. Your ad budget is paid straight to the ad platform, not to us. You keep your ad account and every homeowner who came in, even if you leave.',
+  },
+  {
     q: 'How is this different from an agency?',
     a: "We build the system ourselves, with computer science degrees and 10 years in marketing behind it. We start by keeping what already works.",
   },
@@ -215,6 +219,7 @@ const CREDENTIALS = [
   "Master's and bachelor's degrees in computer science",
   '10 years in marketing',
   'Hands-on experience in home services and construction',
+  'Working with Whitestone Roofing',
 ];
 
 function Team() {
@@ -227,7 +232,7 @@ function Team() {
         <div className={col}>
           <h2 className={`mb-5 ${h2Class}`}>Who we are</h2>
           <p className={`mb-5 ${mutedClass}`}>
-            We build the system ourselves, and we know the trade it's built for.
+            Reboot Media was founded by Kendall Reid. We build the system ourselves, and we know the trade it's built for.
           </p>
           <ul className="mb-6 space-y-3">
             {CREDENTIALS.map((c) => (
