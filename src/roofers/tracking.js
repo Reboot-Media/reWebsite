@@ -9,7 +9,7 @@
 // - postLead() / postSchedule() forward the lead/booking payload to the
 //   same-origin /api/lead endpoint (a Cloudflare Pages Function), which
 //   fires the server-side CAPI event (Lead or Schedule, per event_name)
-//   and forwards to Zapier — no webhook URL or token is ever exposed to
+//   and forwards to the CRM (GoHighLevel) webhook — no webhook URL or token is ever exposed to
 //   the browser.
 //
 // postLead() swallows all errors (in
@@ -132,6 +132,18 @@ export function trackLead(eventId) {
 }
 
 /**
+ * Fire a Meta custom event marking a funnel step (PrequalStart, etc.).
+ */
+export function trackStep(name) {
+  if (typeof window === 'undefined' || typeof window.fbq !== 'function') return
+  try {
+    window.fbq('trackCustom', name)
+  } catch (err) {
+    console.error('[tracking] trackStep failed', err)
+  }
+}
+
+/**
  * Fire the Meta "Schedule" standard event when a Calendly booking completes.
  */
 export function trackSchedule(eventId) {
@@ -146,7 +158,7 @@ export function trackSchedule(eventId) {
 /**
  * Shared fire-and-forget POST to the same-origin /api/lead endpoint (a
  * Cloudflare Pages Function — see functions/api/lead.js), which fires the
- * server-side Meta CAPI event and forwards to Zapier. Never throws, never
+ * server-side Meta CAPI event and forwards to the CRM (GoHighLevel) webhook. Never throws, never
  * blocks the UI — a failure here (including the expected 404 under
  * `vite dev`, which has no Functions runtime) must not break the flow.
  */
@@ -176,7 +188,7 @@ export function postLead(payload) {
 /**
  * Fire-and-forget POST of the Calendly booking payload to /api/lead
  * (event_name: 'Schedule'), so the server-side CAPI "Schedule" event and
- * Zapier forward see it as a booking notification. Same fire-and-forget,
+ * CRM (GoHighLevel) webhook forward see it as a booking notification. Same fire-and-forget,
  * same-origin, keepalive semantics as postLead() — see
  * postToLeadEndpoint().
  */

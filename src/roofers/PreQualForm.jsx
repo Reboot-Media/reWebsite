@@ -1,6 +1,6 @@
-import { useState, lazy, Suspense } from 'react'
+import { useState, useRef, lazy, Suspense } from 'react'
 import { formatPhone, isCity, isEmail, isFullName, isPhone } from './validate.js'
-import { newEventId, trackLead, postLead, getAttribution } from './tracking'
+import { newEventId, trackLead, trackStep, postLead, getAttribution } from './tracking'
 
 // react-calendly is only ever pulled in through this lazy boundary, and
 // only once a prospect has qualified — protects LCP on initial paint.
@@ -209,8 +209,14 @@ export default function PreQualForm() {
   const [qualified, setQualified] = useState(false)
   const [booked, setBooked] = useState(false)
   const [liveMessage, setLiveMessage] = useState('')
+  const startedRef = useRef(false)
+  const partialSentRef = useRef(false)
 
   function update(name, value) {
+    if (!startedRef.current && name !== 'referral_code') {
+      startedRef.current = true
+      trackStep('PrequalStart')
+    }
     setFields((f) => ({ ...f, [name]: value }))
   }
 
@@ -233,8 +239,29 @@ export default function PreQualForm() {
     else if (!isCity(fields.city)) e.city = 'Enter a city name, letters only.'
     if (!fields.googleAdsStatus) e.googleAdsStatus = 'Select an option.'
     if (!fields.adSpend) e.adSpend = 'Select an option.'
-    if (!fields.drivingFactor.trim()) e.drivingFactor = "Tell us what's driving you to look now."
     return e
+  }
+
+  // Capture the contact as soon as step 1 passes, once per form instance, so
+  // abandoned forms still reach the CRM. Only step-1 keys are sent (empty
+  // step-2 keys could overwrite contact fields) and `qualified` is left unset
+  // so the server fires no Meta event.
+  function sendPartial() {
+    if (partialSentRef.current) return
+    partialSentRef.current = true
+    trackStep('PrequalStep1Complete')
+    postLead({
+      fullName: fields.fullName,
+      company: fields.company,
+      email: fields.email,
+      phone: fields.phone,
+      event_id: newEventId(),
+      stage: 'partial',
+      tags: ['Partial'],
+      spam: fields.referral_code.trim().length > 0,
+      page: 'roofers',
+      attribution: getAttribution(),
+    })
   }
 
   function handleSubmitStep(e) {
@@ -253,6 +280,7 @@ export default function PreQualForm() {
     setErrors({})
 
     if (step === 1) {
+      sendPartial()
       setStep(2)
       setLiveMessage('Step 2 of 3: A few questions.')
       return
@@ -290,6 +318,7 @@ export default function PreQualForm() {
     if (trippedHoneypot) tags = [...tags, 'SpamSuspect']
 
     const eventId = newEventId()
+    if (!trippedHoneypot) trackStep('PrequalStep2Complete')
 
     // Flagged submits never fire the pixel — Meta's Lead signal stays clean.
     // The server applies the same rule to CAPI via the `spam` flag.
@@ -300,6 +329,7 @@ export default function PreQualForm() {
     postLead({
       ...fields,
       event_id: eventId,
+      stage: 'complete',
       tags,
       qualified: isQualified,
       spam: trippedHoneypot,
@@ -436,7 +466,7 @@ export default function PreQualForm() {
               />
               <TextAreaField
                 id="pq-drivingFactor"
-                label="What's driving you to look now?"
+                label="What's driving you to look now? (optional)"
                 value={fields.drivingFactor}
                 onChange={(v) => update('drivingFactor', v)}
                 error={errors.drivingFactor}
