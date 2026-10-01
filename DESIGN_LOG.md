@@ -10,9 +10,14 @@
 - 2026-09-15 — Primary completion prompt is to reply `WATCHED` in the originating text conversation. Scope: this page.
 - 2026-09-15 — Future paid/organic acquisition funnel is a separate design problem; research competitor funnels through Polar before defining its structure or conversion sequence. Scope: future funnel project.
 
+- 2026-10-01 — Homepage direction is B · Daylight (picked by Kendall 9/30): light page, violet for accents and buttons only, Inter with optical sizing, everything left-aligned on one edge, three surface tiers (flat, card, lift). Scope: default.
+- 2026-10-01 — The hero shows the founder video when `FOUNDER_VIDEO_URL` is set, and a decorative `aria-hidden` "New inspection booked" mockup when it isn't. The mockup uses no digits, names or metrics. Scope: default.
+
 ## Deliberate exceptions
 
 - 2026-09-15 — Reboot wordmark is intentionally not linked because this no-navigation preparation page is a focused post-booking flow. Scope: this page.
+
+- 2026-10-01 — No "skip to content" link, because the homepage copy is locked. Revisit if the copy is reopened. Scope: default.
 
 ## Running scorecard
 
@@ -20,6 +25,7 @@
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-09-15 | Pre-call page, palette and proof revision | A | A+ | A | A+ | A+ | A | None |
 | 2026-09-15 | Minimal light-first revision | A | A+ | A | A+ | A+ | A | None |
+| 2026-10-01 | Homepage, Daylight design pass | A | A | A | A | A | A | None |
 
 ### 2026-09-15 minimal revision delta
 

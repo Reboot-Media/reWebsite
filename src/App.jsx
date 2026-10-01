@@ -75,7 +75,7 @@ const bodyClass = 'text-[17px] leading-[1.65] text-roof-ink md:text-[18px]';
 const mutedClass = 'text-[17px] leading-[1.65] text-roof-muted md:text-[18px]';
 const wrap = 'mx-auto max-w-[1120px] px-5 md:px-8';
 const sec = 'py-[72px] lg:py-28';
-const card = 'rounded-[20px] border border-roof-border-subtle bg-roof-surface';
+const card = 'rounded-[20px] bg-roof-surface ring-1 ring-roof-border-subtle';
 const connectorV = 'absolute left-[19px] top-11 bottom-1 w-0.5 bg-accent-border';
 const circle = 'absolute left-0 top-0 z-[1] flex h-10 w-10 items-center justify-center rounded-full border-2 border-accent bg-roof-surface text-lg font-bold text-accent';
 
@@ -103,7 +103,7 @@ const btnBase = `inline-flex items-center justify-center font-semibold transitio
 
 function CTA({ children = CTA_LABEL, secondary = false, small = false, className = '' }) {
   const look = secondary
-    ? 'border border-accent bg-white text-accent-dark hover:bg-accent-bg'
+    ? 'bg-white text-roof-ink ring-1 ring-inset ring-roof-border-strong hover:bg-roof-paper'
     : 'bg-accent text-white hover:bg-accent-dark';
   const size = small ? 'h-12 rounded-xl px-3.5 text-[15px] md:px-5 md:text-base' : 'h-14 rounded-[14px] px-7 text-[17px]';
   return (
@@ -147,8 +147,8 @@ function Header() {
 function FounderVideo() {
   if (!FOUNDER_VIDEO_URL) return null;
   return (
-    <figure className="mx-auto mt-12 max-w-[880px]">
-      <div className="aspect-video overflow-hidden rounded-[20px] border border-roof-border-subtle bg-accent-bg shadow-[0_30px_80px_-30px_rgba(91,33,182,0.35)] ring-8 ring-white">
+    <figure className="w-full">
+      <div className="aspect-video overflow-hidden rounded-[20px] bg-accent-bg shadow-lift ring-8 ring-white">
         <iframe
           src={FOUNDER_VIDEO_URL}
           title="Kendall explains the three phases"
@@ -163,30 +163,79 @@ function FounderVideo() {
   );
 }
 
-function Hero() {
+function InspectionMock() {
+  const label = 'text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.08em] text-roof-muted';
+  const value = 'mt-0.5 text-[17px] font-semibold leading-[1.45] text-roof-ink';
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(180deg,theme(colors.accent.bg)_0%,white_62%)] pb-[72px] pt-16 md:pb-24 md:pt-24">
+    <div aria-hidden="true" className="relative mx-auto w-full max-w-[360px] select-none lg:mr-0">
+      <div className="pointer-events-none absolute -inset-10 bg-[radial-gradient(closest-side,rgba(124,58,237,0.16),transparent)]" />
+      <div className="absolute inset-x-6 -bottom-4 h-full rounded-[20px] bg-white p-4 shadow-card ring-1 ring-roof-border-subtle">
+        <div className="h-2 w-2/3 rounded-full bg-roof-border-subtle" />
+        <div className="mt-2 h-2 w-1/3 rounded-full bg-roof-border-subtle" />
+      </div>
+      <div className="relative rounded-[28px] bg-white p-3 shadow-lift ring-1 ring-roof-border-subtle">
+        <div className="rounded-[16px] bg-roof-paper p-4">
+          <div className="flex items-center gap-2">
+            <Logo className="h-5 w-5" />
+            <span className="text-[15px] font-semibold text-roof-ink">Reboot</span>
+            <span className="ml-auto text-[15px] text-roof-muted">now</span>
+          </div>
+          <div className="mt-3 rounded-xl bg-white p-4 shadow-card ring-1 ring-roof-border-subtle">
+            <div className="flex items-center gap-2">
+              <span className="h-2.5 w-2.5 rounded-full bg-success" />
+              <span className="text-[17px] font-semibold text-roof-ink">New inspection booked</span>
+            </div>
+            <div className="mt-4 space-y-3">
+              <div>
+                <div className={label}>Needs</div>
+                <div className={value}>
+                  <span className="inline-block rounded-full bg-accent-bg px-3 py-0.5 text-accent-dark">Storm damage</span>
+                </div>
+              </div>
+              <div>
+                <div className={label}>Insurance claim</div>
+                <div className={value}>Started</div>
+              </div>
+              <div>
+                <div className={label}>Inspection</div>
+                <div className={value}>Thursday morning</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Hero() {
+  const hasVideo = Boolean(FOUNDER_VIDEO_URL);
+  const cols = hasVideo ? 'lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)]' : 'lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]';
+  return (
+    <section className="relative overflow-hidden bg-[linear-gradient(180deg,theme(colors.accent.bg)_0%,white_62%)] pb-[72px] pt-12 md:pb-24 md:pt-24">
       <div aria-hidden="true" className="hero-dots pointer-events-none absolute inset-0" />
-      <div className={`${wrap} relative text-center`}>
+      <div className={`${wrap} relative grid gap-12 lg:items-center lg:gap-16 ${cols}`}>
+        <div>
         <p className="mb-5 text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.14em] text-accent">For residential roofing companies</p>
-        <h1 className="text-[36px] font-extrabold leading-[1.1] tracking-[-0.035em] [text-wrap:balance] md:text-[52px] lg:text-[60px] lg:leading-[1.04]">
+        <h1 className="text-[36px] font-extrabold leading-[1.1] tracking-[-0.035em] [text-wrap:balance] md:text-[52px] lg:text-[56px] lg:leading-[1.04]">
           <span className="block text-roof-ink">Add more qualified roof inspections.</span>{' '}
           <span className="block text-accent-dark">Know what each homeowner needs before you go.</span>
         </h1>
-        <p className="mx-auto mt-5 max-w-[640px] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
+        <p className="mt-5 max-w-[34rem] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
           Reboot installs the system that turns homeowners who need a roof into booked inspections. Live in 2 business days.
         </p>
-        <p className="mx-auto mt-3 max-w-[640px] text-[18px] font-medium leading-[1.65] text-roof-ink md:text-[19px]">
+        <p className="mt-3 max-w-[34rem] text-[18px] font-medium leading-[1.65] text-roof-ink md:text-[19px]">
           All you have to do is answer the phone and show up to the inspection.
         </p>
         <div className="mt-8">
           <CTA className="w-full sm:w-auto" />
-          <p className="mt-3 text-[15px] text-roof-muted">Answer a few questions, then pick a time.</p>
+          <p className="mt-3 text-[17px] text-roof-muted">Answer a few questions, then pick a time.</p>
           <TextLink href="#after-you-book" className="sm:hidden">
             Already booked? See what happens next
           </TextLink>
         </div>
-        <FounderVideo />
+        </div>
+        {hasVideo ? <FounderVideo /> : <InspectionMock />}
       </div>
     </section>
   );
@@ -209,8 +258,10 @@ function Phases() {
             </li>
           ))}
         </ol>
-        <p className={`mb-5 mt-10 font-semibold ${bodyClass}`}>Kendall works each account personally.</p>
-        <CTA className="w-full sm:w-auto" />
+        <div className="mt-12 flex flex-col gap-5 border-t border-roof-border-subtle pt-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className={`font-semibold ${bodyClass}`}>Kendall works each account personally.</p>
+          <CTA className="w-full sm:w-auto" />
+        </div>
       </div>
     </section>
   );
@@ -228,8 +279,8 @@ function ExampleValue({ label, value }) {
 
 function ExampleCard() {
   return (
-    <div className={`${card} border-l-4 border-l-accent p-7 shadow-md`}>
-      <span className="mb-5 inline-block rounded-full bg-accent-bg px-2.5 py-1 text-[11px] font-bold uppercase leading-[1.4] tracking-[0.12em] text-accent-dark">
+    <div className={`${card} p-7 shadow-lift`}>
+      <span className="mb-5 inline-block rounded-full bg-accent-bg px-2.5 py-1 text-xs font-bold uppercase leading-[1.4] tracking-[0.12em] text-accent-dark">
         Example
       </span>
       <dl>
@@ -242,7 +293,7 @@ function ExampleCard() {
           </div>
         ))}
       </dl>
-      <p className="mt-5 text-sm text-roof-muted">Sample for illustration. Not a real homeowner.</p>
+      <p className="mt-5 text-[15px] text-roof-muted">Sample for illustration. Not a real homeowner.</p>
     </div>
   );
 }
@@ -267,8 +318,9 @@ function KnowBeforeYouGo() {
 function AfterYouBook() {
   return (
     <section id="after-you-book" className={`scroll-mt-24 bg-roof-surface ${sec}`}>
-      <div className="mx-auto max-w-3xl px-5 md:px-8">
-        <h2 className={`mb-8 ${h2Class}`}>What happens after you book</h2>
+      <div className={`${wrap} grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-16`}>
+        <h2 className={`${h2Class} lg:sticky lg:top-28 lg:self-start`}>What happens after you book</h2>
+        <div>
         <ol>
           {AFTER_BOOKING.map((item, i) => (
             <li key={item} className="relative pb-8 pl-[60px]">
@@ -280,6 +332,7 @@ function AfterYouBook() {
         </ol>
         <p className={`mt-2 font-semibold ${bodyClass}`}>Already booked? You're all set.</p>
         <CTA secondary className="mt-5 w-full sm:w-auto">Not booked yet? {CTA_LABEL}</CTA>
+        </div>
       </div>
     </section>
   );
@@ -287,8 +340,9 @@ function AfterYouBook() {
 
 function CheckList({ title, items, kind }) {
   const isFor = kind === 'check';
+  const surface = isFor ? 'shadow-card' : 'bg-transparent';
   return (
-    <div className={`${card} p-8 shadow-sm`}>
+    <div className={`${card} p-8 ${surface}`}>
       <h3 className="mb-5 flex items-center gap-3 text-[22px] font-bold leading-[1.2] text-roof-ink">
         <span className={isFor ? 'text-accent' : 'text-roof-muted'}>
           {isFor ? <Icon d="M5 13l4 4L19 7" /> : <Icon d="M6 6l12 12M18 6L6 18" />}
@@ -323,20 +377,23 @@ function WhoItsFor() {
 
 function OneRoofer() {
   return (
-    <section className={`border-y border-accent-border bg-accent-bg ${sec}`}>
-      <div className={`${wrap} text-center`}>
-        <div aria-hidden="true" className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-white text-accent-dark shadow-sm">
-          <Icon className="h-[26px] w-[26px]">
-            <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" />
-            <circle cx="12" cy="10" r="3" />
-          </Icon>
+    <section className={`bg-roof-surface ${sec}`}>
+      <div className={wrap}>
+        <div className="relative overflow-hidden rounded-[32px] bg-accent-bg px-6 py-12 ring-1 ring-accent-border md:px-12 lg:grid lg:grid-cols-2 lg:items-center lg:gap-16 lg:px-16 lg:py-20">
+          <div aria-hidden="true" className="hero-dots pointer-events-none absolute inset-0" />
+          <div className="relative">
+            <div aria-hidden="true" className="mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-white text-accent-dark shadow-card">
+              <Icon className="h-[26px] w-[26px]">
+                <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" />
+                <circle cx="12" cy="10" r="3" />
+              </Icon>
+            </div>
+            <h2 className={h2Class}>One roofer per service area.</h2>
+          </div>
+          <p className={`relative mt-5 max-w-[640px] lg:mt-0 ${mutedClass}`}>
+            We work with one roofing company in each service area. We won't set you up next to another Reboot roofer. Tell us your area when you book and we'll confirm it on your call.
+          </p>
         </div>
-        <h2 className="text-4xl font-extrabold leading-[1.1] tracking-[-0.03em] text-roof-ink [text-wrap:balance] md:text-[40px] lg:text-[48px]">
-          One roofer per service area.
-        </h2>
-        <p className={`mx-auto mt-5 max-w-[640px] ${mutedClass}`}>
-          We work with one roofing company in each service area. We won't set you up next to another Reboot roofer. Tell us your area when you book and we'll confirm it on your call.
-        </p>
       </div>
     </section>
   );
@@ -344,11 +401,12 @@ function OneRoofer() {
 
 function Founder() {
   return (
-    <section className={`bg-roof-surface ${sec}`}>
-      <div className="mx-auto max-w-[640px] px-5 text-center md:px-8">
-        <div aria-hidden="true" className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent-bg text-xl font-bold text-accent-dark">
+    <section className={`bg-roof-paper ${sec}`}>
+      <div className={`${wrap} grid gap-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-16`}>
+        <div aria-hidden="true" className="flex h-32 w-32 items-center justify-center rounded-[28px] bg-[linear-gradient(135deg,theme(colors.accent.DEFAULT),theme(colors.accent.dark))] text-[40px] font-extrabold tracking-[-0.03em] text-white shadow-lift lg:h-44 lg:w-44 lg:text-[56px]">
           KR
         </div>
+        <div className="max-w-[640px]">
         <h2 className={`mb-5 ${h2Class}`}>Work with Kendall directly.</h2>
         <p className={`mb-4 ${mutedClass}`}>
           I'm Kendall. I run Reboot Media and I work each account personally. You deal with me directly.
@@ -359,6 +417,7 @@ function Founder() {
             hello@rebootmedia.us
           </a>
         </p>
+        </div>
       </div>
     </section>
   );
@@ -366,13 +425,13 @@ function Founder() {
 
 function Faq() {
   return (
-    <section className={`bg-roof-paper ${sec}`}>
-      <div className="mx-auto max-w-3xl px-5 md:px-8">
-        <h2 className={`mb-8 ${h2Class}`}>Questions</h2>
+    <section className={`bg-roof-surface ${sec}`}>
+      <div className={`${wrap} grid gap-10 lg:grid-cols-[5fr_7fr] lg:gap-16`}>
+        <h2 className={`${h2Class} lg:sticky lg:top-28 lg:self-start`}>Questions</h2>
         <div className="space-y-3">
           {FAQS.map((f) => (
-            <details key={f.q} className="group rounded-2xl border border-roof-border-subtle bg-roof-surface px-6 py-5">
-              <summary className={`flex min-h-[48px] cursor-pointer list-none items-center justify-between gap-4 text-[18px] font-semibold leading-snug text-roof-ink [&::-webkit-details-marker]:hidden ${focusRing}`}>
+            <details key={f.q} className="group rounded-2xl bg-roof-surface px-6 py-5 ring-1 ring-roof-border-subtle open:shadow-card">
+              <summary className={`flex min-h-[48px] cursor-pointer list-none items-center justify-between gap-4 text-[18px] font-semibold leading-snug text-roof-ink hover:text-accent-dark [&::-webkit-details-marker]:hidden ${focusRing}`}>
                 {f.q}
                 <Icon className="h-5 w-5 shrink-0 text-roof-muted transition-transform duration-150 group-open:rotate-180 motion-reduce:transition-none" d="M6 9l6 6 6-6" />
               </summary>
@@ -387,14 +446,16 @@ function Faq() {
 
 function FormSection() {
   return (
-    <section className={`bg-roof-surface ${sec}`}>
-      <div className="mx-auto max-w-3xl px-5 md:px-8">
-        <h2 className={`mb-4 text-center ${h2Class}`}>Book your strategy call</h2>
-        <p className={`mb-2 text-center ${mutedClass}`}>Answer a few questions about your company. Then pick a time.</p>
-        <div className="mb-6 text-center">
-          <TextLink href="#after-you-book">Already booked? See what happens next</TextLink>
+    <section className={`bg-[linear-gradient(0deg,theme(colors.accent.bg)_0%,white_70%)] ${sec}`}>
+      <div className={`${wrap} grid gap-10 lg:grid-cols-[minmax(0,1fr)_560px] lg:items-start lg:gap-16`}>
+        <div>
+          <h2 className={`mb-4 ${h2Class}`}>Book your strategy call</h2>
+          <p className={`mb-2 ${mutedClass}`}>Answer a few questions about your company. Then pick a time.</p>
+          <div>
+            <TextLink href="#after-you-book">Already booked? See what happens next</TextLink>
+          </div>
         </div>
-        <div className="mx-auto max-w-[560px] rounded-3xl border border-roof-border-subtle bg-roof-surface p-6 shadow-md md:p-8 [&_#prequal-form]:scroll-mt-24">
+        <div className="w-full rounded-3xl bg-roof-surface p-6 shadow-lift ring-1 ring-roof-border-subtle md:p-8 [&_#prequal-form]:scroll-mt-24">
           <PreQualForm />
         </div>
       </div>

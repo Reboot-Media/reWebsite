@@ -21,7 +21,7 @@ body {
   .hero-dots {
     background-image: radial-gradient(theme('colors.accent.grid') 1px, transparent 1px);
     background-size: 22px 22px;
-    -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, #000 30%, transparent 75%);
-    mask-image: radial-gradient(ellipse 60% 50% at 50% 30%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 72% 40%, #000 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 70% 60% at 72% 40%, #000 30%, transparent 75%);
   }
 }
