@@ -218,7 +218,7 @@ export default function PreQualForm() {
     const e = {}
     if (!fields.fullName.trim()) e.fullName = 'Enter your first and last name.'
     else if (!isFullName(fields.fullName)) e.fullName = 'Enter your first and last name, letters only.'
-    if (!fields.company.trim()) e.company = 'Enter your company name.'
+    if (fields.company.trim().length < 2) e.company = 'Enter your company name.'
     if (!fields.email.trim()) e.email = 'Enter your email.'
     else if (!isEmail(fields.email)) e.email = 'Enter a valid email address.'
     if (!fields.phone.trim()) e.phone = 'Enter your mobile phone number.'

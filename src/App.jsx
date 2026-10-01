@@ -15,7 +15,7 @@ const PHASES = [
 const FAQS = [
   { q: 'What do I have to do?', a: 'Answer the phone and show up to the inspection.' },
   {
-    q: 'What happens on the strategy call?',
+    q: 'What happens on the free audit call?',
     a: "We look at how you get customers today and show you how this would work for your company. If it's not a fit, we'll tell you.",
   },
   { q: 'What does it cost?', a: 'It depends on your area and your goals. We go over it on the call.' },
@@ -263,7 +263,7 @@ function FormSection() {
     <section className={`bg-[linear-gradient(0deg,theme(colors.accent.bg)_0%,white_70%)] ${sec}`}>
       <div className={wrap}>
         <div className={col}>
-          <h2 className={`mb-4 ${h2Class}`}>Book your strategy call</h2>
+          <h2 className={`mb-4 ${h2Class}`}>Book your free audit</h2>
           <p className={`mb-10 ${mutedClass}`}>A few questions, then pick a time.</p>
           <div className="w-full rounded-3xl bg-roof-surface p-6 shadow-lift ring-1 ring-roof-border-subtle md:p-8 [&_#prequal-form]:scroll-mt-24">
             <PreQualForm />
