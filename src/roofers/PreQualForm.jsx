@@ -1,4 +1,5 @@
 import { useState, lazy, Suspense } from 'react'
+import { formatPhone, isCity, isEmail, isFullName, isPhone } from './validate.js'
 import { newEventId, trackLead, postLead, getAttribution } from './tracking'
 
 // react-calendly is only ever pulled in through this lazy boundary, and
@@ -6,7 +7,6 @@ import { newEventId, trackLead, postLead, getAttribution } from './tracking'
 const CalendlyEmbed = lazy(() => import('./CalendlyEmbed.jsx'))
 
 const TOTAL_STEPS = 3
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const initialFields = {
   fullName: '',
@@ -217,10 +217,12 @@ export default function PreQualForm() {
   function validateStep1() {
     const e = {}
     if (!fields.fullName.trim()) e.fullName = 'Enter your first and last name.'
-    if (!fields.company.trim()) e.company = 'Enter your company name.'
+    else if (!isFullName(fields.fullName)) e.fullName = 'Enter your first and last name, letters only.'
+    if (fields.company.trim().length < 2) e.company = 'Enter your company name.'
     if (!fields.email.trim()) e.email = 'Enter your email.'
-    else if (!EMAIL_RE.test(fields.email)) e.email = 'Enter a valid email address.'
+    else if (!isEmail(fields.email)) e.email = 'Enter a valid email address.'
     if (!fields.phone.trim()) e.phone = 'Enter your mobile phone number.'
+    else if (!isPhone(fields.phone)) e.phone = 'Enter a 10-digit US phone number, like (555) 234-5678.'
     return e
   }
 
@@ -228,6 +230,7 @@ export default function PreQualForm() {
     const e = {}
     if (!fields.decisionMaker) e.decisionMaker = 'Select an option.'
     if (!fields.city.trim()) e.city = 'Enter the city you operate in.'
+    else if (!isCity(fields.city)) e.city = 'Enter a city name, letters only.'
     if (!fields.googleAdsStatus) e.googleAdsStatus = 'Select an option.'
     if (!fields.adSpend) e.adSpend = 'Select an option.'
     if (!fields.drivingFactor.trim()) e.drivingFactor = "Tell us what's driving you to look now."
@@ -365,7 +368,7 @@ export default function PreQualForm() {
                 type="tel"
                 label="Mobile phone"
                 value={fields.phone}
-                onChange={(v) => update('phone', v)}
+                onChange={(v) => update('phone', formatPhone(v))}
                 error={errors.phone}
                 autoComplete="tel"
               />
