@@ -18,11 +18,11 @@ Set in Cloudflare Pages → your project → Settings → Environment variables.
 | Var | Required? | Where it lives | Notes |
 |---|---|---|---|
 | `META_CAPI_TOKEN` | Required for CAPI | Server-side secret, dashboard only | **Never** commit this or prefix it `VITE_` — that would ship it in the public JS bundle. If it's ever exposed, rotate it in Meta Events Manager → Settings → Conversions API. |
-| `ZAPIER_WEBHOOK_URL` | Required for lead delivery | Server-side secret, dashboard only | The GHL inbound webhook URL, stored in Cloudflare as `ZAPIER_WEBHOOK_URL`. **The name is stale — there is no Zapier in this path anymore.** It's kept as-is for compatibility with the code that reads it; do not "fix" it to something GHL-specific without also updating `functions/api/lead.js`. |
+| `ZAPIER_WEBHOOK_URL` | Required for lead delivery | Server-side secret, dashboard only | The GHL inbound webhook URL, stored in Cloudflare as `ZAPIER_WEBHOOK_URL`. **The name is stale — there is no Zapier in this path.** `functions/api/lead.js` reads `GHL_WEBHOOK_URL` first and falls back to this, so the existing variable keeps working; renaming it to `GHL_WEBHOOK_URL` is optional. |
 | `META_TEST_EVENT_CODE` | Optional, launch-day only | Server-side, dashboard | Routes CAPI events to Meta's Test Events tab instead of live reporting. **Remove after verification** (step 6.8) — leaving it set silently blackholes real conversions from Ads Manager reporting. See "the rotating test-code trap" below before you use this. |
 | `META_DATASET_ID` | Optional | Server-side, dashboard | Defaults to the pixel ID `943826127904095` if unset. Meta dataset IDs and pixel IDs are the same value, so you only need to set this if you're pointing at a different pixel. |
 
-These four are the only variables `functions/api/lead.js` reads. Confirmed by reading the source directly (`context.env.META_CAPI_TOKEN`, `context.env.ZAPIER_WEBHOOK_URL`, `context.env.META_TEST_EVENT_CODE`, `context.env.META_DATASET_ID`).
+These are the only variables `functions/api/lead.js` reads (plus the optional `GHL_WEBHOOK_URL`, which takes precedence over `ZAPIER_WEBHOOK_URL`). Confirmed by reading the source directly (`context.env.META_CAPI_TOKEN`, `context.env.ZAPIER_WEBHOOK_URL`, `context.env.META_TEST_EVENT_CODE`, `context.env.META_DATASET_ID`).
 
 > **Wrong names — these appear in older vault docs and will silently fail:**
 > - `META_CAPI_ACCESS_TOKEN` — the function reads `META_CAPI_TOKEN`. Set the wrong one and CAPI just never fires.
@@ -78,7 +78,7 @@ Notes on the payload:
 
 Suggested GHL mapping:
 - **Contact fields:** `fullName` → name, `email` → email, `phone` → phone.
-- **Contact tags:** map `tags[]` directly to GHL contact tags — `Qualified`, `Tier2`, `LowBudget`, `Nurture`, `Booked`.
+- **Contact tags:** map `tags[]` directly to GHL contact tags — `Qualified`, `Tier2`, `LowBudget`, `Nurture`, `Booked`, `Partial`. `Partial` arrives when someone finishes step 1 only (`stage: "partial"`, contact fields only); if they finish step 2, a second payload (`stage: "complete"`) updates the same contact. Remove `Partial` in the workflow when `stage` is `complete` if you want it to mean "never finished."
 - **Custom fields to create:** Ad Spend, Decision Maker, Google Ads History (`googleAdsStatus`), UTM Campaign, UTM Source, fbclid, event_id (useful for cross-referencing a lead against Meta Events Manager). `city` maps to GHL's native City field — no custom field needed.
 - **Pipeline:** a dedicated opportunity/pipeline with stages `New → Contacted → Booked → Won/Lost`.
 
