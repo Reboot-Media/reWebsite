@@ -4,7 +4,7 @@ import { captureAttribution } from './roofers/tracking.js';
 
 const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/7A6Etcubfpw?rel=0';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
-const CTA_LABEL = 'Book my strategy call';
+const CTA_LABEL = 'Book my free Audit';
 
 const PHASES = [
   { name: 'Evaluate', text: "We look at what you're doing now and keep what works." },
