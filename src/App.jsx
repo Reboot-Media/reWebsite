@@ -8,30 +8,65 @@ const CTA_LABEL = 'Book a Strategy Call';
 
 const PHASES = [
   { name: 'Evaluate', text: "We look at what you're doing now and keep what works." },
-  { name: 'Reboot', text: "We set everything up. You're live in 2 business days." },
-  { name: 'Compound', text: 'It learns which calls turn into jobs, so it gets better over time.' },
+  { name: 'Reboot', text: "We set up your ads and install a storm tracker that watches your area for you. You're live in 2 business days." },
+  { name: 'Compound', text: 'The system learns which calls turn into booked jobs, so results compound every month.' },
 ];
 
 const FAQS = [
-  { q: 'What do I have to do?', a: 'Answer the phone and show up to the inspection.' },
   {
-    q: 'What happens on the strategy call?',
-    a: "We look at how you get customers today and show you how this would work for your company. If it's not a fit, we'll tell you.",
+    q: "I don't pay for leads.",
+    a: "You won't. You pay for ads that run in your company's name. Homeowners who search for a roofer find you and book straight onto your calendar.",
   },
-  { q: 'What does it cost?', a: "The strategy call is free. Pricing depends on your company, and we'll go over it on the call." },
+  {
+    q: "We've tried ads before. The ROI wasn't there.",
+    a: "Most setups chase clicks, not inspections. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
+  },
+  {
+    q: 'Can the ads focus on certain areas?',
+    a: 'Yes. You pick your service area, and we can push harder on the towns and neighborhoods you want more work in.',
+  },
+  {
+    q: 'Can the ads focus on certain jobs?',
+    a: 'Yes. We aim the ads at the work you want more of, and homeowners tell you what they need before they book.',
+  },
+  {
+    q: 'Do you track storms?',
+    a: "Yes. We install a storm tracker that watches your area for you, so you know where weather hit without door knocking or chasing storms yourself.",
+  },
+  {
+    q: 'Do you work with my competitors?',
+    a: "No. We work with one roofer per service area, so your homeowners never get sold to the company down the street.",
+  },
+  {
+    q: "We're booked out right now.",
+    a: 'Good. The system gets better the longer it runs, so starting before the backlog clears keeps your crews busy next season.',
+  },
+  {
+    q: 'What does it cost?',
+    a: "We build a tailor-made plan for every roofer, based on your area and your goals. We go over pricing on the call.",
+  },
   {
     q: 'Is there a contract?',
-    a: 'Yes, 90 days. Your ad budget is paid straight to the ad platform, not to us. You keep your ad account and every homeowner who came in, even if you leave.',
+    a: 'Yes, 90 days. You keep your ad account and every homeowner who came in, even if you leave.',
   },
   {
-    q: 'How is this different from an agency?',
-    a: "We build the system ourselves, with computer science degrees and 10 years in marketing behind it. We start by keeping what already works.",
+    q: 'What happens on the strategy call?',
+    a: "We look at where your inspections come from today and show you what we'd run. If it's not a fit, we'll tell you.",
   },
 ];
 
+const SAMPLE_BOOKING = {
+  name: 'Mike Henderson',
+  initials: 'MH',
+  place: 'Ridgeview Dr, Plano, TX',
+  phone: '(972) 555-0148',
+};
+
 const EXAMPLE_ROWS = [
   ['Needs', 'Storm damage'],
-  ['Inspection', 'Thursday morning'],
+  ['Inspection', 'Thursday, 9:00 AM'],
+  ['Roof age', 'About 12 years'],
+  ['Insurance', 'Not filed yet'],
   ['Their note', '"Shingles came off the back slope after the wind."'],
 ];
 
@@ -118,10 +153,10 @@ function Hero() {
         <div>
           <p className="mb-5 text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.14em] text-accent">For residential roofing companies</p>
           <h1 className="text-[36px] font-extrabold leading-[1.1] tracking-[-0.035em] [text-wrap:balance] md:text-[52px] lg:text-[56px] lg:leading-[1.04]">
-            <span className="text-roof-ink">Roof inspections, booked for you.</span>
+            <span className="text-roof-ink">Consistent, qualified roof inspections. Every month.</span>
           </h1>
           <p className="mt-5 max-w-[34rem] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
-            We set up the system that brings homeowners to your calendar. You answer the phone and show up.
+            We build and run your ads, so homeowners searching for a roofer in your area book inspections straight onto your calendar. Every month.
           </p>
           <div className="mt-8">
             <CTA className="w-full sm:w-auto" />
@@ -166,9 +201,17 @@ function ExampleValue({ label, value }) {
 function ExampleCard() {
   return (
     <div className={`${card} p-7 shadow-card`}>
-      <span className="mb-5 inline-block rounded-full bg-accent-bg px-2.5 py-1 text-xs font-bold uppercase leading-[1.4] tracking-[0.12em] text-accent-dark">
-        Example
-      </span>
+      <div className="mb-6 flex items-center gap-3.5 border-b border-roof-border-subtle pb-5">
+        <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-bg text-[15px] font-bold text-accent-dark">
+          {SAMPLE_BOOKING.initials}
+        </span>
+        <div className="min-w-0">
+          <p className="text-[17px] font-bold leading-[1.3] text-roof-ink">{SAMPLE_BOOKING.name}</p>
+          <p className="text-[15px] leading-[1.4] text-roof-muted">
+            {SAMPLE_BOOKING.place} · {SAMPLE_BOOKING.phone}
+          </p>
+        </div>
+      </div>
       <dl>
         {EXAMPLE_ROWS.map(([k, v]) => (
           <div key={k} className="mb-4">
@@ -179,7 +222,6 @@ function ExampleCard() {
           </div>
         ))}
       </dl>
-      <p className="mt-5 text-[15px] text-roof-muted">Sample for illustration.</p>
     </div>
   );
 }
@@ -216,10 +258,9 @@ function WhoItsFor() {
 }
 
 const CREDENTIALS = [
+  'Over 10 years combined in marketing, home services, and construction',
   "Master's and bachelor's degrees in computer science",
-  '10 years in marketing',
-  'Hands-on experience in home services and construction',
-  'Working with Whitestone Roofing',
+  'Hands-on experience in home services and construction, not just marketing',
 ];
 
 function Team() {
