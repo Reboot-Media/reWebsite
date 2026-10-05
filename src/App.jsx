@@ -39,7 +39,7 @@ const FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: "It depends on your area and your goals. Your ad budget goes straight to Google, not to us. We go over pricing on the call.",
+    a: "It depends on your area and your goals. Your ad budget goes straight to the ad platform, not to us. We go over pricing on the call.",
   },
   {
     q: 'Is there a contract?',
@@ -167,7 +167,7 @@ function Hero() {
             <span className="text-roof-ink">Consistent, qualified roof inspections. Every month.</span>
           </h1>
           <p className="mt-5 max-w-[34rem] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
-            We build and run your Google ads, so homeowners searching for a roofer in your area book inspections straight onto your calendar. Every month.
+            We build and run your ads, so homeowners searching for a roofer in your area book inspections straight onto your calendar. Every month.
           </p>
           <div className="mt-8">
             <CTA className="w-full sm:w-auto" />
