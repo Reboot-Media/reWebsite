@@ -23,10 +23,6 @@ const FAQS = [
     q: 'Is there a contract?',
     a: 'Yes, 90 days. Your ad budget is paid straight to the ad platform, not to us. You keep your ad account and every homeowner who came in, even if you leave.',
   },
-  {
-    q: 'How is this different from an agency?',
-    a: "We build the system ourselves, with computer science degrees and 10 years in marketing behind it. We start by keeping what already works.",
-  },
 ];
 
 const SAMPLE_BOOKING = {
