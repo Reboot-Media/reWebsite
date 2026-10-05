@@ -127,10 +127,10 @@ function Hero() {
         <div>
           <p className="mb-5 text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.14em] text-accent">For residential roofing companies</p>
           <h1 className="text-[36px] font-extrabold leading-[1.1] tracking-[-0.035em] [text-wrap:balance] md:text-[52px] lg:text-[56px] lg:leading-[1.04]">
-            <span className="text-roof-ink">Roof inspections, booked for you.</span>
+            <span className="text-roof-ink">Consistent, qualified inspections every month.</span>
           </h1>
           <p className="mt-5 max-w-[34rem] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
-            We set up the system that brings homeowners to your calendar. You answer the phone and show up.
+            We set up the system that brings homeowners to your calendar consistently, every month. You answer the phone and show up.
           </p>
           <div className="mt-8">
             <CTA className="w-full sm:w-auto" />
