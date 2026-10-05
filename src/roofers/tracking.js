@@ -203,10 +203,14 @@ export function postSchedule(payload) {
 }
 
 // ---------------------------------------------------------------------------
-// Google Analytics 4
+// Google tag: Analytics 4 + Google Ads remarketing
 //
-// GA_MEASUREMENT_ID is the property's public "G-..." id (not a secret).
-// Leave it empty and GA stays off: initAnalytics() and trackEvent() no-op.
+// Both ids are public (not secrets). Leave one empty and that half stays off;
+// leave both empty and initAnalytics() / trackEvent() no-op.
+//   GA_MEASUREMENT_ID   Analytics property id, "G-..."
+//   GOOGLE_ADS_ID       Ads account tag id, "AW-..." (remarketing audiences)
+//   ADS_CONVERSIONS     Ads conversion labels for a qualified lead and a
+//                       booked call, from Ads > Goals > Conversions
 // On top of GA's own enhanced measurement (page views, outbound clicks,
 // site search, file downloads), initAnalytics() reports:
 //   - scroll_depth at 25/50/75/90% of the page
@@ -215,6 +219,8 @@ export function postSchedule(payload) {
 // ---------------------------------------------------------------------------
 
 export const GA_MEASUREMENT_ID = ''
+export const GOOGLE_ADS_ID = ''
+export const ADS_CONVERSIONS = { generate_lead: '', book_call: '' }
 
 let analyticsStarted = false
 
@@ -229,6 +235,10 @@ export function trackEvent(name, params = {}) {
   if (!gaReady()) return
   try {
     window.gtag('event', name, params)
+    const label = ADS_CONVERSIONS[name]
+    if (GOOGLE_ADS_ID && label) {
+      window.gtag('event', 'conversion', { send_to: `${GOOGLE_ADS_ID}/${label}` })
+    }
   } catch (err) {
     console.error('[tracking] trackEvent failed', err)
   }
@@ -273,7 +283,8 @@ function watchSections() {
  * once (StrictMode runs effects twice in dev).
  */
 export function initAnalytics() {
-  if (analyticsStarted || !GA_MEASUREMENT_ID || typeof window === 'undefined') return
+  const tagId = GA_MEASUREMENT_ID || GOOGLE_ADS_ID
+  if (analyticsStarted || !tagId || typeof window === 'undefined') return
   analyticsStarted = true
   try {
     window.dataLayer = window.dataLayer || []
@@ -281,11 +292,12 @@ export function initAnalytics() {
       window.dataLayer.push(arguments)
     }
     window.gtag('js', new Date())
-    window.gtag('config', GA_MEASUREMENT_ID)
+    if (GA_MEASUREMENT_ID) window.gtag('config', GA_MEASUREMENT_ID)
+    if (GOOGLE_ADS_ID) window.gtag('config', GOOGLE_ADS_ID)
 
     const script = document.createElement('script')
     script.async = true
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${tagId}`
     document.head.appendChild(script)
 
     watchScrollDepth()
