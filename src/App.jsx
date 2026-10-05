@@ -29,9 +29,18 @@ const FAQS = [
   },
 ];
 
+const SAMPLE_BOOKING = {
+  name: 'Mike Henderson',
+  initials: 'MH',
+  place: 'Ridgeview Dr, Plano, TX',
+  phone: '(972) 555-0148',
+};
+
 const EXAMPLE_ROWS = [
   ['Needs', 'Storm damage'],
-  ['Inspection', 'Thursday morning'],
+  ['Inspection', 'Thursday, 9:00 AM'],
+  ['Roof age', 'About 12 years'],
+  ['Insurance', 'Not filed yet'],
   ['Their note', '"Shingles came off the back slope after the wind."'],
 ];
 
@@ -166,9 +175,17 @@ function ExampleValue({ label, value }) {
 function ExampleCard() {
   return (
     <div className={`${card} p-7 shadow-card`}>
-      <span className="mb-5 inline-block rounded-full bg-accent-bg px-2.5 py-1 text-xs font-bold uppercase leading-[1.4] tracking-[0.12em] text-accent-dark">
-        Example
-      </span>
+      <div className="mb-6 flex items-center gap-3.5 border-b border-roof-border-subtle pb-5">
+        <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-bg text-[15px] font-bold text-accent-dark">
+          {SAMPLE_BOOKING.initials}
+        </span>
+        <div className="min-w-0">
+          <p className="text-[17px] font-bold leading-[1.3] text-roof-ink">{SAMPLE_BOOKING.name}</p>
+          <p className="text-[15px] leading-[1.4] text-roof-muted">
+            {SAMPLE_BOOKING.place} · {SAMPLE_BOOKING.phone}
+          </p>
+        </div>
+      </div>
       <dl>
         {EXAMPLE_ROWS.map(([k, v]) => (
           <div key={k} className="mb-4">
@@ -179,7 +196,7 @@ function ExampleCard() {
           </div>
         ))}
       </dl>
-      <p className="mt-5 text-[15px] text-roof-muted">Sample for illustration.</p>
+      <p className="mt-5 text-[13px] text-roof-muted">Sample booking</p>
     </div>
   );
 }
