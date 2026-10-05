@@ -8,20 +8,46 @@ const CTA_LABEL = 'Book a Strategy Call';
 
 const PHASES = [
   { name: 'Evaluate', text: "We look at what you're doing now and keep what works." },
-  { name: 'Reboot', text: "We set everything up. You're live in 2 business days." },
+  { name: 'Reboot', text: "We set up your ads and install a storm tracker that watches your area for you. You're live in 2 business days." },
   { name: 'Compound', text: 'The system learns which calls turn into booked jobs, so results compound every month.' },
 ];
 
 const FAQS = [
-  { q: 'What do I have to do?', a: 'Answer the phone and show up to the inspection.' },
   {
-    q: 'What happens on the strategy call?',
-    a: "We look at how you get customers today and show you how this would work for your company. If it's not a fit, we'll tell you.",
+    q: "I don't pay for leads.",
+    a: "You won't. You pay for ads that run in your company's name. Homeowners who search for a roofer find you and book straight onto your calendar.",
   },
-  { q: 'What does it cost?', a: "The strategy call is free. Pricing depends on your company, and we'll go over it on the call." },
+  {
+    q: "We've tried ads before. The ROI wasn't there.",
+    a: "Most setups chase clicks, not inspections. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
+  },
+  {
+    q: 'Can the ads focus on certain areas?',
+    a: 'Yes. You pick your service area, and we can push harder on the towns and neighborhoods you want more work in.',
+  },
+  {
+    q: 'Can the ads focus on certain jobs?',
+    a: 'Yes. We aim the ads at the work you want more of, and homeowners tell you what they need before they book.',
+  },
+  {
+    q: 'Do you track storms?',
+    a: "Yes. We install a storm tracker that watches your area for you, so you know where weather hit without door knocking or chasing storms yourself.",
+  },
+  {
+    q: "We're booked out right now.",
+    a: 'Good. The system gets better the longer it runs, so starting before the backlog clears keeps your crews busy next season.',
+  },
+  {
+    q: 'What does it cost?',
+    a: "It depends on your area and your goals. Your ad budget goes straight to Google, not to us. We go over pricing on the call.",
+  },
   {
     q: 'Is there a contract?',
-    a: 'Yes, 90 days. Your ad budget is paid straight to the ad platform, not to us. You keep your ad account and every homeowner who came in, even if you leave.',
+    a: 'Yes, 90 days. You keep your ad account and every homeowner who came in, even if you leave.',
+  },
+  {
+    q: 'What happens on the strategy call?',
+    a: "We look at where your inspections come from today and show you what we'd run. If it's not a fit, we'll tell you.",
   },
 ];
 
@@ -138,10 +164,10 @@ function Hero() {
         <div>
           <p className="mb-5 text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.14em] text-accent">For residential roofing companies</p>
           <h1 className="text-[36px] font-extrabold leading-[1.1] tracking-[-0.035em] [text-wrap:balance] md:text-[52px] lg:text-[56px] lg:leading-[1.04]">
-            <span className="text-roof-ink">Consistent, qualified inspections every month.</span>
+            <span className="text-roof-ink">Consistent, qualified roof inspections. Every month.</span>
           </h1>
           <p className="mt-5 max-w-[34rem] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
-            We bring homeowners who are actually looking for a roofer and want help to your calendar, every month. Inspections you can actually close.
+            We build and run your Google ads, so homeowners searching for a roofer in your area book inspections straight onto your calendar. Every month.
           </p>
           <div className="mt-8">
             <CTA className="w-full sm:w-auto" />
