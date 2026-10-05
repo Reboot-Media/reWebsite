@@ -9,7 +9,7 @@ const CTA_LABEL = 'Book a Strategy Call';
 const PHASES = [
   { name: 'Evaluate', text: "We look at what you're doing now and keep what works." },
   { name: 'Reboot', text: "We set everything up. You're live in 2 business days." },
-  { name: 'Compound', text: 'It learns which calls turn into jobs, so it gets better over time.' },
+  { name: 'Compound', text: 'The system learns which calls turn into booked jobs, so results compound every month.' },
 ];
 
 const FAQS = [
@@ -42,6 +42,21 @@ const EXAMPLE_ROWS = [
   ['Roof age', 'About 12 years'],
   ['Insurance', 'Not filed yet'],
   ['Their note', '"Shingles came off the back slope after the wind."'],
+];
+
+const DIFFERENCES = [
+  {
+    title: 'Qualified, not just leads',
+    text: 'Homeowners answer a few questions before they book. You only drive out to people who are looking for a roofer and want help.',
+  },
+  {
+    title: 'One roofer per area',
+    text: "We work with one roofer per service area. Your homeowners don't get sold to the company down the street.",
+  },
+  {
+    title: 'You own everything',
+    text: 'Your ad account and every homeowner who came in stay yours, even if you leave.',
+  },
 ];
 
 const focusRing = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
@@ -143,6 +158,24 @@ function Hero() {
   );
 }
 
+function Different() {
+  return (
+    <section className={`bg-roof-paper ${sec}`}>
+      <div className={wrap}>
+        <h2 className={h2Class}>How this is different from other agencies</h2>
+        <ul className="mt-10 grid gap-6 md:grid-cols-3">
+          {DIFFERENCES.map((d) => (
+            <li key={d.title} className={`${card} p-7`}>
+              <h3 className="mb-2.5 text-[20px] font-bold leading-[1.2] text-roof-ink">{d.title}</h3>
+              <p className={mutedClass}>{d.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 function Phases() {
   return (
     <section className={`bg-roof-surface ${sec}`}>
@@ -196,7 +229,6 @@ function ExampleCard() {
           </div>
         ))}
       </dl>
-      <p className="mt-5 text-[13px] text-roof-muted">Sample booking</p>
     </div>
   );
 }
@@ -233,9 +265,9 @@ function WhoItsFor() {
 }
 
 const CREDENTIALS = [
+  'Over 10 years combined in marketing, home services, and construction',
   "Master's and bachelor's degrees in computer science",
-  '10 years in marketing',
-  'Hands-on experience in home services and construction',
+  'Hands-on experience in home services and construction, not just marketing',
 ];
 
 function Team() {
@@ -347,6 +379,7 @@ export default function App() {
       <Header />
       <main>
         <Hero />
+        <Different />
         <Phases />
         <KnowBeforeYouGo />
         <WhoItsFor />
