@@ -130,7 +130,7 @@ function Hero() {
             <span className="text-roof-ink">Consistent, qualified inspections every month.</span>
           </h1>
           <p className="mt-5 max-w-[34rem] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
-            We set up the system that brings homeowners to your calendar consistently, every month. You answer the phone and show up.
+            We bring homeowners who are actually looking for a roofer and want help to your calendar, every month. Inspections you can actually close.
           </p>
           <div className="mt-8">
             <CTA className="w-full sm:w-auto" />
