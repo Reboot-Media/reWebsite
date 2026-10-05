@@ -203,45 +203,119 @@ export function postSchedule(payload) {
 }
 
 // ---------------------------------------------------------------------------
-// Google tag: Analytics 4 + Google Ads remarketing
+// Site analytics: Google Analytics 4, Microsoft Clarity, LinkedIn Insight Tag,
+// and (optional, dormant) Google Ads remarketing.
 //
-// Both ids are public (not secrets). Leave one empty and that half stays off;
-// leave both empty and initAnalytics() / trackEvent() no-op.
-//   GA_MEASUREMENT_ID   Analytics property id, "G-..."
-//   GOOGLE_ADS_ID       Ads account tag id, "AW-..." (remarketing audiences)
-//   ADS_CONVERSIONS     Ads conversion labels for a qualified lead and a
-//                       booked call, from Ads > Goals > Conversions
-// On top of GA's own enhanced measurement (page views, outbound clicks,
-// site search, file downloads), initAnalytics() reports:
+// Every id below is public (not a secret). Each tracker stays off until its id
+// is set, either here or as a Cloudflare Pages build variable of the same name
+// (Settings > Variables, then redeploy):
+//   VITE_GA_MEASUREMENT_ID   GA4 property, "G-..."
+//   VITE_CLARITY_PROJECT_ID  Clarity project id (recordings + heatmaps)
+//   VITE_LINKEDIN_PARTNER_ID LinkedIn Insight Tag partner id (numbers only)
+//   VITE_LINKEDIN_LEAD_CONVERSION / VITE_LINKEDIN_BOOK_CONVERSION
+//                            LinkedIn conversion ids for a qualified lead and a
+//                            booked call (optional)
+//   VITE_GOOGLE_ADS_ID       Google Ads tag, "AW-..." (only if Google Ads runs)
+//   VITE_ADS_LEAD_LABEL / VITE_ADS_BOOK_LABEL
+//                            Google Ads conversion labels (optional)
+//
+// initAnalytics() loads whichever trackers have ids and reports, on top of
+// GA's own page views and outbound clicks:
 //   - scroll_depth at 25/50/75/90% of the page
 //   - section_view the first time each [data-section] is half on screen
-// and trackEvent() lets components report clicks, FAQ opens and form steps.
+// trackEvent() sends the same named event to GA and Clarity, and fires the
+// LinkedIn / Google Ads conversion mapped to it, if any.
 // ---------------------------------------------------------------------------
 
-export const GA_MEASUREMENT_ID = ''
-export const GOOGLE_ADS_ID = ''
-export const ADS_CONVERSIONS = { generate_lead: '', book_call: '' }
+const env = import.meta.env || {}
+
+export const TRACKING_IDS = {
+  ga: env.VITE_GA_MEASUREMENT_ID || '',
+  clarity: env.VITE_CLARITY_PROJECT_ID || '',
+  linkedin: env.VITE_LINKEDIN_PARTNER_ID || '',
+  googleAds: env.VITE_GOOGLE_ADS_ID || '',
+}
+
+const LINKEDIN_CONVERSIONS = {
+  generate_lead: env.VITE_LINKEDIN_LEAD_CONVERSION || '',
+  book_call: env.VITE_LINKEDIN_BOOK_CONVERSION || '',
+}
+
+const ADS_CONVERSIONS = {
+  generate_lead: env.VITE_ADS_LEAD_LABEL || '',
+  book_call: env.VITE_ADS_BOOK_LABEL || '',
+}
 
 let analyticsStarted = false
 
-function gaReady() {
-  return typeof window !== 'undefined' && typeof window.gtag === 'function'
+function loadScript(src) {
+  const script = document.createElement('script')
+  script.async = true
+  script.src = src
+  document.head.appendChild(script)
 }
 
 /**
- * Send a GA4 event. Never throws; silent when GA is off.
+ * Send a named event to every tracker that is on. Never throws; silent
+ * when nothing is configured.
  */
 export function trackEvent(name, params = {}) {
-  if (!gaReady()) return
+  if (typeof window === 'undefined') return
   try {
-    window.gtag('event', name, params)
-    const label = ADS_CONVERSIONS[name]
-    if (GOOGLE_ADS_ID && label) {
-      window.gtag('event', 'conversion', { send_to: `${GOOGLE_ADS_ID}/${label}` })
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', name, params)
+      const label = ADS_CONVERSIONS[name]
+      if (TRACKING_IDS.googleAds && label) {
+        window.gtag('event', 'conversion', { send_to: `${TRACKING_IDS.googleAds}/${label}` })
+      }
+    }
+    if (typeof window.clarity === 'function') {
+      window.clarity('event', name)
+    }
+    const conversionId = LINKEDIN_CONVERSIONS[name]
+    if (conversionId && typeof window.lintrk === 'function') {
+      window.lintrk('track', { conversion_id: Number(conversionId) })
     }
   } catch (err) {
     console.error('[tracking] trackEvent failed', err)
   }
+}
+
+function startGoogleTag() {
+  const tagId = TRACKING_IDS.ga || TRACKING_IDS.googleAds
+  if (!tagId) return
+  window.dataLayer = window.dataLayer || []
+  window.gtag = function gtag() {
+    window.dataLayer.push(arguments)
+  }
+  window.gtag('js', new Date())
+  if (TRACKING_IDS.ga) window.gtag('config', TRACKING_IDS.ga)
+  if (TRACKING_IDS.googleAds) window.gtag('config', TRACKING_IDS.googleAds)
+  loadScript(`https://www.googletagmanager.com/gtag/js?id=${tagId}`)
+}
+
+function startClarity() {
+  if (!TRACKING_IDS.clarity) return
+  window.clarity =
+    window.clarity ||
+    function clarity() {
+      ;(window.clarity.q = window.clarity.q || []).push(arguments)
+    }
+  loadScript(`https://www.clarity.ms/tag/${TRACKING_IDS.clarity}`)
+}
+
+function startLinkedIn() {
+  if (!TRACKING_IDS.linkedin) return
+  window._linkedin_partner_id = TRACKING_IDS.linkedin
+  window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || []
+  window._linkedin_data_partner_ids.push(TRACKING_IDS.linkedin)
+  if (!window.lintrk) {
+    window.lintrk = function lintrk(a, b) {
+      window.lintrk.q.push([a, b])
+    }
+    window.lintrk.q = []
+  }
+  loadScript('https://snap.licdn.com/li.lms-analytics/insight.min.js')
 }
 
 function watchScrollDepth() {
@@ -279,30 +353,20 @@ function watchSections() {
 }
 
 /**
- * Load gtag.js and start the page-level watchers. Safe to call more than
- * once (StrictMode runs effects twice in dev).
+ * Load every configured tracker and start the page-level watchers. Safe to
+ * call more than once (StrictMode runs effects twice in dev).
  */
 export function initAnalytics() {
-  const tagId = GA_MEASUREMENT_ID || GOOGLE_ADS_ID
-  if (analyticsStarted || !tagId || typeof window === 'undefined') return
+  if (analyticsStarted || typeof window === 'undefined') return
+  if (!Object.values(TRACKING_IDS).some(Boolean)) return
   analyticsStarted = true
-  try {
-    window.dataLayer = window.dataLayer || []
-    window.gtag = function gtag() {
-      window.dataLayer.push(arguments)
+  for (const start of [startGoogleTag, startClarity, startLinkedIn]) {
+    try {
+      start()
+    } catch (err) {
+      console.error('[tracking] tracker failed to start', err)
     }
-    window.gtag('js', new Date())
-    if (GA_MEASUREMENT_ID) window.gtag('config', GA_MEASUREMENT_ID)
-    if (GOOGLE_ADS_ID) window.gtag('config', GOOGLE_ADS_ID)
-
-    const script = document.createElement('script')
-    script.async = true
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${tagId}`
-    document.head.appendChild(script)
-
-    watchScrollDepth()
-    watchSections()
-  } catch (err) {
-    console.error('[tracking] initAnalytics failed', err)
   }
+  watchScrollDepth()
+  watchSections()
 }
