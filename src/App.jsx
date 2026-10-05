@@ -34,6 +34,10 @@ const FAQS = [
     a: "Yes. We install a storm tracker that watches your area for you, so you know where weather hit without door knocking or chasing storms yourself.",
   },
   {
+    q: 'Do you work with my competitors?',
+    a: "No. We work with one roofer per service area, so your homeowners never get sold to the company down the street.",
+  },
+  {
     q: "We're booked out right now.",
     a: 'Good. The system gets better the longer it runs, so starting before the backlog clears keeps your crews busy next season.',
   },
@@ -64,21 +68,6 @@ const EXAMPLE_ROWS = [
   ['Roof age', 'About 12 years'],
   ['Insurance', 'Not filed yet'],
   ['Their note', '"Shingles came off the back slope after the wind."'],
-];
-
-const DIFFERENCES = [
-  {
-    title: 'Qualified, not just leads',
-    text: 'Homeowners answer a few questions before they book. You only drive out to people who are looking for a roofer and want help.',
-  },
-  {
-    title: 'One roofer per area',
-    text: "We work with one roofer per service area. Your homeowners don't get sold to the company down the street.",
-  },
-  {
-    title: 'You own everything',
-    text: 'Your ad account and every homeowner who came in stay yours, even if you leave.',
-  },
 ];
 
 const focusRing = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
@@ -175,24 +164,6 @@ function Hero() {
           </div>
         </div>
         <FounderVideo />
-      </div>
-    </section>
-  );
-}
-
-function Different() {
-  return (
-    <section className={`bg-roof-paper ${sec}`}>
-      <div className={wrap}>
-        <h2 className={h2Class}>How this is different from other agencies</h2>
-        <ul className="mt-10 grid gap-6 md:grid-cols-3">
-          {DIFFERENCES.map((d) => (
-            <li key={d.title} className={`${card} p-7`}>
-              <h3 className="mb-2.5 text-[20px] font-bold leading-[1.2] text-roof-ink">{d.title}</h3>
-              <p className={mutedClass}>{d.text}</p>
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
   );
@@ -401,7 +372,6 @@ export default function App() {
       <Header />
       <main>
         <Hero />
-        <Different />
         <Phases />
         <KnowBeforeYouGo />
         <WhoItsFor />
