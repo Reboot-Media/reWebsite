@@ -120,9 +120,11 @@ export function newEventId() {
 }
 
 /**
- * Fire the Meta "Lead" standard event for a qualified pre-qual pass.
+ * Fire the Meta "Lead" standard event for a qualified pre-qual pass, and
+ * the matching GA4 generate_lead event.
  */
 export function trackLead(eventId) {
+  trackEvent('generate_lead', { form: 'roofer_prequal' })
   if (typeof window === 'undefined' || typeof window.fbq !== 'function') return
   try {
     window.fbq('track', 'Lead', { content_name: 'roofer_prequal' }, { eventID: eventId })
@@ -132,9 +134,11 @@ export function trackLead(eventId) {
 }
 
 /**
- * Fire a Meta custom event marking a funnel step (PrequalStart, etc.).
+ * Fire a Meta custom event marking a funnel step (PrequalStart, etc.),
+ * mirrored to GA4 as form_step.
  */
 export function trackStep(name) {
+  trackEvent('form_step', { step: name })
   if (typeof window === 'undefined' || typeof window.fbq !== 'function') return
   try {
     window.fbq('trackCustom', name)
@@ -144,9 +148,11 @@ export function trackStep(name) {
 }
 
 /**
- * Fire the Meta "Schedule" standard event when a Calendly booking completes.
+ * Fire the Meta "Schedule" standard event when a Calendly booking
+ * completes, and the matching GA4 book_call event.
  */
 export function trackSchedule(eventId) {
+  trackEvent('book_call')
   if (typeof window === 'undefined' || typeof window.fbq !== 'function') return
   try {
     window.fbq('track', 'Schedule', {}, { eventID: eventId })
@@ -194,4 +200,97 @@ export function postLead(payload) {
  */
 export function postSchedule(payload) {
   postToLeadEndpoint(payload, 'postSchedule')
+}
+
+// ---------------------------------------------------------------------------
+// Google Analytics 4
+//
+// GA_MEASUREMENT_ID is the property's public "G-..." id (not a secret).
+// Leave it empty and GA stays off: initAnalytics() and trackEvent() no-op.
+// On top of GA's own enhanced measurement (page views, outbound clicks,
+// site search, file downloads), initAnalytics() reports:
+//   - scroll_depth at 25/50/75/90% of the page
+//   - section_view the first time each [data-section] is half on screen
+// and trackEvent() lets components report clicks, FAQ opens and form steps.
+// ---------------------------------------------------------------------------
+
+export const GA_MEASUREMENT_ID = ''
+
+let analyticsStarted = false
+
+function gaReady() {
+  return typeof window !== 'undefined' && typeof window.gtag === 'function'
+}
+
+/**
+ * Send a GA4 event. Never throws; silent when GA is off.
+ */
+export function trackEvent(name, params = {}) {
+  if (!gaReady()) return
+  try {
+    window.gtag('event', name, params)
+  } catch (err) {
+    console.error('[tracking] trackEvent failed', err)
+  }
+}
+
+function watchScrollDepth() {
+  const marks = [25, 50, 75, 90]
+  const sent = new Set()
+  const onScroll = () => {
+    const doc = document.documentElement
+    const max = doc.scrollHeight - window.innerHeight
+    if (max <= 0) return
+    const pct = (window.scrollY / max) * 100
+    for (const m of marks) {
+      if (pct >= m && !sent.has(m)) {
+        sent.add(m)
+        trackEvent('scroll_depth', { percent: m })
+      }
+    }
+    if (sent.size === marks.length) window.removeEventListener('scroll', onScroll)
+  }
+  window.addEventListener('scroll', onScroll, { passive: true })
+}
+
+function watchSections() {
+  if (typeof IntersectionObserver === 'undefined') return
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        trackEvent('section_view', { section: entry.target.dataset.section })
+        observer.unobserve(entry.target)
+      }
+    },
+    { threshold: 0.5 },
+  )
+  document.querySelectorAll('[data-section]').forEach((el) => observer.observe(el))
+}
+
+/**
+ * Load gtag.js and start the page-level watchers. Safe to call more than
+ * once (StrictMode runs effects twice in dev).
+ */
+export function initAnalytics() {
+  if (analyticsStarted || !GA_MEASUREMENT_ID || typeof window === 'undefined') return
+  analyticsStarted = true
+  try {
+    window.dataLayer = window.dataLayer || []
+    window.gtag = function gtag() {
+      window.dataLayer.push(arguments)
+    }
+    window.gtag('js', new Date())
+    window.gtag('config', GA_MEASUREMENT_ID)
+
+    const script = document.createElement('script')
+    script.async = true
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`
+    document.head.appendChild(script)
+
+    watchScrollDepth()
+    watchSections()
+  } catch (err) {
+    console.error('[tracking] initAnalytics failed', err)
+  }
 }

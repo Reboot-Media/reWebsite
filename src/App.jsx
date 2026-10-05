@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import PreQualForm from './roofers/PreQualForm.jsx';
-import { captureAttribution } from './roofers/tracking.js';
+import { captureAttribution, initAnalytics, trackEvent } from './roofers/tracking.js';
 
 const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/7A6Etcubfpw?rel=0';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
@@ -22,36 +22,16 @@ const FAQS = [
     a: "Most setups chase clicks, not inspections. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
   },
   {
-    q: 'Can the ads focus on certain areas?',
-    a: 'Yes. You pick your service area, and we can push harder on the towns and neighborhoods you want more work in.',
-  },
-  {
-    q: 'Can the ads focus on certain jobs?',
-    a: 'Yes. We aim the ads at the work you want more of, and homeowners tell you what they need before they book.',
-  },
-  {
-    q: 'Do you track storms?',
-    a: "Yes. We install a storm tracker that watches your area for you, so you know where weather hit without door knocking or chasing storms yourself.",
+    q: 'Can the ads focus on certain areas and jobs?',
+    a: 'Yes. You pick your service area and the work you want more of, and we push harder there. Homeowners tell you what they need before they book.',
   },
   {
     q: 'Do you work with my competitors?',
     a: "No. We work with one roofer per service area, so your homeowners never get sold to the company down the street.",
   },
   {
-    q: "We're booked out right now.",
-    a: 'Good. The system gets better the longer it runs, so starting before the backlog clears keeps your crews busy next season.',
-  },
-  {
     q: 'What does it cost?',
     a: "We build a tailor-made plan for every roofer, based on your area and your goals. We go over pricing on the call.",
-  },
-  {
-    q: 'Is there a contract?',
-    a: 'Yes, 90 days. You keep your ad account and every homeowner who came in, even if you leave.',
-  },
-  {
-    q: 'What happens on the strategy call?',
-    a: "We look at where your inspections come from today and show you what we'd run. If it's not a fit, we'll tell you.",
   },
 ];
 
@@ -75,7 +55,7 @@ const h2Class = 'text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] tex
 const bodyClass = 'text-[17px] leading-[1.65] text-roof-ink md:text-[18px]';
 const mutedClass = 'text-[17px] leading-[1.65] text-roof-muted md:text-[18px]';
 const wrap = 'mx-auto max-w-[1120px] px-5 md:px-8';
-const sec = 'py-20 lg:py-32';
+const sec = 'py-14 md:py-20 lg:py-32';
 const card = 'rounded-[20px] bg-roof-surface ring-1 ring-roof-border-subtle';
 
 function Logo({ className = 'h-7 w-7' }) {
@@ -100,11 +80,11 @@ function Icon({ d, className = 'h-6 w-6', children }) {
 
 const btnBase = `inline-flex items-center justify-center font-semibold transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none ${focusRing}`;
 
-function CTA({ children = CTA_LABEL, small = false, className = '' }) {
+function CTA({ children = CTA_LABEL, small = false, className = '', location = 'body' }) {
   const look = 'bg-accent text-white hover:bg-accent-dark';
   const size = small ? 'h-12 rounded-xl px-3.5 text-[15px] md:px-5 md:text-base' : 'h-14 rounded-[14px] px-7 text-[17px]';
   return (
-    <a href="#prequal-form" className={`${btnBase} ${size} ${look} ${className}`}>
+    <a href="#prequal-form" onClick={() => trackEvent('cta_click', { location })} className={`${btnBase} ${size} ${look} ${className}`}>
       {children}
     </a>
   );
@@ -120,7 +100,10 @@ function Header() {
           <Logo />
           <span className="text-base font-bold tracking-tight text-roof-ink">Reboot Media</span>
         </span>
-        <CTA small>{CTA_LABEL}</CTA>
+        <CTA small location="header" className="whitespace-nowrap">
+          <span className="sm:hidden">Book a Call</span>
+          <span className="hidden sm:inline">{CTA_LABEL}</span>
+        </CTA>
       </div>
     </header>
   );
@@ -148,8 +131,8 @@ function FounderVideo() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(180deg,theme(colors.accent.bg)_0%,white_62%)] pb-20 pt-12 md:pb-24 md:pt-24">
-      <div className={`${wrap} relative grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:gap-16`}>
+    <section data-section="hero" className="relative overflow-hidden bg-[linear-gradient(180deg,theme(colors.accent.bg)_0%,white_62%)] pb-14 pt-10 md:pb-24 md:pt-24">
+      <div className={`${wrap} relative grid gap-10 md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:gap-16`}>
         <div>
           <p className="mb-5 text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.14em] text-accent">For residential roofing companies</p>
           <h1 className="text-[36px] font-extrabold leading-[1.1] tracking-[-0.035em] [text-wrap:balance] md:text-[52px] lg:text-[56px] lg:leading-[1.04]">
@@ -159,7 +142,7 @@ function Hero() {
             We build and run your ads, so homeowners searching for a roofer in your area book inspections straight onto your calendar. Every month.
           </p>
           <div className="mt-8">
-            <CTA className="w-full sm:w-auto" />
+            <CTA className="w-full sm:w-auto" location="hero" />
             <p className="mt-3 text-[17px] text-roof-muted">A few questions, then pick a time.</p>
           </div>
         </div>
@@ -171,10 +154,10 @@ function Hero() {
 
 function Phases() {
   return (
-    <section className={`bg-roof-surface ${sec}`}>
+    <section data-section="how_it_works" className={`bg-roof-surface ${sec}`}>
       <div className={wrap}>
         <h2 className={h2Class}>How it works</h2>
-        <ol className="mt-10 grid gap-10 md:grid-cols-3">
+        <ol className="mt-8 grid gap-8 md:mt-10 md:grid-cols-3 md:gap-10">
           {PHASES.map((p, i) => (
             <li key={p.name}>
               <span className="mb-3 block text-lg font-bold text-accent">{i + 1}</span>
@@ -200,7 +183,7 @@ function ExampleValue({ label, value }) {
 
 function ExampleCard() {
   return (
-    <div className={`${card} p-7 shadow-card`}>
+    <div className={`${card} p-5 shadow-card md:p-7`}>
       <div className="mb-6 flex items-center gap-3.5 border-b border-roof-border-subtle pb-5">
         <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-bg text-[15px] font-bold text-accent-dark">
           {SAMPLE_BOOKING.initials}
@@ -208,7 +191,8 @@ function ExampleCard() {
         <div className="min-w-0">
           <p className="text-[17px] font-bold leading-[1.3] text-roof-ink">{SAMPLE_BOOKING.name}</p>
           <p className="text-[15px] leading-[1.4] text-roof-muted">
-            {SAMPLE_BOOKING.place} · {SAMPLE_BOOKING.phone}
+            <span className="block">{SAMPLE_BOOKING.place}</span>
+            <span className="block">{SAMPLE_BOOKING.phone}</span>
           </p>
         </div>
       </div>
@@ -228,8 +212,8 @@ function ExampleCard() {
 
 function KnowBeforeYouGo() {
   return (
-    <section className={`bg-roof-paper ${sec}`}>
-      <div className={`${wrap} grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-[72px]`}>
+    <section data-section="know_before_you_go" className={`bg-roof-paper ${sec}`}>
+      <div className={`${wrap} grid gap-10 md:gap-12 lg:grid-cols-2 lg:items-center lg:gap-[72px]`}>
         <div>
           <h2 className={`mb-5 ${h2Class}`}>Know who you're meeting before you go.</h2>
           <p className={`${col} ${mutedClass}`}>
@@ -244,7 +228,7 @@ function KnowBeforeYouGo() {
 
 function WhoItsFor() {
   return (
-    <section className={`bg-roof-surface ${sec}`}>
+    <section data-section="who_its_for" className={`bg-roof-surface ${sec} pb-0`}>
       <div className={`${wrap}`}>
         <div className={col}>
           <h2 className={`mb-5 ${h2Class}`}>Is this a fit?</h2>
@@ -265,7 +249,7 @@ const CREDENTIALS = [
 
 function Team() {
   return (
-    <section className={`bg-roof-surface ${sec}`}>
+    <section data-section="team" className={`bg-roof-surface ${sec}`}>
       <div className={`${wrap} grid gap-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-16`}>
         <div aria-hidden="true" className="flex h-24 w-24 items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,theme(colors.accent.DEFAULT),theme(colors.accent.dark))] shadow-lift lg:h-28 lg:w-28">
           <img src="/logo.png" alt="" className="h-12 w-12 brightness-0 invert lg:h-14 lg:w-14" />
@@ -297,21 +281,23 @@ function Team() {
 
 function Faq() {
   return (
-    <section id="after-you-book" className={`scroll-mt-24 bg-roof-paper ${sec}`}>
+    <section data-section="faq" id="after-you-book" className={`scroll-mt-24 bg-roof-paper ${sec}`}>
       <div className={wrap}>
-        <div className={col}>
-          <h2 className={`mb-10 ${h2Class}`}>Questions</h2>
-          <div className="space-y-3">
-            {FAQS.map((f) => (
-              <details key={f.q} className="group rounded-2xl bg-roof-surface px-6 py-5 ring-1 ring-roof-border-subtle open:shadow-card">
-                <summary className={`flex min-h-[48px] cursor-pointer list-none items-center justify-between gap-4 text-[18px] font-semibold leading-snug text-roof-ink hover:text-accent-dark [&::-webkit-details-marker]:hidden ${focusRing}`}>
-                  {f.q}
-                  <Icon className="h-5 w-5 shrink-0 text-roof-muted transition-transform duration-150 group-open:rotate-180 motion-reduce:transition-none" d="M6 9l6 6 6-6" />
-                </summary>
-                <p className={`mt-2 ${mutedClass}`}>{f.a}</p>
-              </details>
-            ))}
-          </div>
+        <h2 className={`mb-8 md:mb-10 ${h2Class}`}>Questions</h2>
+        <div className="grid items-start gap-3 md:grid-cols-2 md:gap-4">
+          {FAQS.map((f) => (
+            <details
+              key={f.q}
+              onToggle={(e) => e.currentTarget.open && trackEvent('faq_open', { question: f.q })}
+              className="group rounded-2xl bg-roof-surface px-5 py-4 ring-1 ring-roof-border-subtle open:shadow-card md:px-6 md:py-5"
+            >
+              <summary className={`flex min-h-[48px] cursor-pointer list-none items-center justify-between gap-4 text-[17px] font-semibold leading-snug text-roof-ink hover:text-accent-dark md:text-[18px] [&::-webkit-details-marker]:hidden ${focusRing}`}>
+                {f.q}
+                <Icon className="h-5 w-5 shrink-0 text-roof-muted transition-transform duration-150 group-open:rotate-180 motion-reduce:transition-none" d="M6 9l6 6 6-6" />
+              </summary>
+              <p className={`mt-2 ${mutedClass}`}>{f.a}</p>
+            </details>
+          ))}
         </div>
       </div>
     </section>
@@ -320,7 +306,7 @@ function Faq() {
 
 function FormSection() {
   return (
-    <section className={`bg-[linear-gradient(0deg,theme(colors.accent.bg)_0%,white_70%)] ${sec}`}>
+    <section data-section="book_call" className={`bg-[linear-gradient(0deg,theme(colors.accent.bg)_0%,white_70%)] ${sec}`}>
       <div className={wrap}>
         <div className={col}>
           <h2 className={`mb-4 ${h2Class}`}>Book your strategy call</h2>
@@ -365,6 +351,7 @@ function Footer() {
 export default function App() {
   useEffect(() => {
     captureAttribution();
+    initAnalytics();
   }, []);
 
   return (
