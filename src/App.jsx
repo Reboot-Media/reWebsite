@@ -4,7 +4,7 @@ import { captureAttribution } from './roofers/tracking.js';
 
 const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/7A6Etcubfpw?rel=0';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
-const CTA_LABEL = 'Book my free Audit';
+const CTA_LABEL = 'Book a Strategy Call';
 
 const PHASES = [
   { name: 'Evaluate', text: "We look at what you're doing now and keep what works." },
@@ -15,10 +15,10 @@ const PHASES = [
 const FAQS = [
   { q: 'What do I have to do?', a: 'Answer the phone and show up to the inspection.' },
   {
-    q: 'What happens on the free audit call?',
+    q: 'What happens on the strategy call?',
     a: "We look at how you get customers today and show you how this would work for your company. If it's not a fit, we'll tell you.",
   },
-  { q: 'What does it cost?', a: "The audit call is free. Pricing depends on your company, and we'll go over it on the call." },
+  { q: 'What does it cost?', a: "The strategy call is free. Pricing depends on your company, and we'll go over it on the call." },
   {
     q: 'Is there a contract?',
     a: 'Yes, 90 days. Your ad budget is paid straight to the ad platform, not to us. You keep your ad account and every homeowner who came in, even if you leave.',
@@ -282,7 +282,7 @@ function FormSection() {
     <section className={`bg-[linear-gradient(0deg,theme(colors.accent.bg)_0%,white_70%)] ${sec}`}>
       <div className={wrap}>
         <div className={col}>
-          <h2 className={`mb-4 ${h2Class}`}>Book your free audit</h2>
+          <h2 className={`mb-4 ${h2Class}`}>Book your strategy call</h2>
           <p className={`mb-10 ${mutedClass}`}>A few questions, then pick a time.</p>
           <div className="w-full rounded-3xl bg-roof-surface p-6 shadow-lift ring-1 ring-roof-border-subtle md:p-8 [&_#prequal-form]:scroll-mt-24">
             <PreQualForm />
