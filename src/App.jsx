@@ -39,7 +39,7 @@ const FAQS = [
   },
   {
     q: 'What does it cost?',
-    a: "It depends on your area and your goals. Your ad budget goes straight to the ad platform, not to us. We go over pricing on the call.",
+    a: "We build a tailor-made plan for every roofer, based on your area and your goals. We go over pricing on the call.",
   },
   {
     q: 'Is there a contract?',
