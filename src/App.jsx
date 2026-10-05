@@ -236,7 +236,6 @@ const CREDENTIALS = [
   "Master's and bachelor's degrees in computer science",
   '10 years in marketing',
   'Hands-on experience in home services and construction',
-  'Working with Whitestone Roofing',
 ];
 
 function Team() {
