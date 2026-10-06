@@ -241,9 +241,9 @@ function WhoItsFor() {
 }
 
 const CREDENTIALS = [
-  'Over 10 years of combined experience',
-  'Experience in home services, construction, and marketing',
-  'We build our own technology in-house, nothing outsourced',
+  'Home services',
+  'Construction',
+  'Engineering',
 ];
 
 function Team() {
@@ -256,8 +256,9 @@ function Team() {
         <div className={col}>
           <h2 className={`mb-5 ${h2Class}`}>Who we are</h2>
           <p className={`mb-5 ${mutedClass}`}>
-            Reboot Media was founded by Kendall Reid. We build the system ourselves, and we know the trade it's built for.
+            Reboot Media was founded by Kendall Reid.
           </p>
+          <p className={`mb-3 ${bodyClass}`}>Over 10 years of combined experience in:</p>
           <ul className="mb-6 space-y-3">
             {CREDENTIALS.map((c) => (
               <li key={c} className={`flex gap-3 ${bodyClass}`}>
@@ -266,6 +267,7 @@ function Team() {
               </li>
             ))}
           </ul>
+          <p className={`mb-5 font-semibold ${bodyClass}`}>Built by people who write the code and know the trade.</p>
           <p className={bodyClass}>
             Email:{' '}
             <a href="mailto:hello@rebootmedia.us" className={`font-medium text-accent-dark underline underline-offset-4 hover:text-accent ${focusRing}`}>
