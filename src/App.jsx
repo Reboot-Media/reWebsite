@@ -241,7 +241,7 @@ function WhoItsFor() {
 }
 
 const CREDENTIALS = [
-  'Home services',
+  'Marketing',
   'Construction',
   'Engineering',
 ];
