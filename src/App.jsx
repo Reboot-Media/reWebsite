@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import PreQualForm from './roofers/PreQualForm.jsx';
 import { captureAttribution, initAnalytics, trackEvent } from './roofers/tracking.js';
 
-const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/7A6Etcubfpw?rel=0';
+const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/OYPTmTF2lwE?rel=0';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
 const CTA_LABEL = 'Book a Strategy Call';
 
@@ -116,7 +116,7 @@ function FounderVideo() {
       <div className="aspect-video overflow-hidden rounded-[20px] bg-accent-bg shadow-lift ring-8 ring-white">
         <iframe
           src={FOUNDER_VIDEO_URL}
-          title="How the three phases work"
+          title="How Reboot Media works"
           loading="lazy"
           allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
           referrerPolicy="strict-origin-when-cross-origin"
@@ -124,7 +124,6 @@ function FounderVideo() {
           className="h-full w-full border-0"
         />
       </div>
-      <figcaption className="mt-3.5 text-[15px] text-roof-muted">How the three phases work.</figcaption>
     </figure>
   );
 }
