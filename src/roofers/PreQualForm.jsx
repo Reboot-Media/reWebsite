@@ -15,6 +15,9 @@ const initialFields = {
   phone: '',
   decisionMaker: '',
   city: '',
+  annualRevenue: '',
+  hasWebsite: '',
+  websiteUrl: '',
   googleAdsStatus: '',
   adSpend: '',
   drivingFactor: '',
@@ -237,6 +240,8 @@ export default function PreQualForm() {
     if (!fields.decisionMaker) e.decisionMaker = 'Select an option.'
     if (!fields.city.trim()) e.city = 'Enter the city you operate in.'
     else if (!isCity(fields.city)) e.city = 'Enter a city name, letters only.'
+    if (!fields.annualRevenue) e.annualRevenue = 'Select an option.'
+    if (!fields.hasWebsite) e.hasWebsite = 'Select an option.'
     if (!fields.googleAdsStatus) e.googleAdsStatus = 'Select an option.'
     if (!fields.adSpend) e.adSpend = 'Select an option.'
     return e
@@ -448,6 +453,31 @@ export default function PreQualForm() {
                 autoComplete="address-level2"
               />
               <RadioGroup
+                legend="What's your company's annual revenue?"
+                name="pq-annualRevenue"
+                options={['Under $500K', '$500K–$1M', '$1M–$3M', '$3M–$5M', '$5M+']}
+                value={fields.annualRevenue}
+                onChange={(v) => update('annualRevenue', v)}
+                error={errors.annualRevenue}
+              />
+              <RadioGroup
+                legend="Do you have a website?"
+                name="pq-hasWebsite"
+                options={['Yes', 'No']}
+                value={fields.hasWebsite}
+                onChange={(v) => update('hasWebsite', v)}
+                error={errors.hasWebsite}
+              />
+              {fields.hasWebsite === 'Yes' && (
+                <TextField
+                  id="pq-websiteUrl"
+                  label="Website address (optional)"
+                  value={fields.websiteUrl}
+                  onChange={(v) => update('websiteUrl', v)}
+                  autoComplete="url"
+                />
+              )}
+              <RadioGroup
                 legend="Are you running paid ads right now?"
                 name="pq-googleAdsStatus"
                 options={['Running now', 'Ran before, stopped', 'Never have']}
@@ -457,7 +487,7 @@ export default function PreQualForm() {
               />
               <RadioGroup
                 legend="What can you put toward ad spend each month?"
-                hint="your money, paid straight to the ad platform"
+                hint="your money, paid straight to the ads, not to us"
                 name="pq-adSpend"
                 options={['Under $3K', '$3K–$5K', '$5K–$7K', '$7K+']}
                 value={fields.adSpend}
@@ -466,7 +496,7 @@ export default function PreQualForm() {
               />
               <TextAreaField
                 id="pq-drivingFactor"
-                label="What's driving you to look now? (optional)"
+                label="What made you start looking for help now? (optional)"
                 value={fields.drivingFactor}
                 onChange={(v) => update('drivingFactor', v)}
                 error={errors.drivingFactor}

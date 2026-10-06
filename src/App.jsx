@@ -7,7 +7,7 @@ const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
 const CTA_LABEL = 'Book a Strategy Call';
 
 const PHASES = [
-  { name: 'Evaluate', text: "We look at what you're doing now and keep what works." },
+  { name: 'Audit', text: "We do a full audit of your online presence to find what's working and what's not. We keep what's working and remove what's not." },
   { name: 'Reboot', text: "We set up your ads and install a storm tracker that watches your area for you. You're live in 2 business days." },
   { name: 'Compound', text: 'The system learns which calls turn into booked jobs, so results compound every month.' },
 ];
