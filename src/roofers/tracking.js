@@ -207,7 +207,7 @@ export function postSchedule(payload) {
 // and (optional, dormant) Google Ads remarketing.
 //
 // Every id below is public (not a secret). Each tracker stays off until its id
-// is set, either here or as a Cloudflare Pages build variable of the same name
+// is set, either as the default below or as a Cloudflare Pages build variable
 // (Settings > Variables, then redeploy):
 //   VITE_GA_MEASUREMENT_ID   GA4 property, "G-..."
 //   VITE_CLARITY_PROJECT_ID  Clarity project id (recordings + heatmaps)
@@ -231,7 +231,7 @@ const env = import.meta.env || {}
 
 export const TRACKING_IDS = {
   ga: env.VITE_GA_MEASUREMENT_ID || '',
-  clarity: env.VITE_CLARITY_PROJECT_ID || '',
+  clarity: env.VITE_CLARITY_PROJECT_ID || 'ytmlltjoht',
   linkedin: env.VITE_LINKEDIN_PARTNER_ID || '',
   googleAds: env.VITE_GOOGLE_ADS_ID || '',
 }
