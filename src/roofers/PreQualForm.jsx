@@ -20,6 +20,7 @@ const initialFields = {
   websiteUrl: '',
   googleAdsStatus: '',
   adSpend: '',
+  startTimeline: '',
   drivingFactor: '',
   // Honeypot — offscreen, aria-hidden, unreachable by Tab. A filled value
   // marks the submit as likely bot traffic.
@@ -244,6 +245,7 @@ export default function PreQualForm() {
     if (!fields.hasWebsite) e.hasWebsite = 'Select an option.'
     if (!fields.googleAdsStatus) e.googleAdsStatus = 'Select an option.'
     if (!fields.adSpend) e.adSpend = 'Select an option.'
+    if (!fields.startTimeline) e.startTimeline = 'Select an option.'
     return e
   }
 
@@ -493,6 +495,14 @@ export default function PreQualForm() {
                 value={fields.adSpend}
                 onChange={(v) => update('adSpend', v)}
                 error={errors.adSpend}
+              />
+              <RadioGroup
+                legend="If we determine this is a right fit, when are you looking to get started?"
+                name="pq-startTimeline"
+                options={['Right away', 'Within 30 days', 'In 1–3 months', 'Just exploring']}
+                value={fields.startTimeline}
+                onChange={(v) => update('startTimeline', v)}
+                error={errors.startTimeline}
               />
               <TextAreaField
                 id="pq-drivingFactor"
