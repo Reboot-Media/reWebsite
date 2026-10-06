@@ -7,7 +7,9 @@ import { captureAttribution, initAnalytics, trackEvent } from './roofers/trackin
 const PRECALL_LOOM_URL = import.meta.env.VITE_PRECALL_LOOM_URL || '';
 
 function loomEmbed(url) {
-  return url.replace('loom.com/share/', 'loom.com/embed/');
+  // Browsers only allow autoplay when the video starts muted.
+  const embed = url.replace('loom.com/share/', 'loom.com/embed/');
+  return `${embed}${embed.includes('?') ? '&' : '?'}autoplay=1&muted=1`;
 }
 
 const STEPS = [
@@ -41,7 +43,7 @@ function LoomVideo() {
         <iframe
           src={loomEmbed(PRECALL_LOOM_URL)}
           title="Before your call"
-          allow="fullscreen; picture-in-picture"
+          allow="autoplay; fullscreen; picture-in-picture"
           allowFullScreen
           className="h-full w-full border-0"
         />
