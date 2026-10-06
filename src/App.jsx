@@ -241,9 +241,9 @@ function WhoItsFor() {
 }
 
 const CREDENTIALS = [
-  'Over 10 years combined in marketing, home services, and construction',
-  "Master's and bachelor's degrees in computer science",
-  'Hands-on experience in home services and construction, not just marketing',
+  'Over 10 years of combined experience',
+  'Experience in home services, construction, and marketing',
+  'Experience in AI engineering and technical roles',
 ];
 
 function Team() {
