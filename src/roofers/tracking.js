@@ -230,7 +230,7 @@ export function postSchedule(payload) {
 const env = import.meta.env || {}
 
 export const TRACKING_IDS = {
-  ga: env.VITE_GA_MEASUREMENT_ID || '',
+  ga: env.VITE_GA_MEASUREMENT_ID || 'G-D01K6EHJDP',
   clarity: env.VITE_CLARITY_PROJECT_ID || 'ytmlltjoht',
   linkedin: env.VITE_LINKEDIN_PARTNER_ID || '',
   googleAds: env.VITE_GOOGLE_ADS_ID || '',
