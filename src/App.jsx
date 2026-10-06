@@ -256,7 +256,7 @@ function Team() {
         <div className={col}>
           <h2 className={`mb-5 ${h2Class}`}>Who we are</h2>
           <p className={`mb-5 ${mutedClass}`}>
-            Reboot Media was founded by Kendall Reid.
+            Reboot Media was founded by ex-Oracle AI engineer Kendall Reid.
           </p>
           <p className={`mb-3 ${bodyClass}`}>Over 10 years of combined experience in:</p>
           <ul className="mb-6 space-y-3">
