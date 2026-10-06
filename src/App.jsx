@@ -45,7 +45,7 @@ const SAMPLE_BOOKING = {
 const EXAMPLE_ROWS = [
   ['Needs', 'Storm damage'],
   ['Inspection', 'Thursday, 9:00 AM'],
-  ['Roof age', 'About 12 years'],
+  ['Roof age', '~12 years'],
   ['Insurance', 'Not filed yet'],
   ['Their note', '"Shingles came off the back slope after the wind."'],
 ];
