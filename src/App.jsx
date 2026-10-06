@@ -14,11 +14,11 @@ const PHASES = [
 
 const FAQS = [
   {
-    q: "I don't pay for leads.",
-    a: "You won't. You pay for ads that run in your company's name. Homeowners who search for a roofer find you and book straight onto your calendar.",
+    q: 'Is this a lead-sharing or lead-gen service?',
+    a: "No. We don't sell or share leads. We run ads in your company's name, so homeowners searching for a roofer in your area find you and book straight onto your calendar. Every one is yours alone.",
   },
   {
-    q: "We've tried ads before. The ROI wasn't there.",
+    q: "We've tried ads before and the ROI wasn't there. Why would this be different?",
     a: "Most setups chase clicks, not inspections. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
   },
   {
