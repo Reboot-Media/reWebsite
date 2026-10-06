@@ -187,7 +187,7 @@ function ConfirmationMessage() {
   return (
     <div role="status" className="rounded-2xl border border-roof-border-subtle bg-roof-surface p-8 text-center">
       <p className="text-[17px] font-medium text-roof-ink">
-        You're booked. Watch for a confirmation.
+        You're booked. Taking you to a quick video before your call…
       </p>
     </div>
   )
@@ -507,7 +507,12 @@ export default function PreQualForm() {
                     email={fields.email}
                     phone={fields.phone}
                     company={fields.company}
-                    onScheduled={() => setBooked(true)}
+                    onScheduled={() => {
+                      setBooked(true)
+                      // Short pause so the booking events finish sending, then
+                      // take them to the pre-call page with the walkthrough video.
+                      setTimeout(() => window.location.assign('/before-your-call'), 1200)
+                    }}
                   />
                 </Suspense>
               </div>

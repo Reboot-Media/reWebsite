@@ -172,6 +172,7 @@ function postToLeadEndpoint(payload, label) {
   try {
     fetch('/api/lead', {
       method: 'POST',
+      keepalive: true,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       keepalive: true,

@@ -50,15 +50,15 @@ const EXAMPLE_ROWS = [
   ['Their note', '"Shingles came off the back slope after the wind."'],
 ];
 
-const focusRing = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
-const h2Class = 'text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-roof-ink [text-wrap:balance] md:text-[40px] lg:text-[44px]';
-const bodyClass = 'text-[17px] leading-[1.65] text-roof-ink md:text-[18px]';
-const mutedClass = 'text-[17px] leading-[1.65] text-roof-muted md:text-[18px]';
-const wrap = 'mx-auto max-w-[1120px] px-5 md:px-8';
-const sec = 'py-14 md:py-20 lg:py-32';
-const card = 'rounded-[20px] bg-roof-surface ring-1 ring-roof-border-subtle';
+export const focusRing = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+export const h2Class = 'text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-roof-ink [text-wrap:balance] md:text-[40px] lg:text-[44px]';
+export const bodyClass = 'text-[17px] leading-[1.65] text-roof-ink md:text-[18px]';
+export const mutedClass = 'text-[17px] leading-[1.65] text-roof-muted md:text-[18px]';
+export const wrap = 'mx-auto max-w-[1120px] px-5 md:px-8';
+export const sec = 'py-14 md:py-20 lg:py-32';
+export const card = 'rounded-[20px] bg-roof-surface ring-1 ring-roof-border-subtle';
 
-function Logo({ className = 'h-7 w-7' }) {
+export function Logo({ className = 'h-7 w-7' }) {
   return <img src="/logo.png" alt="" className={className} />;
 }
 
@@ -70,7 +70,7 @@ function IconLinkedIn({ className = 'h-5 w-5' }) {
   );
 }
 
-function Icon({ d, className = 'h-6 w-6', children }) {
+export function Icon({ d, className = 'h-6 w-6', children }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {d ? <path d={d} /> : children}
@@ -78,7 +78,7 @@ function Icon({ d, className = 'h-6 w-6', children }) {
   );
 }
 
-const btnBase = `inline-flex items-center justify-center font-semibold transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none ${focusRing}`;
+export const btnBase = `inline-flex items-center justify-center font-semibold transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none ${focusRing}`;
 
 function CTA({ children = CTA_LABEL, small = false, className = '', location = 'body' }) {
   const look = 'bg-accent text-white hover:bg-accent-dark';
@@ -90,7 +90,7 @@ function CTA({ children = CTA_LABEL, small = false, className = '', location = '
   );
 }
 
-const col = 'max-w-[640px]';
+export const col = 'max-w-[640px]';
 
 function Header() {
   return (
@@ -319,7 +319,7 @@ function FormSection() {
   );
 }
 
-function Footer() {
+export function Footer() {
   return (
     <footer className="border-t border-roof-border-subtle bg-roof-surface">
       <div className={`${wrap} flex flex-col gap-2 py-10 text-[15px] text-roof-muted sm:flex-row sm:items-center sm:justify-between`}>
