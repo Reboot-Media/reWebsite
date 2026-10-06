@@ -243,7 +243,7 @@ function WhoItsFor() {
 const CREDENTIALS = [
   'Over 10 years of combined experience',
   'Experience in home services, construction, and marketing',
-  'Experience in AI engineering and technical roles',
+  'We build our own technology in-house, nothing outsourced',
 ];
 
 function Team() {
