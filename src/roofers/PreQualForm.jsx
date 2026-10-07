@@ -2,6 +2,24 @@ import { useState, useRef, lazy, Suspense } from 'react'
 import { formatPhone, isCity, isEmail, isFullName, isPhone } from './validate.js'
 import { newEventId, trackLead, trackStep, postLead, getAttribution } from './tracking'
 
+// Arrow that sits on the text baseline and slides right on hover.
+function Arrow() {
+  return (
+    <svg
+      className="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transition-none"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  )
+}
+
 // react-calendly is only ever pulled in through this lazy boundary, and
 // only once a prospect has qualified — protects LCP on initial paint.
 const CalendlyEmbed = lazy(() => import('./CalendlyEmbed.jsx'))
@@ -346,9 +364,9 @@ export default function PreQualForm() {
 
   const finalLabel = submitted && !qualified ? 'Next steps' : 'Book'
   const primaryBtn =
-    'inline-flex h-14 flex-1 items-center justify-center rounded-[14px] bg-accent px-7 text-[17px] font-semibold text-white hover:bg-accent-dark transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+    'group inline-flex h-14 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-[14px] bg-accent px-5 text-[17px] font-semibold text-white hover:bg-accent-dark transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
   const backBtn =
-    'h-14 flex-1 rounded-[14px] border border-roof-border-strong px-6 py-3 text-[17px] font-semibold text-roof-ink transition-colors hover:bg-roof-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2'
+    'h-14 shrink-0 basis-[34%] rounded-[14px] border border-roof-border-strong px-5 py-3 text-[17px] font-semibold text-roof-ink transition-colors hover:bg-roof-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2'
 
   return (
     <div id="prequal-form" className="mx-auto w-full max-w-xl">
@@ -395,7 +413,8 @@ export default function PreQualForm() {
                 />
               )}
               <button type="submit" className={`${primaryBtn} w-full`}>
-                Continue →
+                Continue
+                <Arrow />
               </button>
             </div>
           )}
@@ -432,7 +451,8 @@ export default function PreQualForm() {
                   Back
                 </button>
                 <button type="submit" className={primaryBtn}>
-                  Continue →
+                  Continue
+                <Arrow />
                 </button>
               </div>
             </div>
@@ -514,7 +534,8 @@ export default function PreQualForm() {
                   Back
                 </button>
                 <button type="submit" className={primaryBtn}>
-                  Pick a time →
+                  Pick a time
+                  <Arrow />
                 </button>
               </div>
             </div>
