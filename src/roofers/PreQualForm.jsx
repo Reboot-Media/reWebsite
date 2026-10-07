@@ -3,7 +3,7 @@ import { formatPhone, isCity, isEmail, isFullName, isPhone } from './validate.js
 import { newEventId, trackLead, trackStep, postLead, getAttribution } from './tracking'
 
 // Arrow that sits on the text baseline and slides right on hover.
-function Arrow() {
+export function Arrow() {
   return (
     <svg
       className="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transition-none"
@@ -55,7 +55,7 @@ const initialFields = {
   referral_code: '',
 }
 
-function TextField({ id, label, type = 'text', value, onChange, error, hint, autoComplete }) {
+export function TextField({ id, label, type = 'text', value, onChange, error, hint, autoComplete }) {
   const errorId = `${id}-error`
   return (
     <div className="mb-6">
@@ -224,7 +224,7 @@ function CalendlyFallback() {
   )
 }
 
-export default function PreQualForm() {
+export default function PreQualForm({ segment = null }) {
   const [step, setStep] = useState(1)
   const [fields, setFields] = useState(initialFields)
   const [errors, setErrors] = useState({})
@@ -322,6 +322,7 @@ export default function PreQualForm() {
     else if (fields.adSpend === '$7K+') tags = ['Qualified', 'Tier2']
     else if (fields.adSpend === 'Under $3K') tags = ['Qualified', 'LowBudget']
     else tags = ['Qualified']
+    if (segment) tags = [...tags, segment.tag]
     if (trippedHoneypot) tags = [...tags, 'SpamSuspect']
 
     const eventId = newEventId()
@@ -340,7 +341,8 @@ export default function PreQualForm() {
       tags,
       qualified: isQualified,
       spam: trippedHoneypot,
-      page: 'roofers',
+      page: segment ? segment.slug : 'roofers',
+      segment: segment ? segment.key : '',
       attribution: getAttribution(),
     })
 
