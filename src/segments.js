@@ -3,14 +3,13 @@
 // Slugs are what the prospect sees in the link, so they never use the
 // internal segment names (e.g. "shark").
 export const SEGMENTS = {
+  // Same audience as the homepage (established enough to have a gatekeeper),
+  // so /grow shows the homepage as-is and only adds the email tag.
   growing: {
     key: 'growing',
     slug: 'grow',
     tag: 'email-growing',
-    eyebrow: 'For growing roofing companies',
-    headline: 'Consistent, signed roofing jobs. Every month.',
-    subline:
-      'Homeowners in your area who already want a roofer book straight onto your calendar. We build and run the ads. You show up and sign the job.',
+    sameAsHome: true,
   },
   shark: {
     key: 'shark',

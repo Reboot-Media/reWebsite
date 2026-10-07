@@ -156,7 +156,7 @@ function Hero({ segment }) {
           <div className="mt-8">
             <CTA className="w-full sm:w-auto" location="hero" />
             <p className="mt-3 text-[17px] text-roof-muted">A few questions, then pick a time.</p>
-            {!segment && <VisibilityCheckLink className="mt-4" location="hero" />}
+            {(!segment || segment.sameAsHome) && <VisibilityCheckLink className="mt-4" location="hero" />}
           </div>
         </div>
         <FounderVideo />
@@ -316,7 +316,7 @@ function Faq({ segment }) {
             </details>
           ))}
         </div>
-        {!segment && <VisibilityCheckLink className="mt-8" location="faq" />}
+        {(!segment || segment.sameAsHome) && <VisibilityCheckLink className="mt-8" location="faq" />}
       </div>
     </section>
   );
