@@ -19,7 +19,7 @@ const FAQS = [
   },
   {
     q: "We've tried ads before and the ROI wasn't there. Why would this be different?",
-    a: "Most setups chase clicks, not inspections. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
+    a: "Most setups chase clicks, not signed jobs. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
   },
   {
     q: 'Can the ads focus on certain areas and jobs?',
@@ -134,10 +134,10 @@ function Hero() {
         <div>
           <p className="mb-5 text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.14em] text-accent">For residential roofing companies</p>
           <h1 className="text-[36px] font-extrabold leading-[1.1] tracking-[-0.035em] [text-wrap:balance] md:text-[52px] lg:text-[56px] lg:leading-[1.04]">
-            <span className="text-roof-ink">Consistent, qualified roof inspections. Every month.</span>
+            <span className="text-roof-ink">More signed roofing jobs. Every month.</span>
           </h1>
           <p className="mt-5 max-w-[34rem] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
-            We build and run your ads, so homeowners searching for a roofer in your area book inspections straight onto your calendar. Every month.
+            We build and run your ads, so homeowners in your area who need a roofer book straight onto your calendar.
           </p>
           <div className="mt-8">
             <CTA className="w-full sm:w-auto" location="hero" />
