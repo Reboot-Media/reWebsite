@@ -1,25 +1,27 @@
 import { useEffect } from 'react';
 import PreQualForm from './roofers/PreQualForm.jsx';
 import { captureAttribution, initAnalytics, trackEvent } from './roofers/tracking.js';
+import { segmentForPath } from './segments.js';
 
-const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/OYPTmTF2lwE?rel=0';
+const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/OYPTmTF2lwE?rel=0&autoplay=1&mute=1&playsinline=1';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
 const CTA_LABEL = 'Book a Strategy Call';
+export const VISIBILITY_CHECK_PATH = '/visibility-check';
 
 const PHASES = [
-  { name: 'Evaluate', text: "We look at what you're doing now and keep what works." },
+  { name: 'Audit', text: "We do a full audit of your online presence to find what's working and what's not. We keep what's working and remove what's not." },
   { name: 'Reboot', text: "We set up your ads and install a storm tracker that watches your area for you. You're live in 2 business days." },
   { name: 'Compound', text: 'The system learns which calls turn into booked jobs, so results compound every month.' },
 ];
 
 const FAQS = [
   {
-    q: "I don't pay for leads.",
-    a: "You won't. You pay for ads that run in your company's name. Homeowners who search for a roofer find you and book straight onto your calendar.",
+    q: 'Is this a lead-sharing or lead-gen service?',
+    a: "No. We don't sell or share leads. We run ads in your company's name, so homeowners searching for a roofer in your area find you and book straight onto your calendar. Every one is yours alone.",
   },
   {
-    q: "We've tried ads before. The ROI wasn't there.",
-    a: "Most setups chase clicks, not inspections. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
+    q: "We've tried ads before and the ROI wasn't there. Why would this be different?",
+    a: "Most setups chase clicks, not signed jobs. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
   },
   {
     q: 'Can the ads focus on certain areas and jobs?',
@@ -45,20 +47,20 @@ const SAMPLE_BOOKING = {
 const EXAMPLE_ROWS = [
   ['Needs', 'Storm damage'],
   ['Inspection', 'Thursday, 9:00 AM'],
-  ['Roof age', 'About 12 years'],
+  ['Roof age', '~12 years'],
   ['Insurance', 'Not filed yet'],
   ['Their note', '"Shingles came off the back slope after the wind."'],
 ];
 
-const focusRing = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
-const h2Class = 'text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-roof-ink [text-wrap:balance] md:text-[40px] lg:text-[44px]';
-const bodyClass = 'text-[17px] leading-[1.65] text-roof-ink md:text-[18px]';
-const mutedClass = 'text-[17px] leading-[1.65] text-roof-muted md:text-[18px]';
-const wrap = 'mx-auto max-w-[1120px] px-5 md:px-8';
-const sec = 'py-14 md:py-20 lg:py-32';
-const card = 'rounded-[20px] bg-roof-surface ring-1 ring-roof-border-subtle';
+export const focusRing = 'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+export const h2Class = 'text-[30px] font-extrabold leading-[1.1] tracking-[-0.03em] text-roof-ink [text-wrap:balance] md:text-[40px] lg:text-[44px]';
+export const bodyClass = 'text-[17px] leading-[1.65] text-roof-ink md:text-[18px]';
+export const mutedClass = 'text-[17px] leading-[1.65] text-roof-muted md:text-[18px]';
+export const wrap = 'mx-auto max-w-[1120px] px-5 md:px-8';
+export const sec = 'py-14 md:py-20 lg:py-32';
+export const card = 'rounded-[20px] bg-roof-surface ring-1 ring-roof-border-subtle';
 
-function Logo({ className = 'h-7 w-7' }) {
+export function Logo({ className = 'h-7 w-7' }) {
   return <img src="/logo.png" alt="" className={className} />;
 }
 
@@ -70,7 +72,7 @@ function IconLinkedIn({ className = 'h-5 w-5' }) {
   );
 }
 
-function Icon({ d, className = 'h-6 w-6', children }) {
+export function Icon({ d, className = 'h-6 w-6', children }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {d ? <path d={d} /> : children}
@@ -78,7 +80,7 @@ function Icon({ d, className = 'h-6 w-6', children }) {
   );
 }
 
-const btnBase = `inline-flex items-center justify-center font-semibold transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none ${focusRing}`;
+export const btnBase = `inline-flex items-center justify-center font-semibold transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none ${focusRing}`;
 
 function CTA({ children = CTA_LABEL, small = false, className = '', location = 'body' }) {
   const look = 'bg-accent text-white hover:bg-accent-dark';
@@ -90,7 +92,7 @@ function CTA({ children = CTA_LABEL, small = false, className = '', location = '
   );
 }
 
-const col = 'max-w-[640px]';
+export const col = 'max-w-[640px]';
 
 function Header() {
   return (
@@ -117,7 +119,6 @@ function FounderVideo() {
         <iframe
           src={FOUNDER_VIDEO_URL}
           title="How Reboot Media works"
-          loading="lazy"
           allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
@@ -128,21 +129,34 @@ function FounderVideo() {
   );
 }
 
-function Hero() {
+export function VisibilityCheckLink({ className = '', location }) {
+  return (
+    <a
+      href={VISIBILITY_CHECK_PATH}
+      onClick={() => trackEvent('visibility_check_click', { location })}
+      className={`inline-flex min-h-[44px] items-center text-[17px] font-semibold text-accent-dark underline underline-offset-4 hover:text-accent ${focusRing} ${className}`}
+    >
+      Not ready for a call? Get a free Visibility Check
+    </a>
+  );
+}
+
+function Hero({ segment }) {
   return (
     <section data-section="hero" className="relative overflow-hidden bg-[linear-gradient(180deg,theme(colors.accent.bg)_0%,white_62%)] pb-14 pt-10 md:pb-24 md:pt-24">
       <div className={`${wrap} relative grid gap-10 md:gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:items-center lg:gap-16`}>
         <div>
-          <p className="mb-5 text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.14em] text-accent">For residential roofing companies</p>
+          <p className="mb-5 text-[13px] font-semibold uppercase leading-[1.4] tracking-[0.14em] text-accent">{segment?.eyebrow || 'For residential roofing companies'}</p>
           <h1 className="text-[36px] font-extrabold leading-[1.1] tracking-[-0.035em] [text-wrap:balance] md:text-[52px] lg:text-[56px] lg:leading-[1.04]">
-            <span className="text-roof-ink">Consistent, qualified roof inspections. Every month.</span>
+            <span className="text-roof-ink">{segment?.headline || 'Consistent, signed roofing jobs. Every month.'}</span>
           </h1>
           <p className="mt-5 max-w-[34rem] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
-            We build and run your ads, so homeowners searching for a roofer in your area book inspections straight onto your calendar. Every month.
+            {segment?.subline || 'We build and run your ads, so homeowners in your area who need a roofer book straight onto your calendar.'}
           </p>
           <div className="mt-8">
             <CTA className="w-full sm:w-auto" location="hero" />
             <p className="mt-3 text-[17px] text-roof-muted">A few questions, then pick a time.</p>
+            {!segment && <VisibilityCheckLink className="mt-4" location="hero" />}
           </div>
         </div>
         <FounderVideo />
@@ -180,23 +194,25 @@ function ExampleValue({ label, value }) {
   return value;
 }
 
-function ExampleCard() {
+function ExampleCard({ segment }) {
+  const booking = segment?.booking || SAMPLE_BOOKING;
+  const rows = segment?.rows || EXAMPLE_ROWS;
   return (
     <div className={`${card} p-5 shadow-card md:p-7`}>
       <div className="mb-6 flex items-center gap-3.5 border-b border-roof-border-subtle pb-5">
         <span aria-hidden="true" className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-bg text-[15px] font-bold text-accent-dark">
-          {SAMPLE_BOOKING.initials}
+          {booking.initials}
         </span>
         <div className="min-w-0">
-          <p className="text-[17px] font-bold leading-[1.3] text-roof-ink">{SAMPLE_BOOKING.name}</p>
+          <p className="text-[17px] font-bold leading-[1.3] text-roof-ink">{booking.name}</p>
           <p className="text-[15px] leading-[1.4] text-roof-muted">
-            <span className="block">{SAMPLE_BOOKING.place}</span>
-            <span className="block">{SAMPLE_BOOKING.phone}</span>
+            <span className="block">{booking.place}</span>
+            <span className="block">{booking.phone}</span>
           </p>
         </div>
       </div>
       <dl>
-        {EXAMPLE_ROWS.map(([k, v]) => (
+        {rows.map(([k, v]) => (
           <div key={k} className="mb-4">
             <dt className="text-xs font-semibold uppercase leading-[1.4] tracking-[0.08em] text-roof-muted">{k}</dt>
             <dd className="mt-0.5 text-[17px] font-semibold leading-[1.45] text-roof-ink">
@@ -209,30 +225,30 @@ function ExampleCard() {
   );
 }
 
-function KnowBeforeYouGo() {
+function KnowBeforeYouGo({ segment }) {
   return (
     <section data-section="know_before_you_go" className={`bg-roof-paper ${sec}`}>
       <div className={`${wrap} grid gap-10 md:gap-12 lg:grid-cols-2 lg:items-center lg:gap-[72px]`}>
         <div>
-          <h2 className={`mb-5 ${h2Class}`}>Know who you're meeting before you go.</h2>
+          <h2 className={`mb-5 ${h2Class}`}>{segment?.knowTitle || "Know who you're meeting before you go."}</h2>
           <p className={`${col} ${mutedClass}`}>
-            Homeowners answer a few questions before they book. You see what they need ahead of time.
+            {segment?.knowText || 'Homeowners answer a few questions before they book. You see what they need ahead of time.'}
           </p>
         </div>
-        <ExampleCard />
+        <ExampleCard segment={segment} />
       </div>
     </section>
   );
 }
 
-function WhoItsFor() {
+function WhoItsFor({ segment }) {
   return (
     <section data-section="who_its_for" className={`bg-roof-surface ${sec} pb-0`}>
       <div className={`${wrap}`}>
         <div className={col}>
           <h2 className={`mb-5 ${h2Class}`}>Is this a fit?</h2>
           <p className={mutedClass}>
-            It's for residential roofing companies that answer the phone and show up to the inspection. We work with one roofer per service area.
+            {segment?.fit || "It's for residential roofing companies that answer the phone and show up to the inspection. We work with one roofer per service area."}
           </p>
         </div>
       </div>
@@ -241,9 +257,9 @@ function WhoItsFor() {
 }
 
 const CREDENTIALS = [
-  'Over 10 years combined in marketing, home services, and construction',
-  "Master's and bachelor's degrees in computer science",
-  'Hands-on experience in home services and construction, not just marketing',
+  'Marketing',
+  'Construction',
+  'Engineering',
 ];
 
 function Team() {
@@ -256,8 +272,9 @@ function Team() {
         <div className={col}>
           <h2 className={`mb-5 ${h2Class}`}>Who we are</h2>
           <p className={`mb-5 ${mutedClass}`}>
-            Reboot Media was founded by Kendall Reid. We build the system ourselves, and we know the trade it's built for.
+            Reboot Media was founded by ex-Oracle AI engineer Kendall Reid.
           </p>
+          <p className={`mb-3 ${bodyClass}`}>Over 10 years of combined experience in:</p>
           <ul className="mb-6 space-y-3">
             {CREDENTIALS.map((c) => (
               <li key={c} className={`flex gap-3 ${bodyClass}`}>
@@ -266,6 +283,7 @@ function Team() {
               </li>
             ))}
           </ul>
+          <p className={`mb-5 font-semibold ${bodyClass}`}>Built by people who write the code and know the trade.</p>
           <p className={bodyClass}>
             Email:{' '}
             <a href="mailto:hello@rebootmedia.us" className={`font-medium text-accent-dark underline underline-offset-4 hover:text-accent ${focusRing}`}>
@@ -278,7 +296,7 @@ function Team() {
   );
 }
 
-function Faq() {
+function Faq({ segment }) {
   return (
     <section data-section="faq" id="after-you-book" className={`scroll-mt-24 bg-roof-paper ${sec}`}>
       <div className={wrap}>
@@ -298,12 +316,13 @@ function Faq() {
             </details>
           ))}
         </div>
+        {!segment && <VisibilityCheckLink className="mt-8" location="faq" />}
       </div>
     </section>
   );
 }
 
-function FormSection() {
+function FormSection({ segment }) {
   return (
     <section data-section="book_call" className={`bg-[linear-gradient(0deg,theme(colors.accent.bg)_0%,white_70%)] ${sec}`}>
       <div className={wrap}>
@@ -311,7 +330,7 @@ function FormSection() {
           <h2 className={`mb-4 ${h2Class}`}>Book your strategy call</h2>
           <p className={`mb-10 ${mutedClass}`}>A few questions, then pick a time.</p>
           <div className="w-full rounded-3xl bg-roof-surface p-6 shadow-lift ring-1 ring-roof-border-subtle md:p-8 [&_#prequal-form]:scroll-mt-24">
-            <PreQualForm />
+            <PreQualForm segment={segment} />
           </div>
         </div>
       </div>
@@ -319,7 +338,7 @@ function FormSection() {
   );
 }
 
-function Footer() {
+export function Footer() {
   return (
     <footer className="border-t border-roof-border-subtle bg-roof-surface">
       <div className={`${wrap} flex flex-col gap-2 py-10 text-[15px] text-roof-muted sm:flex-row sm:items-center sm:justify-between`}>
@@ -348,22 +367,31 @@ function Footer() {
 }
 
 export default function App() {
+  const segment = segmentForPath(window.location.pathname.replace(/\/+$/, ''));
+
   useEffect(() => {
+    if (segment) {
+      // Cold email pages are for people we emailed, not for search.
+      const robots = document.createElement('meta');
+      robots.name = 'robots';
+      robots.content = 'noindex';
+      document.head.appendChild(robots);
+    }
     captureAttribution();
     initAnalytics();
-  }, []);
+  }, [segment]);
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-roof-surface font-sans text-[17px] text-roof-ink antialiased">
       <Header />
       <main>
-        <Hero />
+        <Hero segment={segment} />
         <Phases />
-        <KnowBeforeYouGo />
-        <WhoItsFor />
+        <KnowBeforeYouGo segment={segment} />
+        <WhoItsFor segment={segment} />
         <Team />
-        <Faq />
-        <FormSection />
+        <Faq segment={segment} />
+        <FormSection segment={segment} />
       </main>
       <Footer />
     </div>

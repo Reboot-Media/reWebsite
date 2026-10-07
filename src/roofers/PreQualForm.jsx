@@ -2,11 +2,30 @@ import { useState, useRef, lazy, Suspense } from 'react'
 import { formatPhone, isCity, isEmail, isFullName, isPhone } from './validate.js'
 import { newEventId, trackLead, trackStep, postLead, getAttribution } from './tracking'
 
+// Arrow that sits on the text baseline and slides right on hover.
+export function Arrow() {
+  return (
+    <svg
+      className="h-5 w-5 shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transition-none"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  )
+}
+
 // react-calendly is only ever pulled in through this lazy boundary, and
 // only once a prospect has qualified — protects LCP on initial paint.
 const CalendlyEmbed = lazy(() => import('./CalendlyEmbed.jsx'))
 
-const TOTAL_STEPS = 3
+const TOTAL_STEPS = 4
+const QUESTION_STEPS = 3
 
 const initialFields = {
   fullName: '',
@@ -15,8 +34,12 @@ const initialFields = {
   phone: '',
   decisionMaker: '',
   city: '',
+  annualRevenue: '',
+  hasWebsite: '',
+  websiteUrl: '',
   googleAdsStatus: '',
   adSpend: '',
+  startTimeline: '',
   drivingFactor: '',
   // Honeypot — offscreen, aria-hidden, unreachable by Tab. A filled value
   // marks the submit as likely bot traffic.
@@ -32,7 +55,7 @@ const initialFields = {
   referral_code: '',
 }
 
-function TextField({ id, label, type = 'text', value, onChange, error, hint, autoComplete }) {
+export function TextField({ id, label, type = 'text', value, onChange, error, hint, autoComplete }) {
   const errorId = `${id}-error`
   return (
     <div className="mb-6">
@@ -75,10 +98,10 @@ function TextAreaField({ id, label, value, onChange, error, hint }) {
         name={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        rows={4}
+        rows={3}
         aria-invalid={error ? 'true' : 'false'}
         aria-describedby={error ? errorId : undefined}
-        className={`w-full min-h-[120px] rounded-xl border bg-roof-surface px-4 py-3 text-[17px] text-roof-ink outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+        className={`w-full min-h-[96px] rounded-xl border bg-roof-surface px-4 py-3 text-[17px] text-roof-ink outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
           error ? 'border-danger' : 'border-roof-border-strong'
         }`}
       />
@@ -134,7 +157,7 @@ function RadioGroup({ legend, name, options, value, onChange, error, hint }) {
 }
 
 function ProgressIndicator({ step, finalLabel }) {
-  const labels = ['Your info', 'A few questions', finalLabel]
+  const labels = ['Your business', 'Your marketing', 'Your info', finalLabel]
   return (
     <ol className="mb-8 flex items-center" aria-label="Form progress">
       {labels.map((label, i) => {
@@ -187,7 +210,7 @@ function ConfirmationMessage() {
   return (
     <div role="status" className="rounded-2xl border border-roof-border-subtle bg-roof-surface p-8 text-center">
       <p className="text-[17px] font-medium text-roof-ink">
-        You're booked. Watch for a confirmation.
+        You're booked. Taking you to a quick video before your call…
       </p>
     </div>
   )
@@ -201,7 +224,7 @@ function CalendlyFallback() {
   )
 }
 
-export default function PreQualForm() {
+export default function PreQualForm({ segment = null }) {
   const [step, setStep] = useState(1)
   const [fields, setFields] = useState(initialFields)
   const [errors, setErrors] = useState({})
@@ -210,7 +233,6 @@ export default function PreQualForm() {
   const [booked, setBooked] = useState(false)
   const [liveMessage, setLiveMessage] = useState('')
   const startedRef = useRef(false)
-  const partialSentRef = useRef(false)
 
   function update(name, value) {
     if (!startedRef.current && name !== 'referral_code') {
@@ -220,7 +242,27 @@ export default function PreQualForm() {
     setFields((f) => ({ ...f, [name]: value }))
   }
 
+  // Screen 1: quick taps about the business. Easy questions come first so
+  // the roofer is committed before we ask for contact details.
   function validateStep1() {
+    const e = {}
+    if (!fields.decisionMaker) e.decisionMaker = 'Select an option.'
+    if (!fields.annualRevenue) e.annualRevenue = 'Select an option.'
+    if (!fields.hasWebsite) e.hasWebsite = 'Select an option.'
+    return e
+  }
+
+  // Screen 2: marketing and timing.
+  function validateStep2() {
+    const e = {}
+    if (!fields.googleAdsStatus) e.googleAdsStatus = 'Select an option.'
+    if (!fields.adSpend) e.adSpend = 'Select an option.'
+    if (!fields.startTimeline) e.startTimeline = 'Select an option.'
+    return e
+  }
+
+  // Screen 3: contact details, last.
+  function validateStep3() {
     const e = {}
     if (!fields.fullName.trim()) e.fullName = 'Enter your first and last name.'
     else if (!isFullName(fields.fullName)) e.fullName = 'Enter your first and last name, letters only.'
@@ -229,39 +271,14 @@ export default function PreQualForm() {
     else if (!isEmail(fields.email)) e.email = 'Enter a valid email address.'
     if (!fields.phone.trim()) e.phone = 'Enter your mobile phone number.'
     else if (!isPhone(fields.phone)) e.phone = 'Enter a 10-digit US phone number, like (555) 234-5678.'
-    return e
-  }
-
-  function validateStep2() {
-    const e = {}
-    if (!fields.decisionMaker) e.decisionMaker = 'Select an option.'
     if (!fields.city.trim()) e.city = 'Enter the city you operate in.'
     else if (!isCity(fields.city)) e.city = 'Enter a city name, letters only.'
-    if (!fields.googleAdsStatus) e.googleAdsStatus = 'Select an option.'
-    if (!fields.adSpend) e.adSpend = 'Select an option.'
     return e
   }
 
-  // Capture the contact as soon as step 1 passes, once per form instance, so
-  // abandoned forms still reach the CRM. Only step-1 keys are sent (empty
-  // step-2 keys could overwrite contact fields) and `qualified` is left unset
-  // so the server fires no Meta event.
-  function sendPartial() {
-    if (partialSentRef.current) return
-    partialSentRef.current = true
-    trackStep('PrequalStep1Complete')
-    postLead({
-      fullName: fields.fullName,
-      company: fields.company,
-      email: fields.email,
-      phone: fields.phone,
-      event_id: newEventId(),
-      stage: 'partial',
-      tags: ['Partial'],
-      spam: fields.referral_code.trim().length > 0,
-      page: 'roofers',
-      attribution: getAttribution(),
-    })
+  const STEP_MESSAGES = {
+    2: 'Step 2 of 3: Your marketing.',
+    3: 'Step 3 of 3: Your info.',
   }
 
   function handleSubmitStep(e) {
@@ -271,7 +288,8 @@ export default function PreQualForm() {
     // events / two webhook POSTs).
     if (submitted) return
 
-    const stepErrors = step === 1 ? validateStep1() : validateStep2()
+    const validators = { 1: validateStep1, 2: validateStep2, 3: validateStep3 }
+    const stepErrors = validators[step]()
     if (Object.keys(stepErrors).length > 0) {
       setErrors(stepErrors)
       setLiveMessage('There are errors in the form. Please review and correct the highlighted fields.')
@@ -279,14 +297,14 @@ export default function PreQualForm() {
     }
     setErrors({})
 
-    if (step === 1) {
-      sendPartial()
-      setStep(2)
-      setLiveMessage('Step 2 of 3: A few questions.')
+    if (step < QUESTION_STEPS) {
+      trackStep(`PrequalStep${step}Complete`)
+      setStep(step + 1)
+      setLiveMessage(STEP_MESSAGES[step + 1])
       return
     }
 
-    // Step 2 submit: run qualify logic, fire tracking, POST lead.
+    // Final submit: run qualify logic, fire tracking, POST lead.
     //
     // Authority is the only gate. Budget does NOT disqualify — a roofer who
     // picks "Under $3K" still books a call; the LowBudget tag is what tells
@@ -294,20 +312,9 @@ export default function PreQualForm() {
     // gets routed to nurture.
     const isQualified = fields.decisionMaker !== 'No'
 
-    // Honeypot tripped. This FLAGS the submit, it does not block it.
-    //
-    // The old behaviour was to silently route the person to the nurture
-    // screen and fire nothing at all — no POST, no pixel, no log. That
-    // makes a false positive completely invisible: a real roofer gets told
-    // they aren't eligible and you have no record they ever tried. Given
-    // this form ran with the honeypot named `website` (see initialFields),
-    // false positives were likely, not hypothetical.
-    //
-    // So: they proceed exactly as they otherwise would, but we tag the
-    // submit `SpamSuspect` and set `spam: true` so it's visible in the CRM,
-    // and we withhold the Meta conversion event. A wrongly-flagged customer
-    // keeps their booking; a real bot costs one CRM row and never pollutes
-    // the ad signal.
+    // Honeypot tripped. This FLAGS the submit, it does not block it: the
+    // person proceeds as normal, the CRM row is tagged SpamSuspect, and the
+    // Meta conversion is withheld. See initialFields for the honeypot name.
     const trippedHoneypot = fields.referral_code.trim().length > 0
 
     let tags
@@ -315,10 +322,11 @@ export default function PreQualForm() {
     else if (fields.adSpend === '$7K+') tags = ['Qualified', 'Tier2']
     else if (fields.adSpend === 'Under $3K') tags = ['Qualified', 'LowBudget']
     else tags = ['Qualified']
+    if (segment) tags = [...tags, segment.tag]
     if (trippedHoneypot) tags = [...tags, 'SpamSuspect']
 
     const eventId = newEventId()
-    if (!trippedHoneypot) trackStep('PrequalStep2Complete')
+    if (!trippedHoneypot) trackStep('PrequalStep3Complete')
 
     // Flagged submits never fire the pixel — Meta's Lead signal stays clean.
     // The server applies the same rule to CAPI via the `spam` flag.
@@ -333,16 +341,17 @@ export default function PreQualForm() {
       tags,
       qualified: isQualified,
       spam: trippedHoneypot,
-      page: 'roofers',
+      page: segment ? segment.slug : 'roofers',
+      segment: segment ? segment.key : '',
       attribution: getAttribution(),
     })
 
     setQualified(isQualified)
     setSubmitted(true)
-    setStep(3)
+    setStep(TOTAL_STEPS)
     setLiveMessage(
       isQualified
-        ? "Step 3 of 3: You're qualified — book your appointment."
+        ? "You're qualified — book your appointment."
         : "We might not be the right fit yet — here's how to get ready."
     )
   }
@@ -356,6 +365,10 @@ export default function PreQualForm() {
   }
 
   const finalLabel = submitted && !qualified ? 'Next steps' : 'Book'
+  const primaryBtn =
+    'group inline-flex h-14 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-[14px] bg-accent px-5 text-[17px] font-semibold text-white hover:bg-accent-dark transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
+  const backBtn =
+    'h-14 shrink-0 basis-[34%] rounded-[14px] border border-roof-border-strong px-5 py-3 text-[17px] font-semibold text-roof-ink transition-colors hover:bg-roof-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2'
 
   return (
     <div id="prequal-form" className="mx-auto w-full max-w-xl">
@@ -364,43 +377,141 @@ export default function PreQualForm() {
         {liveMessage}
       </div>
 
-      {step < 3 && (
+      {step <= QUESTION_STEPS && (
         <form onSubmit={handleSubmitStep} noValidate>
           {step === 1 && (
             <div>
-              <TextField
-                id="pq-fullName"
-                label="First and last name"
-                value={fields.fullName}
-                onChange={(v) => update('fullName', v)}
-                error={errors.fullName}
-                autoComplete="name"
+              <RadioGroup
+                legend="Are you the owner / decision-maker?"
+                name="pq-decisionMaker"
+                options={['Yes', 'I share the decision', 'No']}
+                value={fields.decisionMaker}
+                onChange={(v) => update('decisionMaker', v)}
+                error={errors.decisionMaker}
               />
-              <TextField
-                id="pq-company"
-                label="Company name"
-                value={fields.company}
-                onChange={(v) => update('company', v)}
-                error={errors.company}
-                autoComplete="organization"
+              <RadioGroup
+                legend="What's your company's annual revenue?"
+                name="pq-annualRevenue"
+                options={['Under $500K', '$500K–$1M', '$1M–$3M', '$3M–$5M', '$5M+']}
+                value={fields.annualRevenue}
+                onChange={(v) => update('annualRevenue', v)}
+                error={errors.annualRevenue}
               />
-              <TextField
-                id="pq-email"
-                type="email"
-                label="Email"
-                value={fields.email}
-                onChange={(v) => update('email', v)}
-                error={errors.email}
-                autoComplete="email"
+              <RadioGroup
+                legend="Do you have a website?"
+                name="pq-hasWebsite"
+                options={['Yes', 'No']}
+                value={fields.hasWebsite}
+                onChange={(v) => update('hasWebsite', v)}
+                error={errors.hasWebsite}
               />
+              {fields.hasWebsite === 'Yes' && (
+                <TextField
+                  id="pq-websiteUrl"
+                  label="Website address (optional)"
+                  value={fields.websiteUrl}
+                  onChange={(v) => update('websiteUrl', v)}
+                  autoComplete="url"
+                />
+              )}
+              <button type="submit" className={`${primaryBtn} w-full`}>
+                Continue
+                <Arrow />
+              </button>
+            </div>
+          )}
+
+          {step === 2 && (
+            <div>
+              <RadioGroup
+                legend="Are you running paid ads right now?"
+                name="pq-googleAdsStatus"
+                options={['Running now', 'Ran before, stopped', 'Never have']}
+                value={fields.googleAdsStatus}
+                onChange={(v) => update('googleAdsStatus', v)}
+                error={errors.googleAdsStatus}
+              />
+              <RadioGroup
+                legend="What can you put toward ad spend each month?"
+                hint="your money, paid straight to the ads, not to us"
+                name="pq-adSpend"
+                options={['Under $3K', '$3K–$5K', '$5K–$7K', '$7K+']}
+                value={fields.adSpend}
+                onChange={(v) => update('adSpend', v)}
+                error={errors.adSpend}
+              />
+              <RadioGroup
+                legend="If we determine this is a right fit, when are you looking to get started?"
+                name="pq-startTimeline"
+                options={['Right away', 'Within 30 days', 'In 1–3 months', 'Just exploring']}
+                value={fields.startTimeline}
+                onChange={(v) => update('startTimeline', v)}
+                error={errors.startTimeline}
+              />
+              <div className="flex gap-3">
+                <button type="button" onClick={goBack} className={backBtn}>
+                  Back
+                </button>
+                <button type="submit" className={primaryBtn}>
+                  Continue
+                <Arrow />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div>
+              <div className="grid gap-x-4 sm:grid-cols-2">
+                <TextField
+                  id="pq-fullName"
+                  label="First and last name"
+                  value={fields.fullName}
+                  onChange={(v) => update('fullName', v)}
+                  error={errors.fullName}
+                  autoComplete="name"
+                />
+                <TextField
+                  id="pq-company"
+                  label="Company name"
+                  value={fields.company}
+                  onChange={(v) => update('company', v)}
+                  error={errors.company}
+                  autoComplete="organization"
+                />
+                <TextField
+                  id="pq-email"
+                  type="email"
+                  label="Email"
+                  value={fields.email}
+                  onChange={(v) => update('email', v)}
+                  error={errors.email}
+                  autoComplete="email"
+                />
+                <TextField
+                  id="pq-phone"
+                  type="tel"
+                  label="Mobile phone"
+                  value={fields.phone}
+                  onChange={(v) => update('phone', formatPhone(v))}
+                  error={errors.phone}
+                  autoComplete="tel"
+                />
+              </div>
               <TextField
-                id="pq-phone"
-                type="tel"
-                label="Mobile phone"
-                value={fields.phone}
-                onChange={(v) => update('phone', formatPhone(v))}
-                error={errors.phone}
-                autoComplete="tel"
+                id="pq-city"
+                label="What city do you operate in?"
+                value={fields.city}
+                onChange={(v) => update('city', v)}
+                error={errors.city}
+                autoComplete="address-level2"
+              />
+              <TextAreaField
+                id="pq-drivingFactor"
+                label="What made you start looking for help now? (optional)"
+                value={fields.drivingFactor}
+                onChange={(v) => update('drivingFactor', v)}
+                error={errors.drivingFactor}
               />
               {/* Honeypot — offscreen and unreachable by keyboard/screen reader.
                   Real users never see it; a filled value flags (never blocks)
@@ -420,70 +531,13 @@ export default function PreQualForm() {
                   onChange={(e) => update('referral_code', e.target.value)}
                 />
               </div>
-              <button
-                type="submit"
-                className="inline-flex h-14 w-full items-center justify-center rounded-[14px] bg-accent px-7 text-[17px] font-semibold text-white hover:bg-accent-dark transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-              >
-                Continue →
-              </button>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div>
-              <RadioGroup
-                legend="Are you the owner / decision-maker?"
-                name="pq-decisionMaker"
-                options={['Yes', 'I share the decision', 'No']}
-                value={fields.decisionMaker}
-                onChange={(v) => update('decisionMaker', v)}
-                error={errors.decisionMaker}
-              />
-              <TextField
-                id="pq-city"
-                label="What city do you operate in?"
-                value={fields.city}
-                onChange={(v) => update('city', v)}
-                error={errors.city}
-                autoComplete="address-level2"
-              />
-              <RadioGroup
-                legend="Are you running paid ads right now?"
-                name="pq-googleAdsStatus"
-                options={['Running now', 'Ran before, stopped', 'Never have']}
-                value={fields.googleAdsStatus}
-                onChange={(v) => update('googleAdsStatus', v)}
-                error={errors.googleAdsStatus}
-              />
-              <RadioGroup
-                legend="What can you put toward ad spend each month?"
-                hint="your money, paid straight to the ad platform"
-                name="pq-adSpend"
-                options={['Under $3K', '$3K–$5K', '$5K–$7K', '$7K+']}
-                value={fields.adSpend}
-                onChange={(v) => update('adSpend', v)}
-                error={errors.adSpend}
-              />
-              <TextAreaField
-                id="pq-drivingFactor"
-                label="What's driving you to look now? (optional)"
-                value={fields.drivingFactor}
-                onChange={(v) => update('drivingFactor', v)}
-                error={errors.drivingFactor}
-              />
               <div className="flex gap-3">
-                <button
-                  type="button"
-                  onClick={goBack}
-                  className="h-14 flex-1 rounded-[14px] border border-roof-border-strong px-6 py-3 text-[17px] font-semibold text-roof-ink transition-colors hover:bg-roof-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-                >
+                <button type="button" onClick={goBack} className={backBtn}>
                   Back
                 </button>
-                <button
-                  type="submit"
-                  className="inline-flex h-14 flex-1 items-center justify-center rounded-[14px] bg-accent px-7 text-[17px] font-semibold text-white hover:bg-accent-dark transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-                >
-                  Submit →
+                <button type="submit" className={primaryBtn}>
+                  Pick a time
+                  <Arrow />
                 </button>
               </div>
             </div>
@@ -491,7 +545,7 @@ export default function PreQualForm() {
         </form>
       )}
 
-      {step === 3 && submitted && (
+      {step === TOTAL_STEPS && submitted && (
         <div>
           {qualified ? (
             booked ? (
@@ -507,7 +561,12 @@ export default function PreQualForm() {
                     email={fields.email}
                     phone={fields.phone}
                     company={fields.company}
-                    onScheduled={() => setBooked(true)}
+                    onScheduled={() => {
+                      setBooked(true)
+                      // Short pause so the booking events finish sending, then
+                      // take them to the pre-call page with the walkthrough video.
+                      setTimeout(() => window.location.assign('/before-your-call'), 1200)
+                    }}
                   />
                 </Suspense>
               </div>
