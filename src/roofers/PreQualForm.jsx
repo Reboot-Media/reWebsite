@@ -28,6 +28,32 @@ const CalendlyEmbed = lazy(() => import('./CalendlyEmbed.jsx'))
 const TOTAL_STEPS = 4
 const QUESTION_STEPS = 3
 
+// The questions on screens 1 and 2. Segment pages (src/segments.js) swap in
+// their own set through `segment.quiz`; screen 3 (contact details) is the
+// same everywhere. Question types: radio, checkbox (stored as one
+// comma-separated string), text. `optional` skips validation; `showIf`
+// hides a question until another answer matches.
+export const DEFAULT_QUIZ = {
+  stepLabels: ['Your business', 'Your marketing'],
+  steps: [
+    [
+      { name: 'decisionMaker', type: 'radio', legend: 'Are you the owner / decision-maker?', options: ['Yes', 'I share the decision', 'No'] },
+      { name: 'annualRevenue', type: 'radio', legend: "What's your company's annual revenue?", options: ['Under $500K', '$500K–$1M', '$1M–$3M', '$3M–$5M', '$5M+'] },
+      { name: 'hasWebsite', type: 'radio', legend: 'Do you have a website?', options: ['Yes', 'No'] },
+      { name: 'websiteUrl', type: 'text', label: 'Website address (optional)', optional: true, autoComplete: 'url', showIf: (f) => f.hasWebsite === 'Yes' },
+    ],
+    [
+      { name: 'googleAdsStatus', type: 'radio', legend: 'Are you running paid ads right now?', options: ['Running now', 'Ran before, stopped', 'Never have'] },
+      { name: 'adSpend', type: 'radio', legend: 'What can you put toward ad spend each month?', hint: 'your money, paid straight to the ads, not to us', options: ['Under $3K', '$3K–$5K', '$5K–$7K', '$7K+'] },
+      { name: 'startTimeline', type: 'radio', legend: 'If we determine this is a right fit, when are you looking to get started?', options: ['Right away', 'Within 30 days', 'In 1–3 months', 'Just exploring'] },
+    ],
+  ],
+  drivingFactorLabel: 'What made you start looking for help now? (optional)',
+  // adSpend answers that add the LowBudget / Tier2 tags.
+  lowBudget: 'Under $3K',
+  tier2: '$7K+',
+}
+
 const initialFields = {
   fullName: '',
   company: '',
@@ -42,6 +68,13 @@ const initialFields = {
   adSpend: '',
   startTimeline: '',
   drivingFactor: '',
+  // Segment-page questions (see SEGMENTS[*].quiz in src/segments.js).
+  crewCount: '',
+  growthPlan: '',
+  targetMarkets: '',
+  commercialShare: '',
+  bidSources: '',
+  bidCapacity: '',
   // Honeypot — offscreen, aria-hidden, unreachable by Tab. A filled value
   // marks the submit as likely bot traffic.
   //
@@ -157,8 +190,66 @@ function RadioGroup({ legend, name, options, value, onChange, error, hint }) {
   )
 }
 
-function ProgressIndicator({ step, finalLabel }) {
-  const labels = ['Your business', 'Your marketing', 'Your info', finalLabel]
+function CheckboxGroup({ legend, name, options, value, onChange, error, hint }) {
+  const errorId = `${name}-error`
+  const selected = value ? value.split(', ') : []
+  function toggle(opt) {
+    const next = selected.includes(opt) ? selected.filter((o) => o !== opt) : [...selected, opt]
+    // Keep the order the options are listed in, so the CRM value is stable.
+    onChange(options.filter((o) => next.includes(o)).join(', '))
+  }
+  return (
+    <fieldset className="mb-6" aria-describedby={error ? errorId : undefined}>
+      <legend className="mb-2 block text-[15px] font-semibold text-roof-ink">{legend}</legend>
+      {hint && <p className="mb-2 text-sm text-roof-ink">{hint}</p>}
+      <div className="flex flex-col gap-3">
+        {options.map((opt) => {
+          const optId = `${name}-${opt.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`
+          const checked = selected.includes(opt)
+          return (
+            <label
+              key={opt}
+              htmlFor={optId}
+              className={`flex min-h-[48px] cursor-pointer items-center gap-3 rounded-xl border bg-roof-surface px-4 py-3 text-[17px] text-roof-ink transition-colors ${
+                checked ? 'border-accent ring-1 ring-accent' : 'border-roof-border-subtle'
+              }`}
+            >
+              <input
+                type="checkbox"
+                id={optId}
+                name={name}
+                value={opt}
+                checked={checked}
+                onChange={() => toggle(opt)}
+                aria-invalid={error ? 'true' : 'false'}
+                className="h-5 w-5 shrink-0 accent-accent focus-visible:ring-2 focus-visible:ring-accent"
+              />
+              {opt}
+            </label>
+          )
+        })}
+      </div>
+      {error && (
+        <p id={errorId} className="mt-2 text-sm text-danger">
+          {error}
+        </p>
+      )}
+    </fieldset>
+  )
+}
+
+function Question({ q, fields, errors, update }) {
+  if (q.showIf && !q.showIf(fields)) return null
+  const common = { value: fields[q.name], onChange: (v) => update(q.name, v), error: errors[q.name], hint: q.hint }
+  if (q.type === 'text') {
+    return <TextField id={`pq-${q.name}`} label={q.label} autoComplete={q.autoComplete} {...common} />
+  }
+  const Group = q.type === 'checkbox' ? CheckboxGroup : RadioGroup
+  return <Group legend={q.legend} name={`pq-${q.name}`} options={q.options} {...common} />
+}
+
+function ProgressIndicator({ step, finalLabel, stepLabels }) {
+  const labels = [...stepLabels, 'Your info', finalLabel]
   return (
     <ol className="mb-8 flex items-center" aria-label="Form progress">
       {labels.map((label, i) => {
@@ -276,22 +367,17 @@ export default function PreQualForm({ segment = null }) {
     setFields((f) => ({ ...f, [name]: value }))
   }
 
-  // Screen 1: quick taps about the business. Easy questions come first so
-  // the roofer is committed before we ask for contact details.
-  function validateStep1() {
-    const e = {}
-    if (!fields.decisionMaker) e.decisionMaker = 'Select an option.'
-    if (!fields.annualRevenue) e.annualRevenue = 'Select an option.'
-    if (!fields.hasWebsite) e.hasWebsite = 'Select an option.'
-    return e
-  }
+  const quiz = segment?.quiz || DEFAULT_QUIZ
 
-  // Screen 2: marketing and timing.
-  function validateStep2() {
+  // Screens 1 and 2: quick taps about the business, then marketing and
+  // timing. Easy questions come first so the roofer is committed before we
+  // ask for contact details.
+  function validateQuestions(questions) {
     const e = {}
-    if (!fields.googleAdsStatus) e.googleAdsStatus = 'Select an option.'
-    if (!fields.adSpend) e.adSpend = 'Select an option.'
-    if (!fields.startTimeline) e.startTimeline = 'Select an option.'
+    for (const q of questions) {
+      if (q.optional || (q.showIf && !q.showIf(fields))) continue
+      if (!fields[q.name].trim()) e[q.name] = q.type === 'checkbox' ? 'Select at least one.' : 'Select an option.'
+    }
     return e
   }
 
@@ -311,7 +397,7 @@ export default function PreQualForm({ segment = null }) {
   }
 
   const STEP_MESSAGES = {
-    2: 'Step 2 of 3: Your marketing.',
+    2: `Step 2 of 3: ${quiz.stepLabels[1]}.`,
     3: 'Step 3 of 3: Your info.',
   }
 
@@ -322,7 +408,7 @@ export default function PreQualForm({ segment = null }) {
     // events / two webhook POSTs).
     if (submitted) return
 
-    const validators = { 1: validateStep1, 2: validateStep2, 3: validateStep3 }
+    const validators = { 1: () => validateQuestions(quiz.steps[0]), 2: () => validateQuestions(quiz.steps[1]), 3: validateStep3 }
     const stepErrors = validators[step]()
     if (Object.keys(stepErrors).length > 0) {
       setErrors(stepErrors)
@@ -353,8 +439,8 @@ export default function PreQualForm({ segment = null }) {
 
     let tags
     if (!isQualified) tags = ['Nurture']
-    else if (fields.adSpend === '$7K+') tags = ['Qualified', 'Tier2']
-    else if (fields.adSpend === 'Under $3K') tags = ['Qualified', 'LowBudget']
+    else if (fields.adSpend === quiz.tier2) tags = ['Qualified', 'Tier2']
+    else if (fields.adSpend === quiz.lowBudget) tags = ['Qualified', 'LowBudget']
     else tags = ['Qualified']
     if (segment) tags = [...tags, segment.tag]
     if (trippedHoneypot) tags = [...tags, 'SpamSuspect']
@@ -370,6 +456,9 @@ export default function PreQualForm({ segment = null }) {
 
     postLead({
       ...fields,
+      // Segment quizzes ask for the website address without the yes/no
+      // question, so fill in hasWebsite for the CRM field that maps it.
+      hasWebsite: fields.hasWebsite || (fields.websiteUrl.trim() ? 'Yes' : ''),
       event_id: eventId,
       stage: 'complete',
       tags,
@@ -406,7 +495,7 @@ export default function PreQualForm({ segment = null }) {
 
   return (
     <div id="prequal-form" className="mx-auto w-full max-w-xl">
-      <ProgressIndicator step={step} finalLabel={finalLabel} />
+      <ProgressIndicator step={step} finalLabel={finalLabel} stepLabels={quiz.stepLabels} />
       <div aria-live="polite" className="sr-only">
         {liveMessage}
       </div>
@@ -415,39 +504,9 @@ export default function PreQualForm({ segment = null }) {
         <form onSubmit={handleSubmitStep} noValidate>
           {step === 1 && (
             <div>
-              <RadioGroup
-                legend="Are you the owner / decision-maker?"
-                name="pq-decisionMaker"
-                options={['Yes', 'I share the decision', 'No']}
-                value={fields.decisionMaker}
-                onChange={(v) => update('decisionMaker', v)}
-                error={errors.decisionMaker}
-              />
-              <RadioGroup
-                legend="What's your company's annual revenue?"
-                name="pq-annualRevenue"
-                options={['Under $500K', '$500K–$1M', '$1M–$3M', '$3M–$5M', '$5M+']}
-                value={fields.annualRevenue}
-                onChange={(v) => update('annualRevenue', v)}
-                error={errors.annualRevenue}
-              />
-              <RadioGroup
-                legend="Do you have a website?"
-                name="pq-hasWebsite"
-                options={['Yes', 'No']}
-                value={fields.hasWebsite}
-                onChange={(v) => update('hasWebsite', v)}
-                error={errors.hasWebsite}
-              />
-              {fields.hasWebsite === 'Yes' && (
-                <TextField
-                  id="pq-websiteUrl"
-                  label="Website address (optional)"
-                  value={fields.websiteUrl}
-                  onChange={(v) => update('websiteUrl', v)}
-                  autoComplete="url"
-                />
-              )}
+              {quiz.steps[0].map((q) => (
+                <Question key={q.name} q={q} fields={fields} errors={errors} update={update} />
+              ))}
               <button type="submit" className={`${primaryBtn} w-full`}>
                 Continue
                 <Arrow />
@@ -457,31 +516,9 @@ export default function PreQualForm({ segment = null }) {
 
           {step === 2 && (
             <div>
-              <RadioGroup
-                legend="Are you running paid ads right now?"
-                name="pq-googleAdsStatus"
-                options={['Running now', 'Ran before, stopped', 'Never have']}
-                value={fields.googleAdsStatus}
-                onChange={(v) => update('googleAdsStatus', v)}
-                error={errors.googleAdsStatus}
-              />
-              <RadioGroup
-                legend="What can you put toward ad spend each month?"
-                hint="your money, paid straight to the ads, not to us"
-                name="pq-adSpend"
-                options={['Under $3K', '$3K–$5K', '$5K–$7K', '$7K+']}
-                value={fields.adSpend}
-                onChange={(v) => update('adSpend', v)}
-                error={errors.adSpend}
-              />
-              <RadioGroup
-                legend="If we determine this is a right fit, when are you looking to get started?"
-                name="pq-startTimeline"
-                options={['Right away', 'Within 30 days', 'In 1–3 months', 'Just exploring']}
-                value={fields.startTimeline}
-                onChange={(v) => update('startTimeline', v)}
-                error={errors.startTimeline}
-              />
+              {quiz.steps[1].map((q) => (
+                <Question key={q.name} q={q} fields={fields} errors={errors} update={update} />
+              ))}
               <div className="flex gap-3">
                 <button type="button" onClick={goBack} className={backBtn}>
                   Back
@@ -542,7 +579,7 @@ export default function PreQualForm({ segment = null }) {
               />
               <TextAreaField
                 id="pq-drivingFactor"
-                label="What made you start looking for help now? (optional)"
+                label={quiz.drivingFactorLabel}
                 value={fields.drivingFactor}
                 onChange={(v) => update('drivingFactor', v)}
                 error={errors.drivingFactor}
