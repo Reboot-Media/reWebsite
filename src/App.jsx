@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
+import HeroVideo from './HeroVideo.jsx';
 import PreQualForm from './roofers/PreQualForm.jsx';
 import { captureAttribution, initAnalytics, trackEvent } from './roofers/tracking.js';
 import { segmentForPath } from './segments.js';
 
-const FOUNDER_VIDEO_URL = 'https://www.youtube-nocookie.com/embed/OYPTmTF2lwE?rel=0&autoplay=1&mute=1&playsinline=1';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
 const CTA_LABEL = 'Book a Strategy Call';
 export const VISIBILITY_CHECK_PATH = '/visibility-check';
@@ -108,19 +108,9 @@ function Header() {
 }
 
 function FounderVideo() {
-  if (!FOUNDER_VIDEO_URL) return null;
   return (
     <figure className="w-full">
-      <div className="aspect-video overflow-hidden rounded-[20px] bg-accent-bg shadow-lift ring-8 ring-white">
-        <iframe
-          src={FOUNDER_VIDEO_URL}
-          title="How Reboot Media works"
-          allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-          className="h-full w-full border-0"
-        />
-      </div>
+      <HeroVideo />
     </figure>
   );
 }
