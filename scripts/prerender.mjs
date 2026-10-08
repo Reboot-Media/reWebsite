@@ -19,8 +19,19 @@ const ORG = {
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   email: 'hello@rebootmedia.us',
+  // Matches the Google Business Profile, so search ties the site to it.
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '5900 Balcones Drive',
+    addressLocality: 'Austin',
+    addressRegion: 'TX',
+    postalCode: '78731',
+    addressCountry: 'US',
+  },
   description:
     'Reboot Media builds and runs ads for roofing companies so homeowners who need a roofer book straight onto their calendar. One roofer per service area.',
+  alternateName: 'Reboot Media LLC',
+  slogan: 'Consistent, signed roofing jobs. Every month.',
   knowsAbout: ['Roofing company marketing', 'Lead generation for roofers', 'Roofing appointments'],
   areaServed: { '@type': 'Country', name: 'United States' },
   founder: { '@type': 'Person', name: 'Kendall Reid', jobTitle: 'Founder' },
