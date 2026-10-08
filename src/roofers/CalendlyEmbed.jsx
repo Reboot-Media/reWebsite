@@ -5,8 +5,7 @@
 // prospect has qualified — never during the initial page paint.
 import { InlineWidget, useCalendlyEventListener } from 'react-calendly'
 import { newEventId, trackSchedule, postSchedule, getAttribution } from './tracking'
-
-const DEFAULT_CALENDLY_URL = 'https://calendly.com/hello-rebootmedia/strategycall'
+import { CALENDLY_URL } from './calendlyUrl.js'
 
 // Maps our snake_case attribution keys to the camelCase shape react-calendly's
 // InlineWidget expects for its `utm` prop.
@@ -49,13 +48,12 @@ export default function CalendlyEmbed({ name, email, phone, company, onScheduled
     },
   })
 
-  const calendlyUrl = import.meta.env.VITE_CALENDLY_URL || DEFAULT_CALENDLY_URL
   const utm = buildCalendlyUtm(getAttribution())
 
   return (
     <div className="overflow-hidden rounded-2xl border border-roof-border-subtle bg-roof-surface shadow-sm">
       <InlineWidget
-        url={calendlyUrl}
+        url={CALENDLY_URL}
         styles={{ height: '700px', minWidth: '280px' }}
         prefill={{
           name,

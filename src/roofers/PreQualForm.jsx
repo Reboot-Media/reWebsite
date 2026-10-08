@@ -1,6 +1,7 @@
-import { useState, useRef, lazy, Suspense } from 'react'
+import { Component, useState, useRef, lazy, Suspense } from 'react'
 import { formatPhone, isCity, isEmail, isFullName, isPhone } from './validate.js'
 import { newEventId, trackLead, trackStep, postLead, getAttribution } from './tracking'
+import { CALENDLY_URL } from './calendlyUrl.js'
 
 // Arrow that sits on the text baseline and slides right on hover.
 export function Arrow() {
@@ -214,6 +215,39 @@ function ConfirmationMessage() {
       </p>
     </div>
   )
+}
+
+// If the scheduler chunk fails to load (most often a tab opened before a
+// deploy asking for a chunk file that no longer exists), React would unmount
+// the whole page and leave a white screen. Catch it and link straight to the
+// booking page instead.
+class SchedulerBoundary extends Component {
+  state = { failed: false }
+
+  static getDerivedStateFromError() {
+    return { failed: true }
+  }
+
+  componentDidCatch(error) {
+    console.error('[prequal] scheduler failed to load', error)
+  }
+
+  render() {
+    if (!this.state.failed) return this.props.children
+    const { name, email } = this.props
+    const url = `${CALENDLY_URL}?${new URLSearchParams({ name, email })}`
+    return (
+      <div className="rounded-2xl border border-roof-border-subtle bg-roof-surface p-8 text-center">
+        <p className="mb-5 text-[17px] text-roof-ink">The scheduler didn't load here. You can pick your time on our booking page.</p>
+        <a
+          href={url}
+          className="inline-flex h-14 items-center justify-center rounded-[14px] bg-accent px-6 text-[17px] font-semibold text-white hover:bg-accent-dark"
+        >
+          Open the booking page
+        </a>
+      </div>
+    )
+  }
 }
 
 function CalendlyFallback() {
@@ -555,6 +589,7 @@ export default function PreQualForm({ segment = null }) {
                 <h3 className="mb-4 text-[17px] font-semibold text-roof-ink">
                   You're in — pick a time that works.
                 </h3>
+                <SchedulerBoundary name={fields.fullName} email={fields.email}>
                 <Suspense fallback={<CalendlyFallback />}>
                   <CalendlyEmbed
                     name={fields.fullName}
@@ -569,6 +604,7 @@ export default function PreQualForm({ segment = null }) {
                     }}
                   />
                 </Suspense>
+                </SchedulerBoundary>
               </div>
             )
           ) : (
