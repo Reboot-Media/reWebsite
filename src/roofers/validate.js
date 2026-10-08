@@ -4,6 +4,7 @@ const NAME_PART = "\\p{L}[\\p{L}'’.-]*"
 const FULL_NAME_RE = new RegExp(`^${NAME_PART}(\\s+${NAME_PART})+$`, 'u')
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/
 const CITY_RE = /^\p{L}[\p{L}\s.'’-]*\p{L}\.?$/u
+const WEBSITE_RE = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/\S*)?$/i
 
 /** 10-digit US number (an optional leading 1 is dropped), or '' if it isn't one. */
 export function usDigits(phone) {
@@ -27,3 +28,4 @@ export const isFullName = (v) => FULL_NAME_RE.test(String(v ?? '').trim())
 export const isEmail = (v) => EMAIL_RE.test(String(v ?? '').trim())
 export const isPhone = (v) => usDigits(v) !== ''
 export const isCity = (v) => CITY_RE.test(String(v ?? '').trim())
+export const isWebsite = (v) => WEBSITE_RE.test(String(v ?? '').trim())

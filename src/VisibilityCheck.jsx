@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Footer, Icon, Logo, btnBase, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
 import { Arrow, TextField } from './roofers/PreQualForm.jsx';
-import { formatPhone, isCity, isEmail, isFullName, isPhone } from './roofers/validate.js';
+import { formatPhone, isCity, isEmail, isFullName, isPhone, isWebsite } from './roofers/validate.js';
 import { captureAttribution, getAttribution, initAnalytics, newEventId, postLead, trackEvent } from './roofers/tracking.js';
 
 // Free lead magnet for roofers not ready to book a call. The request lands in
@@ -9,7 +9,7 @@ import { captureAttribution, getAttribution, initAnalytics, newEventId, postLead
 // before it goes out. It is never a qualified lead, so no Meta conversion fires.
 
 const YOU_GET = [
-  'The roofers homeowners in your city find first when they search for one.',
+  'The 3 roofers a homeowner in your city sees first when they search for one.',
   "Where you show up, and where you don't.",
   'Your reviews next to your top 3 competitors.',
   'The 3 fixes that would get you more calls, in order.',
@@ -24,6 +24,7 @@ function validate(f) {
   if (!isCity(f.city)) e.city = 'Enter the city you work in.';
   if (!isPhone(f.phone)) e.phone = 'Enter a 10-digit mobile number.';
   if (!isEmail(f.email)) e.email = 'Enter a valid email.';
+  if (!isWebsite(f.websiteUrl)) e.websiteUrl = 'Enter your website, like yourcompany.com.';
   return e;
 }
 
@@ -119,7 +120,7 @@ export default function VisibilityCheck() {
                   <TextField id="vc-city" label="What city do you work in?" value={fields.city} onChange={(v) => update('city', v)} error={errors.city} autoComplete="address-level2" />
                   <TextField id="vc-phone" label="Mobile phone" type="tel" value={fields.phone} onChange={(v) => update('phone', v)} error={errors.phone} autoComplete="tel" />
                   <TextField id="vc-email" label="Email" type="email" value={fields.email} onChange={(v) => update('email', v)} error={errors.email} autoComplete="email" />
-                  <TextField id="vc-websiteUrl" label="Website (optional)" value={fields.websiteUrl} onChange={(v) => update('websiteUrl', v)} autoComplete="url" />
+                  <TextField id="vc-websiteUrl" label="Website" value={fields.websiteUrl} onChange={(v) => update('websiteUrl', v)} error={errors.websiteUrl} autoComplete="url" />
                   <div aria-hidden="true" className="absolute left-[-9999px] h-px w-px overflow-hidden">
                     <label htmlFor="vc-referral_code">Referral code</label>
                     <input id="vc-referral_code" name="referral_code" tabIndex={-1} autoComplete="off" value={fields.referral_code} onChange={(e) => update('referral_code', e.target.value)} />
