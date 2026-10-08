@@ -33,7 +33,7 @@ const ORG = {
   knowsAbout: ['Roofing company marketing', 'Lead generation for roofers', 'Roofing appointments'],
   areaServed: { '@type': 'Country', name: 'United States' },
   founder: { '@type': 'Person', name: 'Kendall Reid', jobTitle: 'Founder' },
-  sameAs: ['https://www.linkedin.com/company/rebootmedia-io/'],
+  sameAs: ['https://www.linkedin.com/company/rebootmedia-io/', 'https://share.google/I1BgD0sDjlCaVh4Lh'],
 }
 
 function schemaFor(path) {
