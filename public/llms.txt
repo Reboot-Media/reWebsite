@@ -1,0 +1,21 @@
+# Reboot Media
+
+> Reboot Media builds and runs ads for roofing companies in the United States, so homeowners who need a roofer book straight onto the roofer's calendar. The roofer shows up and signs the job. We work with one roofer per service area.
+
+## How it works
+
+1. Audit: we review the company's online presence, keep what's working and remove what isn't.
+2. Reboot: we set up ads in the company's own name and install a storm tracker that watches its area. Live in 2 business days.
+3. Compound: the system learns which calls turn into signed jobs and puts more behind them every month.
+
+Homeowners answer a few questions before they book, so the roofer knows what the job is before the inspection. It is not a shared-lead service: every homeowner who calls is calling that roofer. Pricing depends on the area and goals and is covered on a strategy call.
+
+## Pages
+
+- [Home and strategy call booking](https://rebootmedia.us/): what we do, who it's for, common questions, and the form to book a strategy call.
+- [Free Visibility Check](https://rebootmedia.us/visibility-check): a free report, within one business day, showing which roofers homeowners in a city find first, where a company shows up, and the 3 fixes that would get it more calls.
+
+## Contact
+
+- Email: hello@rebootmedia.us
+- Founder: Kendall Reid
