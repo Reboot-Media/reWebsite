@@ -28,9 +28,10 @@ const ON_THE_CALL = [
 
 const BRING = [
   'Roughly how many jobs you sign in a month',
+  'Your close rate: how many of your quotes turn into signed jobs',
   "What you spend on marketing now, and what's working",
   'The service area you want to grow in',
-  'Anyone else who makes the call with you',
+  'Anyone who makes the decisions with you',
 ];
 
 const PHASES = [
