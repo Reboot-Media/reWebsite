@@ -24,12 +24,8 @@ const FAQS = [
     a: "Most setups chase clicks, not signed jobs. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
   },
   {
-    q: 'Can the ads focus on certain areas and jobs?',
-    a: 'Yes. You pick your service area and the work you want more of, and we push harder there. Homeowners tell you what they need before they book.',
-  },
-  {
     q: 'Do you work with my competitors?',
-    a: "No. We work with one roofer per service area, so your homeowners never get sold to the company down the street.",
+    a: "No. We work with one roofer per service area, so your homeowners never get sold to the company down the street. You pick that area and the work you want more of, and we push harder there.",
   },
   {
     q: 'What does it cost?',
