@@ -4,7 +4,8 @@ import { captureAttribution, initAnalytics, trackEvent } from './roofers/trackin
 
 // Paste the Loom share link here (or set VITE_PRECALL_LOOM_URL in Cloudflare).
 // Share links (loom.com/share/ID) are converted to the embed URL automatically.
-const PRECALL_LOOM_URL = import.meta.env.VITE_PRECALL_LOOM_URL || '';
+const PRECALL_LOOM_URL =
+  import.meta.env.VITE_PRECALL_LOOM_URL || 'https://www.loom.com/share/e908dfa7ff684deca3a67b53ee1b6fb0';
 
 function loomEmbed(url) {
   // Browsers only allow autoplay when the video starts muted.
