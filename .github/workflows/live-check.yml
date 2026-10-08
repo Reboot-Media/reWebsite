@@ -5,10 +5,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          for u in https://rebootmedia.us/before-your-call https://rebootmedia.us/before-your-call/ https://www.rebootmedia.us/before-your-call https://rewebsite-er0.pages.dev/before-your-call https://rebootmedia.us/; do
-            echo "===== $u"; curl -sS -I --max-time 20 "$u"
-          done
-          echo "===== body asset refs"
-          curl -sS https://rebootmedia.us/before-your-call | grep -oE 'assets/index-[^"]+' || true
-          curl -sS https://rewebsite-er0.pages.dev/ | grep -oE 'assets/index-[^"]+' || true
-          echo "===== live _redirects"; curl -sS https://rebootmedia.us/_redirects | head -20
+          set +e
+          echo "===== live /before-your-call body"
+          curl -sS https://rebootmedia.us/before-your-call | grep -oE '<title>[^<]*|assets/index-[^"]+'
+          echo "===== live / body"
+          curl -sS https://rebootmedia.us/ | grep -oE 'assets/index-[^"]+'
+          echo "===== live _redirects"; curl -sS -o /dev/null -w "%{http_code}\n" https://rebootmedia.us/_redirects
+          echo "===== live JS has BeforeCall page"
+          js=$(curl -sS https://rebootmedia.us/ | grep -oE 'assets/index-[^"]+\.js' | head -1)
+          curl -sS "https://rebootmedia.us/$js" | grep -oE 'before-your-call|Watch this before your call|e908dfa7ff684deca3a67b53ee1b6fb0' | sort | uniq -c
