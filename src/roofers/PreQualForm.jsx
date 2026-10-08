@@ -75,7 +75,6 @@ const initialFields = {
   commercialShare: '',
   bidSources: '',
   bidCapacity: '',
-  avgJobSize: '',
   // Honeypot — offscreen, aria-hidden, unreachable by Tab. A filled value
   // marks the submit as likely bot traffic.
   //

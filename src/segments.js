@@ -31,9 +31,8 @@ export const SEGMENTS = {
     fit: "It's for established roofing companies adding crews or new markets. We work with one roofer per service area, so no one else gets your markets.",
     // Sharks are already big and usually already running ads, so the
     // ranges start higher than the homepage's.
-    // Sharks want to fill crews and open new metros. Qualified = can afford
-    // it and likely to buy: ask how big they are, which markets are next,
-    // what a job is worth (the call's goal math), and what they can spend.
+    // Sharks want to fill crews and open new metros: ask how big they are,
+    // which markets are next, and what they can spend across all of them.
     quiz: {
       stepLabels: ['Your business', 'Your growth'],
       steps: [
@@ -47,7 +46,6 @@ export const SEGMENTS = {
         [
           { name: 'growthPlan', type: 'radio', legend: 'What do you want to do in the next 12 months?', options: ['More jobs in my current market', 'Open 1 new market', 'Open 2–3 new markets', 'Open 4 or more markets'] },
           { name: 'targetMarkets', type: 'text', label: 'Which cities or metros are next? (optional)', hint: "We'll check they're open before your call.", optional: true },
-          { name: 'avgJobSize', type: 'radio', legend: "What's your average signed job worth?", options: ['Under $10K', '$10K–$15K', '$15K–$25K', '$25K+'] },
           { name: 'adSpend', type: 'radio', legend: 'What can you put toward ad spend each month, across all your markets?', hint: spendHint, options: ['Under $5K', '$5K–$10K', '$10K–$20K', '$20K+'] },
           { name: 'startTimeline', type: 'radio', legend: "If it's a fit, when do you want the next market running?", options: startOptions },
         ],
@@ -77,8 +75,8 @@ export const SEGMENTS = {
     ],
     fit: "It's for commercial roofing companies that respond fast to bid requests and show up to the walkthrough. We work with one roofer per service area.",
     // Commercial roofers want more bid requests from the people who send
-    // roofing work: ask who they want to hear from, how many bids they can
-    // turn around, and what a job is worth (the call's goal math).
+    // roofing work: ask who they want to hear from and how many bids they
+    // can turn around.
     quiz: {
       stepLabels: ['Your business', 'Your bids'],
       steps: [
@@ -92,7 +90,6 @@ export const SEGMENTS = {
         [
           { name: 'bidSources', type: 'checkbox', legend: 'Who do you want more bid requests from?', hint: 'Pick all that apply.', options: ['Property managers', 'HOA boards', 'Facility managers', 'General contractors'] },
           { name: 'bidCapacity', type: 'radio', legend: 'How many new bid requests could your team handle each month?', options: ['Up to 5', '6–15', '16–30', '30+'] },
-          { name: 'avgJobSize', type: 'radio', legend: "What's a typical commercial job worth to you?", options: ['Under $25K', '$25K–$75K', '$75K–$200K', '$200K+'] },
           { name: 'adSpend', type: 'radio', legend: 'What can you put toward ad spend each month?', hint: spendHint, options: ['Under $3K', '$3K–$5K', '$5K–$10K', '$10K+'] },
           { name: 'startTimeline', type: 'radio', legend: "If it's a fit, when do you want bid requests coming in?", options: startOptions },
         ],
