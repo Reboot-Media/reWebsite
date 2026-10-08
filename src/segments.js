@@ -29,6 +29,8 @@ export const SEGMENTS = {
     subline:
       'We run targeted ads for each market on your list, so homeowners there book straight onto your calendar while your crews expand.',
     fit: "It's for established roofing companies adding crews or new markets. We work with one roofer per service area, so no one else gets your markets.",
+    // Sharks are already big and usually already running ads, so the
+    // ranges start higher than the homepage's.
     // Sharks want to fill crews and open new metros. Qualified = can afford
     // it and likely to buy: ask how big they are, which markets are next,
     // what a job is worth (the call's goal math), and what they can spend.
@@ -37,22 +39,22 @@ export const SEGMENTS = {
       steps: [
         [
           decisionMaker,
-          biggerRevenue,
-          { name: 'crewCount', type: 'radio', legend: 'How many crews do you run today?', options: ['1–2', '3–5', '6–10', '11+'] },
-          { name: 'googleAdsStatus', type: 'radio', legend: 'Are you running paid ads in any of your markets?', options: adStatusOptions },
+          { name: 'annualRevenue', type: 'radio', legend: "What's your company's annual revenue?", options: ['Under $3M', '$3M–$5M', '$5M–$10M', '$10M–$25M', '$25M+'] },
+          { name: 'crewCount', type: 'radio', legend: 'How many crews do you run today?', options: ['1–3', '4–6', '7–10', '11+'] },
+          { name: 'googleAdsStatus', type: 'radio', legend: 'How are your ads doing right now?', options: ['Running and working', 'Running, not happy with results', 'Not running yet'] },
           websiteUrl,
         ],
         [
           { name: 'growthPlan', type: 'radio', legend: 'What do you want to do in the next 12 months?', options: ['More jobs in my current market', 'Open 1 new market', 'Open 2–3 new markets', 'Open 4 or more markets'] },
           { name: 'targetMarkets', type: 'text', label: 'Which cities or metros are next? (optional)', hint: "We'll check they're open before your call.", optional: true },
           { name: 'avgJobSize', type: 'radio', legend: "What's your average signed job worth?", options: ['Under $10K', '$10K–$15K', '$15K–$25K', '$25K+'] },
-          { name: 'adSpend', type: 'radio', legend: 'What can you put toward ad spend each month, across all your markets?', hint: spendHint, options: ['Under $3K', '$3K–$7K', '$7K–$15K', '$15K+'] },
+          { name: 'adSpend', type: 'radio', legend: 'What can you put toward ad spend each month, across all your markets?', hint: spendHint, options: ['Under $5K', '$5K–$10K', '$10K–$20K', '$20K+'] },
           { name: 'startTimeline', type: 'radio', legend: "If it's a fit, when do you want the next market running?", options: startOptions },
         ],
       ],
       drivingFactorLabel: "What's holding back the next market right now? (optional)",
-      lowBudget: 'Under $3K',
-      tier2: '$15K+',
+      lowBudget: 'Under $5K',
+      tier2: '$20K+',
     },
   },
   commercial: {
