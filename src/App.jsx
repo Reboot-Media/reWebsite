@@ -288,7 +288,7 @@ function Faq({ segment }) {
       <div className={wrap}>
         <h2 className={`mb-8 md:mb-10 ${h2Class}`}>Questions</h2>
         <div className="grid items-start gap-3 md:grid-cols-2 md:gap-4">
-          {FAQS.map((f) => (
+          {(segment?.faqs || FAQS).map((f) => (
             <details
               key={f.q}
               onToggle={(e) => e.currentTarget.open && trackEvent('faq_open', { question: f.q })}

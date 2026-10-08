@@ -29,6 +29,27 @@ export const SEGMENTS = {
     subline:
       'We run targeted ads for each market on your list, so homeowners there book straight onto your calendar while your crews expand.',
     fit: "It's for established roofing companies adding crews or new markets. We work with one roofer per service area, so no one else gets your markets.",
+    // Objections from roofers who already run crews in more than one market,
+    // and often already run ads. Same pattern as the homepage: agree, then
+    // point to a phase (Audit / Reboot / Compound).
+    faqs: [
+      {
+        q: 'We already run ads. Why change?',
+        a: "If it's working, keep what works. Most multi-market setups run one budget across every area, so the strongest market eats it and the new ones starve. The Audit breaks it out by market and shows which ones turn into signed jobs, so you know what to keep before anything changes.",
+      },
+      {
+        q: 'Can you run several markets at once?',
+        a: "That's what this is built for. In the Reboot phase every market gets its own ads, budget and tracking, so you see signed jobs by market. When one is ready for another crew, you'll know, and in Compound we put more behind it.",
+      },
+      {
+        q: 'Do you work with my competitors?',
+        a: "Smart to ask, because plenty of agencies do. We don't. We work with one roofer per service area, and for you that's every market on your list. Tell us which ones on the form and we'll check they're open before the call.",
+      },
+      {
+        q: 'What does it cost?',
+        a: "Makes sense to want the number first. It depends on how many markets you want and how fast you want to grow into them, and that's what the Audit sorts out. We go over pricing on the call.",
+      },
+    ],
     // Sharks are already big and usually already running ads, so the
     // ranges start higher than the homepage's.
     // Sharks want to fill crews and open new metros: ask how big they are,
