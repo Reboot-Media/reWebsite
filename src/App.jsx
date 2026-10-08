@@ -17,23 +17,19 @@ const PHASES = [
 const FAQS = [
   {
     q: 'Is this a lead-sharing or lead-gen service?',
-    a: "No. We don't sell or share leads. We run ads in your company's name, so homeowners searching for a roofer in your area find you and book straight onto your calendar. Every one is yours alone.",
+    a: "Fair question. Most of what's out there is shared leads. Not this. In the Reboot phase we set up ads in your company's name, so every homeowner who calls is calling you, and nobody else gets them.",
   },
   {
     q: "We've tried ads before and the ROI wasn't there. Why would this be different?",
-    a: "Most setups chase clicks, not signed jobs. We build and run every account ourselves, and the system learns which calls turn into jobs. On the call, we show you exactly what we'd run before you spend a dollar.",
-  },
-  {
-    q: 'Can the ads focus on certain areas and jobs?',
-    a: 'Yes. You pick your service area and the work you want more of, and we push harder there. Homeowners tell you what they need before they book.',
+    a: "You're right, most ad setups don't pay. They chase clicks, not signed jobs. That's why we start with the Audit: we find what was wasting money and cut it before anything new goes live. Then in Compound, the system learns which calls turn into signed jobs and puts more behind them.",
   },
   {
     q: 'Do you work with my competitors?',
-    a: "No. We work with one roofer per service area, so your homeowners never get sold to the company down the street.",
+    a: "Smart to ask, because plenty of agencies do. We don't. We work with one roofer per service area. In the Audit you pick that area and the work you want more of, and the ads stay pointed there.",
   },
   {
     q: 'What does it cost?',
-    a: "We build a tailor-made plan for every roofer, based on your area and your goals. We go over pricing on the call.",
+    a: "Makes sense to want the number first. It depends on your area and your goals, and that's what the Audit sorts out. We go over pricing on the call, once we know what you need.",
   },
 ];
 
