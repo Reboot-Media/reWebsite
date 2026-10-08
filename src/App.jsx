@@ -28,6 +28,14 @@ export const FAQS = [
     a: "Smart to ask, because plenty of agencies do. We don't. We work with one roofer per service area. In the Audit you pick that area and the work you want more of, and the ads stay pointed there.",
   },
   {
+    q: 'Who owns the ad account?',
+    a: "You do. The ads run in your company's name on an account you own, so the history and the results stay with you.",
+  },
+  {
+    q: 'Am I locked into a long contract?',
+    a: "No. We start with 90 days so the system has time to set up and prove itself. After that it's month to month.",
+  },
+  {
     q: 'What does it cost?',
     a: "Makes sense to want the number first. It depends on your area and your goals, and that's what the Audit sorts out. We go over pricing on the call, once we know what you need.",
   },
