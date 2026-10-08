@@ -19,20 +19,23 @@ const STEPS = [
 ];
 
 const ON_THE_CALL = [
-  'What you have now: your website, what you run today, and where your best jobs come from.',
-  'Where you want the business to go: the jobs you want more of and the area you want to work.',
-  "Whether we're a fit. If we're not, we'll tell you straight. If we are, we'll show you exactly how it would run in your area.",
+  'A deep dive on your company and where your best jobs come from today.',
+  "An audit of your online presence and how you're bringing in revenue right now.",
+  'Your goals: the jobs you want more of and the areas you want to cover.',
+  'A plan built for your company, based on those goals and where you want to take it.',
+  "Whether you qualify. If you do, we'll show you how we'd reboot your company. If you don't, we'll tell you straight.",
 ];
 
 const BRING = [
   'Roughly how many jobs you sign in a month',
+  'Your close rate: how many of your quotes turn into signed jobs',
   "What you spend on marketing now, and what's working",
   'The service area you want to grow in',
-  'Anyone else who makes the call with you',
+  'Anyone who makes the decisions with you',
 ];
 
 const PHASES = [
-  { name: 'We learn your business', text: "We keep what's working, cut what's costing you money, and build the plan around the jobs and area you want." },
+  { name: 'We learn your company', text: "We keep what's working, cut what's costing you money, and build the plan around the jobs and area you want." },
   { name: 'We install the system', text: 'Homeowners already looking for roof help find you, and every one is pre-qualified before they book.' },
   { name: 'It gets better every month', text: 'Every week you see which appointments turned into signed jobs. The system learns from that and keeps improving.' },
 ];
@@ -92,7 +95,7 @@ export default function BeforeCall() {
                 Watch this before your call.
               </h1>
               <p className="mt-5 max-w-[34rem] text-[18px] leading-[1.65] text-roof-muted md:text-[19px]">
-                A short walkthrough of how we work, so we can spend the call on your business instead of explaining ours.
+                A short walkthrough of how we work, so we can spend the call on your company instead of explaining ours.
               </p>
             </div>
             <LoomVideo />
