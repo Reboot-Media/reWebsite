@@ -19,13 +19,11 @@ const ORG = {
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   email: 'hello@rebootmedia.us',
-  // Matches the Google Business Profile, so search ties the site to it.
+  // City only: the Google profile hides the street address (service-area company).
   address: {
     '@type': 'PostalAddress',
-    streetAddress: '5900 Balcones Drive',
     addressLocality: 'Austin',
     addressRegion: 'TX',
-    postalCode: '78731',
     addressCountry: 'US',
   },
   description:
