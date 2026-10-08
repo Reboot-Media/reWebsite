@@ -2,6 +2,7 @@ import { Component, useState, useRef, lazy, Suspense } from 'react'
 import { formatPhone, isCity, isEmail, isFullName, isPhone } from './validate.js'
 import { newEventId, trackLead, trackStep, postLead, getAttribution } from './tracking'
 import { CALENDLY_URL } from './calendlyUrl.js'
+import { navigate } from '../navigate.js'
 
 // Arrow that sits on the text baseline and slides right on hover.
 export function Arrow() {
@@ -637,7 +638,7 @@ export default function PreQualForm({ segment = null }) {
                       setBooked(true)
                       // Short pause so the booking events finish sending, then
                       // take them to the pre-call page with the walkthrough video.
-                      setTimeout(() => window.location.assign('/before-your-call'), 1200)
+                      setTimeout(() => navigate('/before-your-call'), 1200)
                     }}
                   />
                 </Suspense>
