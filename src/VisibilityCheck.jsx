@@ -9,7 +9,7 @@ import { captureAttribution, getAttribution, initAnalytics, newEventId, postLead
 // before it goes out. It is never a qualified lead, so no Meta conversion fires.
 
 const YOU_GET = [
-  'The roofers homeowners in your city find first when they search for one.',
+  'The 3 roofers a homeowner in your city sees first when they search for one.',
   "Where you show up, and where you don't.",
   'Your reviews next to your top 3 competitors.',
   'The 3 fixes that would get you more calls, in order.',
