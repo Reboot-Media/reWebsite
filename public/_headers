@@ -1,0 +1,10 @@
+# Post-booking and cold email pages stay out of search, even for crawlers
+# that never run the page's JavaScript.
+/before-your-call
+  X-Robots-Tag: noindex
+/grow
+  X-Robots-Tag: noindex
+/scale
+  X-Robots-Tag: noindex
+/commercial
+  X-Robots-Tag: noindex

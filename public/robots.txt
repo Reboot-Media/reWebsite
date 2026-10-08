@@ -1,0 +1,6 @@
+# Search engines and AI assistants are welcome on the public pages.
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://rebootmedia.us/sitemap.xml

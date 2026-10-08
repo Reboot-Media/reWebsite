@@ -14,7 +14,7 @@ const PHASES = [
   { name: 'Compound', text: 'The system learns which calls turn into booked jobs, so results compound every month.' },
 ];
 
-const FAQS = [
+export const FAQS = [
   {
     q: 'Is this a lead-sharing or lead-gen service?',
     a: "Fair question. Most of what's out there is shared leads. Not this. In the Reboot phase we set up ads in your company's name, so every homeowner who calls is calling you, and nobody else gets them.",
@@ -26,6 +26,14 @@ const FAQS = [
   {
     q: 'Do you work with my competitors?',
     a: "Smart to ask, because plenty of agencies do. We don't. We work with one roofer per service area. In the Audit you pick that area and the work you want more of, and the ads stay pointed there.",
+  },
+  {
+    q: 'Who owns the ad account?',
+    a: "You do. The ads run in your company's name on an account you own, so the history and the results stay with you.",
+  },
+  {
+    q: 'Am I locked into a long contract?',
+    a: "No. We start with 90 days so the system has time to set up and prove itself. After that it's month to month.",
   },
   {
     q: 'What does it cost?',
@@ -324,9 +332,23 @@ function FormSection({ segment }) {
   );
 }
 
-export function Footer() {
+// Footer routes to the pages a roofer can act on, so every page links to them.
+export const BOOK_LINK = { href: '/#prequal-form', label: 'Book a Strategy Call' };
+export const VISIBILITY_LINK = { href: VISIBILITY_CHECK_PATH, label: 'Free Visibility Check' };
+export const FOOTER_LINKS = [BOOK_LINK, VISIBILITY_LINK];
+
+export function Footer({ links = [] }) {
   return (
     <footer className="border-t border-roof-border-subtle bg-roof-surface">
+      {links.length > 0 && (
+        <nav aria-label="Footer" className={`${wrap} flex flex-wrap gap-x-6 border-b border-roof-border-subtle py-4 text-[15px]`}>
+          {links.map((l) => (
+            <a key={l.href} href={l.href} className={`inline-flex min-h-[48px] items-center font-semibold text-roof-ink hover:text-accent-dark hover:underline ${focusRing}`}>
+              {l.label}
+            </a>
+          ))}
+        </nav>
+      )}
       <div className={`${wrap} flex flex-col gap-2 py-10 text-[15px] text-roof-muted sm:flex-row sm:items-center sm:justify-between`}>
         <p>Reboot Media LLC</p>
         <a href="mailto:hello@rebootmedia.us" className={`inline-flex min-h-[48px] items-center hover:text-roof-ink hover:underline ${focusRing}`}>
@@ -352,8 +374,8 @@ export function Footer() {
   );
 }
 
-export default function App() {
-  const segment = segmentForPath(window.location.pathname.replace(/\/+$/, ''));
+export default function App({ path = window.location.pathname }) {
+  const segment = segmentForPath(path.replace(/\/+$/, ''));
 
   useEffect(() => {
     if (segment) {
@@ -379,7 +401,7 @@ export default function App() {
         <Faq segment={segment} />
         <FormSection segment={segment} />
       </main>
-      <Footer />
+      <Footer links={!segment || segment.sameAsHome ? FOOTER_LINKS : [BOOK_LINK]} />
     </div>
   );
 }

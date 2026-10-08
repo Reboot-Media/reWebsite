@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Footer, Icon, Logo, btnBase, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
+import { BOOK_LINK, Footer, Icon, Logo, btnBase, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
 import { Arrow, TextField } from './roofers/PreQualForm.jsx';
 import { formatPhone, isCity, isEmail, isFullName, isPhone, isWebsite } from './roofers/validate.js';
 import { captureAttribution, getAttribution, initAnalytics, newEventId, postLead, trackEvent } from './roofers/tracking.js';
@@ -34,7 +34,7 @@ export default function VisibilityCheck() {
   const [sent, setSent] = useState(false);
 
   useEffect(() => {
-    document.title = 'Free Visibility Check | Reboot Media';
+    document.title = 'Free Visibility Check for Roofing Companies | Reboot Media';
     captureAttribution();
     initAnalytics();
     trackEvent('visibility_check_view');
@@ -96,6 +96,13 @@ export default function VisibilityCheck() {
                   </li>
                 ))}
               </ul>
+              <p className={`mt-8 ${mutedClass}`}>
+                Rather talk it through with us now?{' '}
+                <a href="/#prequal-form" className="font-semibold text-accent-dark underline underline-offset-4 hover:text-accent">
+                  Book a strategy call
+                </a>
+                .
+              </p>
             </div>
 
             <div className={`${card} h-fit p-6 shadow-lift md:p-8`}>
@@ -136,7 +143,7 @@ export default function VisibilityCheck() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer links={[BOOK_LINK]} />
     </div>
   );
 }
