@@ -35,11 +35,11 @@ export const OBJECTIONS = [
   },
   {
     q: 'What if I show up and the homeowner isn’t there?',
-    a: 'Homeowners pick their own time and answer questions about the roof before they book, so they’ve already chosen to meet you. You also see their answers before you go.',
+    a: 'We install this into your online presence. Homeowners answer a few questions about their roof, then pick their own time to meet you, so by the time you show up they’ve already chosen you and you’ve seen their answers. All you have to do is call or text to confirm the appointment.',
   },
   {
     q: 'I want replacements, not repairs.',
-    a: 'Tell us on the call. We set the questions homeowners answer around the work you want, so your calendar fills with the jobs you’d rather be doing.',
+    a: 'Tell us on the call. We build a tailor-made plan for your company around your goals: the work you want, how we’ll get it, and what it takes to hit that goal. You pick the jobs, we make it work.',
   },
   {
     q: 'Work dries up after storm season. Does this help?',
