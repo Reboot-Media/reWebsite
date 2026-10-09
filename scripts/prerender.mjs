@@ -19,6 +19,7 @@ const ORG = {
   url: SITE_URL,
   logo: `${SITE_URL}/logo.png`,
   email: 'hello@rebootmedia.us',
+  telephone: '+1-903-691-9016',
   // City only: the Google profile hides the street address (service-area company).
   address: {
     '@type': 'PostalAddress',
