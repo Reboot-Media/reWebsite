@@ -35,7 +35,7 @@ export const OBJECTIONS = [
   },
   {
     q: 'What if I show up and the homeowner isn’t there?',
-    a: 'We install this into your online presence. Homeowners answer a few questions about their roof, then pick their own time to meet you, so by the time you show up they’ve already chosen you and you’ve seen their answers. All you have to do is call or text to confirm the appointment.',
+    a: 'We install this into your online presence. Homeowners answer a few questions about their roof, then pick their own time to meet you. All you have to do is call or text to confirm the appointment. By the time you show up, they’ve already chosen you, and you’ve seen their answers.',
   },
   {
     q: 'I want replacements, not repairs.',
