@@ -104,9 +104,9 @@ export function SocialLinks({ location, className = '' }) {
           rel="noopener noreferrer"
           aria-label={label}
           onClick={() => trackEvent('social_click', { network, location })}
-          className={`inline-flex h-10 w-8 items-center justify-center rounded-lg text-accent sm:w-10 hover:bg-accent-bg hover:text-accent-dark ${focusRing}`}
+          className={`inline-flex h-10 w-8 items-center justify-center rounded-lg text-roof-muted transition-colors hover:text-accent sm:w-10 ${focusRing}`}
         >
-          <SocialIcon />
+          <SocialIcon className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
         </a>
       ))}
     </span>
@@ -138,7 +138,7 @@ export const col = 'max-w-[640px]';
 function Header() {
   return (
     <header className="sticky top-0 z-10 border-b border-roof-border-subtle bg-white/80 backdrop-blur-md">
-      <div className={`${wrap} flex min-h-[72px] items-center justify-between gap-2`}>
+      <div className={`${wrap} flex min-h-[72px] items-center justify-between gap-2 sm:gap-3`}>
         <span className="flex items-center gap-2 whitespace-nowrap">
           <Logo />
           <span className="text-base font-bold tracking-tight text-roof-ink">Reboot Media</span>
