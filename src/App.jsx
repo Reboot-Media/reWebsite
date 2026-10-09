@@ -65,7 +65,7 @@ export const sec = 'py-14 md:py-20 lg:py-32';
 export const card = 'rounded-[20px] bg-roof-surface ring-1 ring-roof-border-subtle';
 
 export function Logo({ className = 'h-7 w-7' }) {
-  return <img src="/logo.png" alt="" className={className} />;
+  return <img src="/logo.png" alt="Reboot Media logo" className={className} />;
 }
 
 function IconLinkedIn({ className = 'h-5 w-5' }) {
@@ -261,7 +261,7 @@ function Team() {
     <section data-section="team" className={`bg-roof-surface ${sec}`}>
       <div className={`${wrap} grid gap-10 lg:grid-cols-[auto_1fr] lg:items-center lg:gap-16`}>
         <div aria-hidden="true" className="flex h-24 w-24 items-center justify-center rounded-[24px] bg-[linear-gradient(135deg,theme(colors.accent.DEFAULT),theme(colors.accent.dark))] shadow-lift lg:h-28 lg:w-28">
-          <img src="/logo.png" alt="" className="h-12 w-12 brightness-0 invert lg:h-14 lg:w-14" />
+          <img src="/logo.png" alt="Reboot Media logo" className="h-12 w-12 brightness-0 invert lg:h-14 lg:w-14" />
         </div>
         <div className={col}>
           <h2 className={`mb-5 ${h2Class}`}>Who we are</h2>
