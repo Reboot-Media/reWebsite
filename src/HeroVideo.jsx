@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { trackEvent } from './roofers/tracking.js';
 
 // Self-hosted hero VSL (public/media). Re-encode new cuts with
-// ffmpeg -crf 23 -maxrate 4M -movflags +faststart to stay under Pages' 25 MiB file limit.
+// ffmpeg -crf 23 -maxrate 4M -g 30 -keyint_min 30 -sc_threshold 0 -movflags +faststart: under
+// Pages' 25 MiB file limit, with a keyframe every second so dragging the timeline seeks smoothly.
 const VSL_SRC = '/media/vsl.mp4';
 const VSL_POSTER = '/media/vsl-poster.jpg';
 
