@@ -24,6 +24,18 @@ export const ROUTES = {
       'How 8 roofing marketing companies differ, based on what each says on its own website, plus 5 questions to ask before you sign with any of them.',
     index: true,
   },
+  '/roofing-marketing-agency': {
+    title: 'Roofing Marketing Agency for Signed Jobs | Reboot Media',
+    description:
+      'We build and run ads for roofing companies across the U.S., so homeowners who need a roofer book onto your calendar. One roofer per service area.',
+    index: true,
+  },
+  '/texas-roofing-marketing': {
+    title: 'Roofing Marketing in Texas | Reboot Media, Austin',
+    description:
+      'Austin-based roofing marketing for Texas roofing companies. Ads in your name, homeowners booked onto your calendar, one roofer per service area.',
+    index: true,
+  },
   // Post-booking page and cold email pages: not for search.
   '/before-your-call': { title: 'Before your call | Reboot Media', description: DEFAULT_DESCRIPTION, index: false },
   '/grow': { title: 'Reboot Media | More signed jobs for roofing companies', description: DEFAULT_DESCRIPTION, index: false },
