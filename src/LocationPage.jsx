@@ -52,6 +52,7 @@ export const LOCATION_PAGES = {
     links: [
       { href: VISIBILITY_LINK.href, label: 'Get a free Visibility Check' },
       { href: COMPARE_PATH, label: 'How roofing marketing companies compare' },
+      { href: '/roofing-marketing-questions', label: 'Questions roofers ask us' },
     ],
     faqs: [
       { q: 'Do you only work with roofers?', a: 'Yes. Roofing companies only.' },
@@ -89,7 +90,10 @@ export const LOCATION_PAGES = {
         text: 'Austin, Round Rock, Georgetown, San Marcos, San Antonio, New Braunfels, Dallas, Fort Worth, Plano, Frisco, Houston, The Woodlands, Katy, Sugar Land, Waco, Killeen, College Station, and the rest of the state.',
       },
     ],
-    links: [{ href: VISIBILITY_LINK.href, label: 'Get a free Visibility Check for your Texas city' }],
+    links: [
+      { href: VISIBILITY_LINK.href, label: 'Get a free Visibility Check for your Texas city' },
+      { href: '/roofing-marketing-questions', label: 'Questions roofers ask us' },
+    ],
     faqs: [
       { q: 'Are you actually in Texas?', a: 'Yes, we’re based in Austin.' },
       { q: 'Is my area taken?', a: 'Tell us your service area when you book and we’ll check before the call.' },
