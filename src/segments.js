@@ -25,6 +25,8 @@ export const SEGMENTS = {
     slug: 'scale',
     tag: 'email-shark',
     eyebrow: 'For roofing companies ready to scale',
+    // Shark VSL replaces the homepage video on /scale.
+    video: { src: '/media/vsl-shark.mp4', poster: '/media/vsl-shark-poster.jpg' },
     headline: 'Signed jobs in every market you want to grow into.',
     subline:
       'We run targeted ads for each market on your list, so homeowners there book straight onto your calendar while your crews expand.',
