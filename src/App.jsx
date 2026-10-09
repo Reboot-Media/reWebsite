@@ -7,8 +7,6 @@ import { segmentForPath } from './segments.js';
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
 const INSTAGRAM_URL = 'https://www.instagram.com/rebootmedia_';
 const CTA_LABEL = 'Book a Strategy Call';
-export const PHONE = '+19036919016';
-export const PHONE_LABEL = '(903) 691-9016';
 export const VISIBILITY_CHECK_PATH = '/visibility-check';
 
 const PHASES = [
@@ -115,21 +113,6 @@ export function SocialLinks({ location, className = '' }) {
   );
 }
 
-// Tap-to-call at the top of every page: an icon on phones, the number on bigger screens.
-function CallLink() {
-  return (
-    <a
-      href={`tel:${PHONE}`}
-      onClick={() => trackEvent('call_click', { location: 'header' })}
-      aria-label={`Call Reboot Media at ${PHONE_LABEL}`}
-      className={`inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg px-2 text-[15px] font-semibold text-roof-ink transition-colors hover:text-accent ${focusRing}`}
-    >
-      <Icon className="h-[18px] w-[18px]" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
-      <span className="hidden lg:inline">{PHONE_LABEL}</span>
-    </a>
-  );
-}
-
 export function Icon({ d, className = 'h-6 w-6', children }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -161,7 +144,6 @@ function Header() {
           <span className="text-base font-bold tracking-tight text-roof-ink">Reboot Media</span>
         </span>
         <SocialLinks location="header" className="ml-auto hidden sm:flex" />
-        <CallLink />
         <CTA small location="header" className="whitespace-nowrap">
           <span className="sm:hidden">Book a Call</span>
           <span className="hidden sm:inline">{CTA_LABEL}</span>
