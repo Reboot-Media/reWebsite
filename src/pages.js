@@ -2,6 +2,7 @@ import App from './App.jsx'
 import BeforeCall from './BeforeCall.jsx'
 import Compare, { COMPARE_PATH } from './Compare.jsx'
 import LocationPage, { NATIONWIDE_PATH, TEXAS_PATH } from './LocationPage.jsx'
+import Questions, { QUESTIONS_PATH } from './Questions.jsx'
 import VisibilityCheck from './VisibilityCheck.jsx'
 
 const PAGES = {
@@ -10,6 +11,7 @@ const PAGES = {
   [COMPARE_PATH]: Compare,
   [NATIONWIDE_PATH]: LocationPage,
   [TEXAS_PATH]: LocationPage,
+  [QUESTIONS_PATH]: Questions,
 }
 
 export const normalizePath = (path) => path.replace(/\/+$/, '') || '/'

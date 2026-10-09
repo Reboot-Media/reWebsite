@@ -36,6 +36,12 @@ export const ROUTES = {
       'Austin-based roofing marketing for Texas roofing companies. Ads in your name, homeowners booked onto your calendar, one roofer per service area.',
     index: true,
   },
+  '/roofing-marketing-questions': {
+    title: 'What Roofers Ask Before Hiring a Marketing Company | Reboot Media',
+    description:
+      'Straight answers to the questions roofing company owners ask us: shared leads, cost, contracts, who owns the ad account, and what makes us different.',
+    index: true,
+  },
   // Post-booking page and cold email pages: not for search.
   '/before-your-call': { title: 'Before your call | Reboot Media', description: DEFAULT_DESCRIPTION, index: false },
   '/grow': { title: 'Reboot Media | More signed jobs for roofing companies', description: DEFAULT_DESCRIPTION, index: false },

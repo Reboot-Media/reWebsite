@@ -10,3 +10,4 @@ export function render(path) {
 export { FAQS } from './App.jsx'
 export { COMPANIES } from './Compare.jsx'
 export { LOCATION_PAGES } from './LocationPage.jsx'
+export { OBJECTIONS } from './Questions.jsx'
