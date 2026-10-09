@@ -29,3 +29,24 @@ export const isEmail = (v) => EMAIL_RE.test(String(v ?? '').trim())
 export const isPhone = (v) => usDigits(v) !== ''
 export const isCity = (v) => CITY_RE.test(String(v ?? '').trim())
 export const isWebsite = (v) => WEBSITE_RE.test(String(v ?? '').trim())
+
+const STATES = {
+  AL: 'alabama', AK: 'alaska', AZ: 'arizona', AR: 'arkansas', CA: 'california', CO: 'colorado',
+  CT: 'connecticut', DE: 'delaware', DC: 'district of columbia', FL: 'florida', GA: 'georgia',
+  HI: 'hawaii', ID: 'idaho', IL: 'illinois', IN: 'indiana', IA: 'iowa', KS: 'kansas',
+  KY: 'kentucky', LA: 'louisiana', ME: 'maine', MD: 'maryland', MA: 'massachusetts',
+  MI: 'michigan', MN: 'minnesota', MS: 'mississippi', MO: 'missouri', MT: 'montana',
+  NE: 'nebraska', NV: 'nevada', NH: 'new hampshire', NJ: 'new jersey', NM: 'new mexico',
+  NY: 'new york', NC: 'north carolina', ND: 'north dakota', OH: 'ohio', OK: 'oklahoma',
+  OR: 'oregon', PA: 'pennsylvania', RI: 'rhode island', SC: 'south carolina', SD: 'south dakota',
+  TN: 'tennessee', TX: 'texas', UT: 'utah', VT: 'vermont', VA: 'virginia', WA: 'washington',
+  WV: 'west virginia', WI: 'wisconsin', WY: 'wyoming',
+}
+
+/** Two-letter code for a US state typed as a code or a name ("tx", "Texas"), or '' if it isn't one. */
+export function stateCode(v) {
+  const t = String(v ?? '').trim().replace(/\.$/, '').replace(/\s+/g, ' ')
+  const up = t.toUpperCase()
+  if (STATES[up]) return up
+  return Object.keys(STATES).find((k) => STATES[k] === t.toLowerCase()) || ''
+}

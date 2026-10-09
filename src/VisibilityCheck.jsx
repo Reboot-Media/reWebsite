@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { BOOK_LINK, COMPARE_LINK, Footer, Icon, Logo, SocialLinks, btnBase, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
 import { Arrow, TextField } from './roofers/PreQualForm.jsx';
-import { formatPhone, isCity, isEmail, isFullName, isPhone, isWebsite } from './roofers/validate.js';
+import { formatPhone, isCity, isEmail, isFullName, isPhone, isWebsite, stateCode } from './roofers/validate.js';
 import { captureAttribution, getAttribution, initAnalytics, newEventId, postLead, trackEvent } from './roofers/tracking.js';
 
 // Free lead magnet for roofers not ready to book a call. The request lands in
@@ -15,13 +15,14 @@ const YOU_GET = [
   'The 3 fixes that would get you more calls, in order.',
 ];
 
-const initialFields = { fullName: '', company: '', city: '', phone: '', email: '', websiteUrl: '', referral_code: '' };
+const initialFields = { fullName: '', company: '', city: '', state: '', phone: '', email: '', websiteUrl: '', referral_code: '' };
 
 function validate(f) {
   const e = {};
   if (!isFullName(f.fullName)) e.fullName = 'Enter your first and last name.';
   if (!f.company.trim()) e.company = 'Enter your company name.';
   if (!isCity(f.city)) e.city = 'Enter the city you work in.';
+  if (!stateCode(f.state)) e.state = 'Enter your state, like TX or Texas.';
   if (!isPhone(f.phone)) e.phone = 'Enter a 10-digit mobile number.';
   if (!isEmail(f.email)) e.email = 'Enter a valid email.';
   if (!isWebsite(f.websiteUrl)) e.websiteUrl = 'Enter your website, like yourcompany.com.';
@@ -53,6 +54,7 @@ export default function VisibilityCheck() {
     const spam = fields.referral_code.trim().length > 0;
     postLead({
       ...fields,
+      state: stateCode(fields.state),
       event_id: newEventId(),
       event_name: 'Lead',
       stage: 'visibility_check',
@@ -126,6 +128,7 @@ export default function VisibilityCheck() {
                   <TextField id="vc-fullName" label="First and last name" value={fields.fullName} onChange={(v) => update('fullName', v)} error={errors.fullName} autoComplete="name" />
                   <TextField id="vc-company" label="Company name" value={fields.company} onChange={(v) => update('company', v)} error={errors.company} autoComplete="organization" />
                   <TextField id="vc-city" label="What city do you work in?" value={fields.city} onChange={(v) => update('city', v)} error={errors.city} autoComplete="address-level2" />
+                  <TextField id="vc-state" label="State" value={fields.state} onChange={(v) => update('state', v)} error={errors.state} autoComplete="address-level1" />
                   <TextField id="vc-phone" label="Mobile phone" type="tel" value={fields.phone} onChange={(v) => update('phone', v)} error={errors.phone} autoComplete="tel" />
                   <TextField id="vc-email" label="Email" type="email" value={fields.email} onChange={(v) => update('email', v)} error={errors.email} autoComplete="email" />
                   <TextField id="vc-websiteUrl" label="Website" value={fields.websiteUrl} onChange={(v) => update('websiteUrl', v)} error={errors.websiteUrl} autoComplete="url" />
