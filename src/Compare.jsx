@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BOOK_LINK, Footer, Logo, VISIBILITY_LINK, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
+import { BOOK_LINK, Footer, Logo, SocialLinks, VISIBILITY_LINK, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
 import { captureAttribution, initAnalytics, trackEvent } from './roofers/tracking.js';
 
 // Comparison page for "best roofing marketing companies" searches. Every other
@@ -86,6 +86,7 @@ export default function Compare() {
             <Logo />
             <span className="text-base font-bold tracking-tight text-roof-ink">Reboot Media</span>
           </a>
+          <SocialLinks location="header" className="ml-auto" />
         </div>
       </header>
       <main>
