@@ -335,7 +335,14 @@ function FormSection({ segment }) {
 // Footer routes to the pages a roofer can act on, so every page links to them.
 export const BOOK_LINK = { href: '/#prequal-form', label: 'Book a Strategy Call' };
 export const VISIBILITY_LINK = { href: VISIBILITY_CHECK_PATH, label: 'Free Visibility Check' };
-export const FOOTER_LINKS = [BOOK_LINK, VISIBILITY_LINK];
+// Linked from /visibility-check, not the homepage (K 2026-10-09).
+export const COMPARE_LINK = { href: '/roofing-marketing-companies', label: 'Roofing Marketing Companies Compared' };
+export const FOOTER_LINKS = [
+  BOOK_LINK,
+  VISIBILITY_LINK,
+  { href: '/roofing-marketing-agency', label: 'Roofing Marketing Agency' },
+  { href: '/texas-roofing-marketing', label: 'Roofing Marketing in Texas' },
+];
 
 export function Footer({ links = [] }) {
   return (

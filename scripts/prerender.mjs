@@ -5,7 +5,7 @@
 import { readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { ROUTES, SITE_URL } from '../src/seo.js'
 
-const { render, FAQS } = await import('../dist-ssr/entry-server.js')
+const { render, FAQS, COMPANIES, LOCATION_PAGES } = await import('../dist-ssr/entry-server.js')
 const template = readFileSync('dist/index.html', 'utf8')
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -59,6 +59,47 @@ function schemaFor(path) {
         provider: { '@id': ORG['@id'] },
         audience: { '@type': 'BusinessAudience', audienceType: 'Roofing companies' },
         url: `${SITE_URL}${path}`,
+      },
+    ]
+  }
+  if (LOCATION_PAGES[path]) {
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Service',
+        name: ROUTES[path].title.split(' | ')[0],
+        serviceType: 'Roofing company marketing',
+        description: ROUTES[path].description,
+        provider: { '@id': ORG['@id'] },
+        audience: { '@type': 'BusinessAudience', audienceType: 'Roofing companies' },
+        areaServed: path === '/texas-roofing-marketing' ? { '@type': 'State', name: 'Texas' } : { '@type': 'Country', name: 'United States' },
+        url: `${SITE_URL}${path}`,
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: LOCATION_PAGES[path].faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+      },
+    ]
+  }
+  if (path === '/roofing-marketing-companies') {
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: 'Roofing Marketing Companies Compared (2026)',
+        description: ROUTES[path].description,
+        url: `${SITE_URL}${path}`,
+        datePublished: '2026-10-09',
+        author: { '@id': ORG['@id'] },
+        publisher: { '@id': ORG['@id'] },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Roofing marketing companies',
+        itemListOrder: 'https://schema.org/ItemListOrderAscending',
+        itemListElement: COMPANIES.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name })),
       },
     ]
   }
