@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BOOK_LINK, Footer, Icon, Logo, btnBase, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
+import { BOOK_LINK, COMPARE_LINK, Footer, Icon, Logo, btnBase, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
 import { Arrow, TextField } from './roofers/PreQualForm.jsx';
 import { formatPhone, isCity, isEmail, isFullName, isPhone, isWebsite } from './roofers/validate.js';
 import { captureAttribution, getAttribution, initAnalytics, newEventId, postLead, trackEvent } from './roofers/tracking.js';
@@ -143,7 +143,7 @@ export default function VisibilityCheck() {
           </div>
         </section>
       </main>
-      <Footer links={[BOOK_LINK]} />
+      <Footer links={[BOOK_LINK, COMPARE_LINK]} />
     </div>
   );
 }

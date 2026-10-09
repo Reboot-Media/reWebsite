@@ -8,3 +8,4 @@ export function render(path) {
 }
 
 export { FAQS } from './App.jsx'
+export { COMPANIES } from './Compare.jsx'

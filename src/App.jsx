@@ -335,6 +335,8 @@ function FormSection({ segment }) {
 // Footer routes to the pages a roofer can act on, so every page links to them.
 export const BOOK_LINK = { href: '/#prequal-form', label: 'Book a Strategy Call' };
 export const VISIBILITY_LINK = { href: VISIBILITY_CHECK_PATH, label: 'Free Visibility Check' };
+// Linked from /visibility-check, not the homepage (K 2026-10-09).
+export const COMPARE_LINK = { href: '/roofing-marketing-companies', label: 'Roofing Marketing Companies Compared' };
 export const FOOTER_LINKS = [BOOK_LINK, VISIBILITY_LINK];
 
 export function Footer({ links = [] }) {

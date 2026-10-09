@@ -18,6 +18,12 @@ export const ROUTES = {
       'See which roofers homeowners in your city find first, where your company shows up, and the 3 fixes that would get you more calls. Free, within one business day.',
     index: true,
   },
+  '/roofing-marketing-companies': {
+    title: 'Roofing Marketing Companies Compared (2026) | Reboot Media',
+    description:
+      'How 8 roofing marketing companies differ, based on what each says on its own website, plus 5 questions to ask before you sign with any of them.',
+    index: true,
+  },
   // Post-booking page and cold email pages: not for search.
   '/before-your-call': { title: 'Before your call | Reboot Media', description: DEFAULT_DESCRIPTION, index: false },
   '/grow': { title: 'Reboot Media | More signed jobs for roofing companies', description: DEFAULT_DESCRIPTION, index: false },
