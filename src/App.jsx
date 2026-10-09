@@ -143,7 +143,7 @@ function Header() {
           <Logo />
           <span className="text-base font-bold tracking-tight text-roof-ink">Reboot Media</span>
         </span>
-        <SocialLinks location="header" className="ml-auto" />
+        <SocialLinks location="header" className="ml-auto hidden sm:flex" />
         <CTA small location="header" className="whitespace-nowrap">
           <span className="sm:hidden">Book a Call</span>
           <span className="hidden sm:inline">{CTA_LABEL}</span>
@@ -157,6 +157,11 @@ function FounderVideo() {
   return (
     <figure className="w-full">
       <HeroVideo />
+      {/* On phones the header stays clean, so the socials live under the video. */}
+      <figcaption className="mt-3 flex items-center justify-center gap-1 text-[15px] text-roof-muted sm:hidden">
+        <span>Follow along</span>
+        <SocialLinks location="hero" />
+      </figcaption>
     </figure>
   );
 }
