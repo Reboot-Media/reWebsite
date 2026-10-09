@@ -308,7 +308,7 @@ function Team() {
         <div className={col}>
           <h2 className={`mb-5 ${h2Class}`}>Who we are</h2>
           <p className={`mb-5 ${mutedClass}`}>
-            Reboot Media was founded by ex-Oracle AI engineer Kendall Reid.
+            Reboot Media was founded by ex-Oracle AI engineer Kendall Reid. Based in Austin, Texas.
           </p>
           <p className={`mb-3 ${bodyClass}`}>Over 10 years of combined experience in:</p>
           <ul className="mb-6 space-y-3">
@@ -399,7 +399,7 @@ export function Footer({ links = [] }) {
         </nav>
       )}
       <div className={`${wrap} flex flex-col gap-2 py-10 text-[15px] text-roof-muted sm:flex-row sm:items-center sm:justify-between`}>
-        <p>Reboot Media LLC</p>
+        <p>Reboot Media LLC · Austin, Texas</p>
         <a href="mailto:hello@rebootmedia.us" className={`inline-flex min-h-[48px] items-center hover:text-roof-ink hover:underline ${focusRing}`}>
           hello@rebootmedia.us
         </a>
