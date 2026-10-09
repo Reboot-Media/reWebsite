@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BOOK_LINK, COMPARE_LINK, Footer, Icon, Logo, btnBase, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
+import { BOOK_LINK, COMPARE_LINK, Footer, Icon, Logo, SocialLinks, btnBase, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
 import { Arrow, TextField } from './roofers/PreQualForm.jsx';
 import { formatPhone, isCity, isEmail, isFullName, isPhone, isWebsite } from './roofers/validate.js';
 import { captureAttribution, getAttribution, initAnalytics, newEventId, postLead, trackEvent } from './roofers/tracking.js';
@@ -74,6 +74,7 @@ export default function VisibilityCheck() {
             <Logo />
             <span className="text-base font-bold tracking-tight text-roof-ink">Reboot Media</span>
           </a>
+          <SocialLinks location="header" className="ml-auto" />
         </div>
       </header>
       <main>

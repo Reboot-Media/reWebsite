@@ -5,6 +5,7 @@ import { captureAttribution, initAnalytics, trackEvent } from './roofers/trackin
 import { segmentForPath } from './segments.js';
 
 const LINKEDIN_URL = 'https://www.linkedin.com/company/rebootmedia-io/';
+const INSTAGRAM_URL = 'https://www.instagram.com/rebootmedia_';
 const CTA_LABEL = 'Book a Strategy Call';
 export const VISIBILITY_CHECK_PATH = '/visibility-check';
 
@@ -76,6 +77,42 @@ function IconLinkedIn({ className = 'h-5 w-5' }) {
   );
 }
 
+function IconInstagram({ className = 'h-5 w-5' }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="2" y="2" width="20" height="20" rx="5" />
+      <circle cx="12" cy="12" r="4.5" />
+      <circle cx="17.5" cy="6.5" r="0.75" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+const SOCIALS = [
+  { network: 'instagram', href: INSTAGRAM_URL, label: 'Reboot Media on Instagram', Icon: IconInstagram },
+  { network: 'linkedin', href: LINKEDIN_URL, label: 'Reboot Media on LinkedIn', Icon: IconLinkedIn },
+];
+
+// Proof of life for cold visitors: our socials, visible at the top of every page.
+export function SocialLinks({ location, className = '' }) {
+  return (
+    <span className={`flex shrink-0 items-center ${className}`}>
+      {SOCIALS.map(({ network, href, label, Icon: SocialIcon }) => (
+        <a
+          key={network}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={label}
+          onClick={() => trackEvent('social_click', { network, location })}
+          className={`inline-flex h-10 w-8 items-center justify-center rounded-lg text-roof-muted transition-colors hover:text-accent sm:w-10 ${focusRing}`}
+        >
+          <SocialIcon className="h-[18px] w-[18px] sm:h-5 sm:w-5" />
+        </a>
+      ))}
+    </span>
+  );
+}
+
 export function Icon({ d, className = 'h-6 w-6', children }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -101,11 +138,12 @@ export const col = 'max-w-[640px]';
 function Header() {
   return (
     <header className="sticky top-0 z-10 border-b border-roof-border-subtle bg-white/80 backdrop-blur-md">
-      <div className={`${wrap} flex min-h-[72px] items-center justify-between gap-2`}>
+      <div className={`${wrap} flex min-h-[72px] items-center justify-between gap-2 sm:gap-3`}>
         <span className="flex items-center gap-2 whitespace-nowrap">
           <Logo />
           <span className="text-base font-bold tracking-tight text-roof-ink">Reboot Media</span>
         </span>
+        <SocialLinks location="header" className="ml-auto hidden sm:flex" />
         <CTA small location="header" className="whitespace-nowrap">
           <span className="sm:hidden">Book a Call</span>
           <span className="hidden sm:inline">{CTA_LABEL}</span>
@@ -119,6 +157,10 @@ function FounderVideo() {
   return (
     <figure className="w-full">
       <HeroVideo />
+      {/* On phones the header stays clean, so the socials live under the video. */}
+      <figcaption className="mt-2 flex justify-center sm:hidden">
+        <SocialLinks location="hero" />
+      </figcaption>
     </figure>
   );
 }
@@ -365,15 +407,7 @@ export function Footer({ links = [] }) {
           <a href="/privacy.html" className={`inline-flex min-h-[48px] items-center px-2 hover:text-roof-ink hover:underline ${focusRing}`}>
             Privacy
           </a>
-          <a
-            href={LINKEDIN_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Reboot Media on LinkedIn"
-            className={`inline-flex min-h-[48px] min-w-[48px] items-center justify-center hover:text-roof-ink ${focusRing}`}
-          >
-            <IconLinkedIn />
-          </a>
+          <SocialLinks location="footer" />
           <span>© 2026</span>
         </div>
       </div>

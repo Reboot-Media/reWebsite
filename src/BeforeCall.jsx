@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Footer, Icon, Logo, bodyClass, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
+import { Footer, Icon, Logo, SocialLinks, bodyClass, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
 import { captureAttribution, initAnalytics, trackEvent } from './roofers/tracking.js';
 
 // Paste the Loom share link here (or set VITE_PRECALL_LOOM_URL in Cloudflare).
@@ -84,6 +84,7 @@ export default function BeforeCall() {
             <Logo />
             <span className="text-base font-bold tracking-tight text-roof-ink">Reboot Media</span>
           </a>
+          <SocialLinks location="header" className="ml-auto" />
         </div>
       </header>
       <main>

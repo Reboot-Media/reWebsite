@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BOOK_LINK, Footer, Icon, Logo, VISIBILITY_LINK, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
+import { BOOK_LINK, Footer, Icon, Logo, SocialLinks, VISIBILITY_LINK, card, col, h2Class, mutedClass, sec, wrap } from './App.jsx';
 import { captureAttribution, initAnalytics, trackEvent } from './roofers/tracking.js';
 
 // Nationwide and Texas pages for "roofing marketing agency" and "roofing
@@ -118,6 +118,7 @@ export default function LocationPage({ path = window.location.pathname }) {
             <Logo />
             <span className="text-base font-bold tracking-tight text-roof-ink">Reboot Media</span>
           </a>
+          <SocialLinks location="header" className="ml-auto" />
         </div>
       </header>
       <main>
