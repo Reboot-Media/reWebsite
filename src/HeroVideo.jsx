@@ -9,7 +9,7 @@ const VSL_POSTER = '/media/vsl-poster.jpg';
 const MILESTONES = [25, 50, 75];
 const frame = 'relative aspect-video overflow-hidden rounded-[20px] bg-brand-950 shadow-lift ring-8 ring-white';
 
-export default function HeroVideo() {
+export default function HeroVideo({ src = VSL_SRC, poster = VSL_POSTER }) {
   const ref = useRef(null);
   // 'preview' = muted autoplay loop behind the play button; 'watching' = sound on, controls shown.
   const [mode, setMode] = useState('preview');
@@ -30,7 +30,7 @@ export default function HeroVideo() {
     v.loop = false;
     setMode('watching');
     v.play().catch(() => {});
-    trackEvent('vsl_play');
+    trackEvent('vsl_play', { video: src });
   }
 
   function onTimeUpdate() {
@@ -40,21 +40,21 @@ export default function HeroVideo() {
     for (const m of MILESTONES) {
       if (pct >= m && !sent.current.has(m)) {
         sent.current.add(m);
-        trackEvent('vsl_progress', { percent: m });
+        trackEvent('vsl_progress', { percent: m, video: src });
       }
     }
   }
 
   function onEnded() {
-    if (mode === 'watching') trackEvent('vsl_complete');
+    if (mode === 'watching') trackEvent('vsl_complete', { video: src });
   }
 
   return (
     <div className={frame}>
       <video
         ref={ref}
-        src={VSL_SRC}
-        poster={VSL_POSTER}
+        src={src}
+        poster={poster}
         muted
         loop={mode === 'preview'}
         playsInline

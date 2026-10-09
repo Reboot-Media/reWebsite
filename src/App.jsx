@@ -153,10 +153,10 @@ function Header() {
   );
 }
 
-function FounderVideo() {
+function FounderVideo({ video }) {
   return (
     <figure className="w-full">
-      <HeroVideo />
+      <HeroVideo {...video} />
       {/* On phones the header stays clean, so the socials live under the video. */}
       <figcaption className="mt-2 flex justify-center sm:hidden">
         <SocialLinks location="hero" />
@@ -195,7 +195,7 @@ function Hero({ segment }) {
             {(!segment || segment.sameAsHome) && <VisibilityCheckLink className="mt-4" location="hero" />}
           </div>
         </div>
-        <FounderVideo />
+        <FounderVideo video={segment?.video} />
       </div>
     </section>
   );
