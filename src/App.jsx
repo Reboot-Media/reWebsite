@@ -158,8 +158,7 @@ function FounderVideo() {
     <figure className="w-full">
       <HeroVideo />
       {/* On phones the header stays clean, so the socials live under the video. */}
-      <figcaption className="mt-3 flex items-center justify-center gap-1 text-[15px] text-roof-muted sm:hidden">
-        <span>Follow along</span>
+      <figcaption className="mt-2 flex justify-center sm:hidden">
         <SocialLinks location="hero" />
       </figcaption>
     </figure>
