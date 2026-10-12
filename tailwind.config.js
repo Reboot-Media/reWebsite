@@ -40,6 +40,20 @@ export default {
         card: '0 1px 2px rgba(26,22,38,0.06), 0 4px 12px -2px rgba(26,22,38,0.06)',
         lift: '0 1px 2px rgba(26,22,38,0.06), 0 24px 64px -24px rgba(91,33,182,0.35)',
       },
+      keyframes: {
+        'question-in': {
+          from: { opacity: '0', transform: 'translateX(12px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
+        },
+        'question-back': {
+          from: { opacity: '0', transform: 'translateX(-12px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
+        },
+      },
+      animation: {
+        'question-in': 'question-in 220ms cubic-bezier(0.23, 1, 0.32, 1) both',
+        'question-back': 'question-back 220ms cubic-bezier(0.23, 1, 0.32, 1) both',
+      },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
