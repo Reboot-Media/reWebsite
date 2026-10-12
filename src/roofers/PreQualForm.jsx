@@ -285,12 +285,7 @@ function ProgressBar({ label, current, total, done }) {
   const pct = done ? 100 : Math.max(4, Math.round(((current - 1) / total) * 100))
   return (
     <div className="mb-7">
-      <div className="mb-2 flex items-baseline justify-between text-sm">
-        <span className="font-medium text-roof-ink">{label}</span>
-        <span className="tabular-nums text-roof-muted">
-          {done ? 'Done' : current < total ? `${current} of ${total}` : 'Last step'}
-        </span>
-      </div>
+      <p className="mb-2 text-sm font-medium text-roof-ink">{label}</p>
       <div
         role="progressbar"
         aria-label="Form progress"
