@@ -61,7 +61,7 @@ export const SEGMENTS = {
       steps: [
         [
           decisionMaker,
-          { name: 'annualRevenue', type: 'radio', legend: "What's your company's annual revenue?", options: ['Under $3M', '$3M–$5M', '$5M–$10M', '$10M–$25M', '$25M+'] },
+          { name: 'annualRevenue', type: 'radio', legend: "What's your company's annual revenue?", options: ['Under $5M', '$5M–$10M', '$10M–$25M', '$25M+'] },
           { name: 'crewCount', type: 'radio', legend: 'How many crews do you run today?', options: ['1–3', '4–6', '7–10', '11+'] },
           { name: 'googleAdsStatus', type: 'radio', legend: 'How are your ads doing right now?', options: ['Running and working', 'Running, not happy with results', 'Not running yet'] },
           websiteUrl,
