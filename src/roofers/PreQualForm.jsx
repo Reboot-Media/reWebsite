@@ -1,4 +1,4 @@
-import { Component, useState, useRef, lazy, Suspense } from 'react'
+import { Component, useState, useRef, useEffect, lazy, Suspense } from 'react'
 import { formatPhone, isCity, isEmail, isFullName, isPhone } from './validate.js'
 import { newEventId, trackLead, trackStep, postLead, getAttribution } from './tracking'
 import { CALENDLY_URL } from './calendlyUrl.js'
@@ -26,14 +26,18 @@ export function Arrow() {
 // only once a prospect has qualified — protects LCP on initial paint.
 const CalendlyEmbed = lazy(() => import('./CalendlyEmbed.jsx'))
 
-const TOTAL_STEPS = 4
-const QUESTION_STEPS = 3
+// How long a tapped answer stays highlighted before the next question slides in.
+const AUTO_ADVANCE_MS = 320
 
-// The questions on screens 1 and 2. Segment pages (src/segments.js) swap in
-// their own set through `segment.quiz`; screen 3 (contact details) is the
-// same everywhere. Question types: radio, checkbox (stored as one
-// comma-separated string), text. `optional` skips validation; `showIf`
-// hides a question until another answer matches.
+// The quiz shows ONE question per screen. `steps` groups the questions into
+// sections: the section label sits above the progress bar, and finishing a
+// section fires the same PrequalStep1Complete / PrequalStep2Complete events
+// the old three-screen form did, so funnel reports keep working. Segment
+// pages (src/segments.js) swap in their own set through `segment.quiz`; the
+// contact-details screen comes last and is the same everywhere. Question
+// types: radio, checkbox (stored as one comma-separated string), text.
+// `optional` skips validation; `showIf` hides a question until another
+// answer matches.
 export const DEFAULT_QUIZ = {
   stepLabels: ['Your business', 'Your marketing'],
   steps: [
@@ -149,12 +153,18 @@ function TextAreaField({ id, label, value, onChange, error, hint }) {
   )
 }
 
-function RadioGroup({ legend, name, options, value, onChange, error, hint }) {
+function RadioGroup({ legend, name, options, value, onChange, error, hint, onPick }) {
   const errorId = `${name}-error`
+  const pointerRef = useRef(false)
   return (
-    <fieldset className="mb-6" aria-describedby={error ? errorId : undefined}>
-      <legend className="mb-2 block text-[15px] font-semibold text-roof-ink">{legend}</legend>
-      {hint && <p className="mb-2 text-sm text-roof-ink">{hint}</p>}
+    <fieldset
+      className="mb-6"
+      aria-describedby={error ? errorId : undefined}
+      onPointerDown={() => (pointerRef.current = true)}
+      onKeyDown={() => (pointerRef.current = false)}
+    >
+      <legend className="mb-4 block text-xl font-semibold leading-snug text-roof-ink text-balance">{legend}</legend>
+      {hint && <p className="-mt-2 mb-4 text-sm text-roof-muted">{hint}</p>}
       <div className="flex flex-col gap-3">
         {options.map((opt) => {
           const optId = `${name}-${opt.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`
@@ -174,6 +184,15 @@ function RadioGroup({ legend, name, options, value, onChange, error, hint }) {
                 value={opt}
                 checked={checked}
                 onChange={() => onChange(opt)}
+                // A tap or click on an answer moves to the next question
+                // (re-tapping the answer already picked does too). Arrow keys
+                // also fire click on radios but with no pointer down first,
+                // so keyboard users stay put and move on with Enter.
+                onClick={() => {
+                  if (!pointerRef.current) return
+                  pointerRef.current = false
+                  onPick?.(opt)
+                }}
                 aria-invalid={error ? 'true' : 'false'}
                 className="h-5 w-5 shrink-0 accent-accent focus-visible:ring-2 focus-visible:ring-accent"
               />
@@ -201,8 +220,8 @@ function CheckboxGroup({ legend, name, options, value, onChange, error, hint }) 
   }
   return (
     <fieldset className="mb-6" aria-describedby={error ? errorId : undefined}>
-      <legend className="mb-2 block text-[15px] font-semibold text-roof-ink">{legend}</legend>
-      {hint && <p className="mb-2 text-sm text-roof-ink">{hint}</p>}
+      <legend className="mb-4 block text-xl font-semibold leading-snug text-roof-ink text-balance">{legend}</legend>
+      {hint && <p className="-mt-2 mb-4 text-sm text-roof-muted">{hint}</p>}
       <div className="flex flex-col gap-3">
         {options.map((opt) => {
           const optId = `${name}-${opt.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`
@@ -239,49 +258,53 @@ function CheckboxGroup({ legend, name, options, value, onChange, error, hint }) 
   )
 }
 
-function Question({ q, fields, errors, update }) {
-  if (q.showIf && !q.showIf(fields)) return null
+function Question({ q, fields, errors, update, onPick }) {
   const common = { value: fields[q.name], onChange: (v) => update(q.name, v), error: errors[q.name], hint: q.hint }
   if (q.type === 'text') {
-    return <TextField id={`pq-${q.name}`} label={q.label} autoComplete={q.autoComplete} {...common} />
+    return (
+      <div className="[&_label]:mb-4 [&_label]:text-xl [&_label]:leading-snug [&_label]:text-balance">
+        <TextField id={`pq-${q.name}`} label={q.label} autoComplete={q.autoComplete} {...common} />
+      </div>
+    )
   }
-  const Group = q.type === 'checkbox' ? CheckboxGroup : RadioGroup
-  return <Group legend={q.legend} name={`pq-${q.name}`} options={q.options} {...common} />
+  if (q.type === 'checkbox') return <CheckboxGroup legend={q.legend} name={`pq-${q.name}`} options={q.options} {...common} />
+  return <RadioGroup legend={q.legend} name={`pq-${q.name}`} options={q.options} onPick={onPick} {...common} />
 }
 
-function ProgressIndicator({ step, finalLabel, stepLabels }) {
-  const labels = [...stepLabels, 'Your info', finalLabel]
+// The questions a roofer will actually see, in order, given the answers so
+// far (a `showIf` question appears only once its trigger answer is picked).
+function visibleQuestions(quiz, fields) {
+  return quiz.steps.flatMap((questions, section) =>
+    questions.filter((q) => !q.showIf || q.showIf(fields)).map((q) => ({ q, section }))
+  )
+}
+
+function ProgressBar({ label, current, total, done }) {
+  // The bar fills as questions are answered, so it only reaches the end once
+  // the form is sent.
+  const pct = done ? 100 : Math.max(4, Math.round(((current - 1) / total) * 100))
   return (
-    <ol className="mb-8 flex items-center" aria-label="Form progress">
-      {labels.map((label, i) => {
-        const n = i + 1
-        const isCurrent = n === step
-        const isDone = n < step
-        return (
-          <li
-            key={label}
-            className="flex flex-1 items-center gap-2 last:flex-none"
-            aria-current={isCurrent ? 'step' : undefined}
-          >
-            <span
-              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[13px] font-bold ${
-                isDone || isCurrent ? 'bg-accent text-white' : 'bg-roof-border-subtle text-roof-muted'
-              }`}
-            >
-              {n}
-            </span>
-            <span
-              className={`hidden text-sm sm:inline ${
-                isCurrent ? 'font-medium text-roof-ink' : 'text-roof-muted'
-              }`}
-            >
-              {label}
-            </span>
-            {n < TOTAL_STEPS && <span className="mx-2 h-px flex-1 bg-roof-border-subtle" aria-hidden="true" />}
-          </li>
-        )
-      })}
-    </ol>
+    <div className="mb-7">
+      <div className="mb-2 flex items-baseline justify-between text-sm">
+        <span className="font-medium text-roof-ink">{label}</span>
+        <span className="tabular-nums text-roof-muted">
+          {done ? 'Done' : current < total ? `${current} of ${total}` : 'Last step'}
+        </span>
+      </div>
+      <div
+        role="progressbar"
+        aria-label="Form progress"
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-valuenow={done ? total : current - 1}
+        className="h-1.5 w-full overflow-hidden rounded-full bg-roof-border-subtle"
+      >
+        <div
+          className="h-full rounded-full bg-accent transition-[width] duration-300 ease-out motion-reduce:transition-none"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+    </div>
   )
 }
 
@@ -351,7 +374,10 @@ function CalendlyFallback() {
 }
 
 export default function PreQualForm({ segment = null }) {
-  const [step, setStep] = useState(1)
+  // `screen` indexes the visible questions; one past the last is the
+  // contact-details screen.
+  const [screen, setScreen] = useState(0)
+  const [direction, setDirection] = useState(1)
   const [fields, setFields] = useState(initialFields)
   const [errors, setErrors] = useState({})
   const [submitted, setSubmitted] = useState(false)
@@ -359,6 +385,11 @@ export default function PreQualForm({ segment = null }) {
   const [booked, setBooked] = useState(false)
   const [liveMessage, setLiveMessage] = useState('')
   const startedRef = useRef(false)
+  const fieldsRef = useRef(fields)
+  fieldsRef.current = fields
+  const advanceTimer = useRef(null)
+  const screenRef = useRef(null)
+  const navigatedRef = useRef(false)
 
   function update(name, value) {
     if (!startedRef.current && name !== 'referral_code') {
@@ -369,21 +400,38 @@ export default function PreQualForm({ segment = null }) {
   }
 
   const quiz = segment?.quiz || DEFAULT_QUIZ
+  const questions = visibleQuestions(quiz, fields)
+  const contactScreen = questions.length
+  const totalScreens = questions.length + 1
+  const current = questions[screen]
 
-  // Screens 1 and 2: quick taps about the business, then marketing and
-  // timing. Easy questions come first so the roofer is committed before we
-  // ask for contact details.
-  function validateQuestions(questions) {
-    const e = {}
-    for (const q of questions) {
-      if (q.optional || (q.showIf && !q.showIf(fields))) continue
-      if (!fields[q.name].trim()) e[q.name] = q.type === 'checkbox' ? 'Select at least one.' : 'Select an option.'
+  useEffect(() => () => clearTimeout(advanceTimer.current), [])
+
+  // After moving between screens, put focus on the new screen's answer (the
+  // picked one, or the first) so keyboard and screen-reader users land on
+  // the question, and bring the form back into view if a tall screen left
+  // its top above the fold. Skipped on first render so the page load
+  // doesn't jump to the form.
+  useEffect(() => {
+    if (!navigatedRef.current) return
+    const root = screenRef.current
+    const target = root && (root.querySelector('input:checked') || root.querySelector('input, textarea'))
+    target?.focus({ preventScroll: true })
+    const form = document.getElementById('prequal-form')
+    if (form && form.getBoundingClientRect().top < 0) {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      form.scrollIntoView({ block: 'start', behavior: reduce ? 'auto' : 'smooth' })
     }
-    return e
+  }, [screen, submitted])
+
+  function validateQuestion(q, f) {
+    if (q.optional || (q.showIf && !q.showIf(f))) return {}
+    if (!f[q.name].trim()) return { [q.name]: q.type === 'checkbox' ? 'Select at least one.' : 'Select an option.' }
+    return {}
   }
 
-  // Screen 3: contact details, last.
-  function validateStep3() {
+  // Contact details, last.
+  function validateContact() {
     const e = {}
     if (!fields.fullName.trim()) e.fullName = 'Enter your first and last name.'
     else if (!isFullName(fields.fullName)) e.fullName = 'Enter your first and last name, letters only.'
@@ -397,9 +445,39 @@ export default function PreQualForm({ segment = null }) {
     return e
   }
 
-  const STEP_MESSAGES = {
-    2: `Step 2 of 3: ${quiz.stepLabels[1]}.`,
-    3: 'Step 3 of 3: Your info.',
+  function goTo(next, dir) {
+    clearTimeout(advanceTimer.current)
+    navigatedRef.current = true
+    setDirection(dir)
+    setErrors({})
+    setScreen(next)
+  }
+
+  // Validate the question on screen and move to the next one. Reads the
+  // latest answers from a ref so a tap's auto-advance sees the answer it
+  // just picked.
+  function advance() {
+    const f = fieldsRef.current
+    const list = visibleQuestions(quiz, f)
+    const item = list[screen]
+    if (!item) return
+    const e = validateQuestion(item.q, f)
+    if (Object.keys(e).length > 0) {
+      setErrors(e)
+      setLiveMessage(e[item.q.name])
+      return
+    }
+    const next = screen + 1
+    // Finishing a section fires the same events the old sectioned form did.
+    const nextSection = next < list.length ? list[next].section : quiz.steps.length
+    if (nextSection !== item.section) trackStep(`PrequalStep${item.section + 1}Complete`)
+    goTo(next, 1)
+    setLiveMessage(next < list.length ? `Question ${next + 1} of ${list.length + 1}.` : `Last step: your info.`)
+  }
+
+  function pick() {
+    clearTimeout(advanceTimer.current)
+    advanceTimer.current = setTimeout(advance, AUTO_ADVANCE_MS)
   }
 
   function handleSubmitStep(e) {
@@ -409,21 +487,18 @@ export default function PreQualForm({ segment = null }) {
     // events / two webhook POSTs).
     if (submitted) return
 
-    const validators = { 1: () => validateQuestions(quiz.steps[0]), 2: () => validateQuestions(quiz.steps[1]), 3: validateStep3 }
-    const stepErrors = validators[step]()
+    if (screen < contactScreen) {
+      advance()
+      return
+    }
+
+    const stepErrors = validateContact()
     if (Object.keys(stepErrors).length > 0) {
       setErrors(stepErrors)
       setLiveMessage('There are errors in the form. Please review and correct the highlighted fields.')
       return
     }
     setErrors({})
-
-    if (step < QUESTION_STEPS) {
-      trackStep(`PrequalStep${step}Complete`)
-      setStep(step + 1)
-      setLiveMessage(STEP_MESSAGES[step + 1])
-      return
-    }
 
     // Final submit: run qualify logic, fire tracking, POST lead.
     //
@@ -470,9 +545,9 @@ export default function PreQualForm({ segment = null }) {
       attribution: getAttribution(),
     })
 
+    navigatedRef.current = true
     setQualified(isQualified)
     setSubmitted(true)
-    setStep(TOTAL_STEPS)
     setLiveMessage(
       isQualified
         ? "You're qualified — book your appointment."
@@ -481,59 +556,53 @@ export default function PreQualForm({ segment = null }) {
   }
 
   function goBack() {
-    if (step > 1) {
-      setStep(step - 1)
-      setErrors({})
-      setLiveMessage(`Step ${step - 1} of 3.`)
+    if (screen > 0) {
+      goTo(screen - 1, -1)
+      setLiveMessage(`Question ${screen} of ${totalScreens}.`)
     }
   }
 
-  const finalLabel = submitted && !qualified ? 'Next steps' : 'Book'
+  const sectionLabel = submitted
+    ? qualified ? 'Book your call' : 'Next steps'
+    : current ? quiz.stepLabels[current.section] : 'Your info'
   const primaryBtn =
     'group inline-flex h-14 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-[14px] bg-accent px-5 text-[17px] font-semibold text-white hover:bg-accent-dark transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent'
   const backBtn =
-    'h-14 shrink-0 basis-[34%] rounded-[14px] border border-roof-border-strong px-5 py-3 text-[17px] font-semibold text-roof-ink transition-colors hover:bg-roof-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2'
+    'h-14 shrink-0 basis-[34%] rounded-[14px] border border-roof-border-strong px-5 py-3 text-[17px] font-semibold text-roof-ink transition-[background-color,transform] duration-150 active:scale-[0.96] motion-reduce:transition-none hover:bg-roof-paper focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2'
+  const enter = direction > 0 ? 'animate-question-in' : 'animate-question-back'
+  const skippable = current?.q.optional && !fields[current.q.name].trim()
 
   return (
     <div id="prequal-form" className="mx-auto w-full max-w-xl">
-      <ProgressIndicator step={step} finalLabel={finalLabel} stepLabels={quiz.stepLabels} />
+      <ProgressBar label={sectionLabel} current={screen + 1} total={totalScreens} done={submitted} />
       <div aria-live="polite" className="sr-only">
         {liveMessage}
       </div>
 
-      {step <= QUESTION_STEPS && (
+      {!submitted && (
         <form onSubmit={handleSubmitStep} noValidate>
-          {step === 1 && (
-            <div>
-              {quiz.steps[0].map((q) => (
-                <Question key={q.name} q={q} fields={fields} errors={errors} update={update} />
-              ))}
-              <button type="submit" className={`${primaryBtn} w-full`}>
-                Continue
-                <Arrow />
-              </button>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div>
-              {quiz.steps[1].map((q) => (
-                <Question key={q.name} q={q} fields={fields} errors={errors} update={update} />
-              ))}
+          {current && (
+            <div key={current.q.name} ref={screenRef} className={`${enter} motion-reduce:animate-none`}>
+              <Question q={current.q} fields={fields} errors={errors} update={update} onPick={pick} />
               <div className="flex gap-3">
-                <button type="button" onClick={goBack} className={backBtn}>
-                  Back
-                </button>
+                {screen > 0 && (
+                  <button type="button" onClick={goBack} className={backBtn}>
+                    Back
+                  </button>
+                )}
                 <button type="submit" className={primaryBtn}>
-                  Continue
-                <Arrow />
+                  {skippable ? 'Skip' : 'Continue'}
+                  <Arrow />
                 </button>
               </div>
             </div>
           )}
 
-          {step === 3 && (
-            <div>
+          {screen === contactScreen && (
+            <div key="contact" ref={screenRef} className={`${enter} motion-reduce:animate-none`}>
+              <h3 className="mb-5 text-xl font-semibold leading-snug text-roof-ink text-balance">
+                Last step. Where should we send your call details?
+              </h3>
               <div className="grid gap-x-4 sm:grid-cols-2">
                 <TextField
                   id="pq-fullName"
@@ -617,7 +686,7 @@ export default function PreQualForm({ segment = null }) {
         </form>
       )}
 
-      {step === TOTAL_STEPS && submitted && (
+      {submitted && (
         <div>
           {qualified ? (
             booked ? (
