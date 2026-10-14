@@ -2,10 +2,11 @@
 // route with its own title, description, canonical, robots and page markup, so
 // search engines and AI crawlers that don't run JavaScript can read every page.
 // Cloudflare Pages serves dist/visibility-check.html at /visibility-check.
-import { readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { dirname } from 'node:path'
 import { ROUTES, SITE_URL } from '../src/seo.js'
 
-const { render, FAQS, COMPANIES, LOCATION_PAGES, OBJECTIONS } = await import('../dist-ssr/entry-server.js')
+const { render, FAQS, COMPANIES, LOCATION_PAGES, OBJECTIONS, POSTS, BLOG_PATH } = await import('../dist-ssr/entry-server.js')
 const template = readFileSync('dist/index.html', 'utf8')
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -72,7 +73,9 @@ function schemaFor(path) {
         description: ROUTES[path].description,
         provider: { '@id': ORG['@id'] },
         audience: { '@type': 'BusinessAudience', audienceType: 'Roofing companies' },
-        areaServed: path === '/texas-roofing-marketing' ? { '@type': 'State', name: 'Texas' } : { '@type': 'Country', name: 'United States' },
+        areaServed:
+          LOCATION_PAGES[path].area ||
+          (path === '/texas-roofing-marketing' ? { '@type': 'State', name: 'Texas' } : { '@type': 'Country', name: 'United States' }),
         url: `${SITE_URL}${path}`,
       },
       {
@@ -112,6 +115,27 @@ function schemaFor(path) {
       },
     ]
   }
+  const post = POSTS.find((p) => `${BLOG_PATH}/${p.slug}` === path)
+  if (post) {
+    return [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: post.title,
+        description: post.description,
+        url: `${SITE_URL}${path}`,
+        datePublished: post.date,
+        dateModified: post.date,
+        author: { '@type': 'Person', name: 'Kendall Reid', url: SITE_URL },
+        publisher: { '@id': ORG['@id'] },
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: post.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+      },
+    ]
+  }
   return []
 }
 
@@ -136,7 +160,9 @@ for (const [path, meta] of Object.entries(ROUTES)) {
     .replace('</head>', `  ${head}\n  </head>`)
     .replace('<div id="root"></div>', `<div id="root">${render(path)}</div>`)
 
-  writeFileSync(path === '/' ? 'dist/index.html' : `dist${path}.html`, html)
+  const file = path === '/' ? 'dist/index.html' : `dist${path}.html`
+  mkdirSync(dirname(file), { recursive: true })
+  writeFileSync(file, html)
   console.log(`prerendered ${path}`)
 }
 

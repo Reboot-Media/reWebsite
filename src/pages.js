@@ -1,7 +1,8 @@
 import App from './App.jsx'
 import BeforeCall from './BeforeCall.jsx'
 import Compare, { COMPARE_PATH } from './Compare.jsx'
-import LocationPage, { NATIONWIDE_PATH, TEXAS_PATH } from './LocationPage.jsx'
+import Blog, { BLOG_PATH, POST_PATHS } from './Blog.jsx'
+import LocationPage, { METRO_PATHS, NATIONWIDE_PATH, TEXAS_PATH } from './LocationPage.jsx'
 import Questions, { QUESTIONS_PATH } from './Questions.jsx'
 import VisibilityCheck from './VisibilityCheck.jsx'
 
@@ -12,6 +13,9 @@ const PAGES = {
   [NATIONWIDE_PATH]: LocationPage,
   [TEXAS_PATH]: LocationPage,
   [QUESTIONS_PATH]: Questions,
+  ...Object.fromEntries(METRO_PATHS.map((p) => [p, LocationPage])),
+  [BLOG_PATH]: Blog,
+  ...Object.fromEntries(POST_PATHS.map((p) => [p, Blog])),
 }
 
 export const normalizePath = (path) => path.replace(/\/+$/, '') || '/'
