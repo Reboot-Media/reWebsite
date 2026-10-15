@@ -1,6 +1,8 @@
 // What search engines and AI crawlers see for each route. The build writes
 // these into each page's static HTML (scripts/prerender.mjs), so crawlers that
 // don't run JavaScript still get the title, description, canonical and content.
+import { POSTS } from './posts.js';
+
 export const SITE_URL = 'https://rebootmedia.us';
 
 const DEFAULT_DESCRIPTION =
@@ -42,6 +44,32 @@ export const ROUTES = {
       'Straight answers to the questions roofing company owners ask us: shared leads, cost, contracts, who owns the ad account, and what makes us different.',
     index: true,
   },
+  '/dallas-fort-worth-roofing-marketing': {
+    title: 'Roofing Marketing in Dallas-Fort Worth | Reboot Media',
+    description:
+      'Roofing marketing for DFW roofing companies. Ads in your company’s name, homeowners booked onto your calendar all year, one roofer per service area.',
+    index: true,
+  },
+  '/houston-roofing-marketing': {
+    title: 'Roofing Marketing in Houston | Reboot Media',
+    description:
+      'Roofing marketing for Houston roofing companies. Ads in your company’s name, homeowners booked onto your calendar every month, one roofer per service area.',
+    index: true,
+  },
+  '/austin-roofing-marketing': {
+    title: 'Roofing Marketing in Austin | Reboot Media, Austin, TX',
+    description:
+      'Austin-based roofing marketing for Austin roofing companies. Ads in your company’s name, homeowners booked onto your calendar, one roofer per service area.',
+    index: true,
+  },
+  '/blog': {
+    title: 'Answers for Roofing Company Owners | Reboot Media',
+    description: 'Straight answers to the questions roofing company owners ask about getting more signed jobs.',
+    index: true,
+  },
+  ...Object.fromEntries(
+    POSTS.map((p) => [`/blog/${p.slug}`, { title: `${p.title} | Reboot Media`, description: p.description, index: true }]),
+  ),
   // Post-booking page and cold email pages: not for search.
   '/before-your-call': { title: 'Before your call | Reboot Media', description: DEFAULT_DESCRIPTION, index: false },
   '/grow': { title: 'Reboot Media | More signed jobs for roofing companies', description: DEFAULT_DESCRIPTION, index: false },

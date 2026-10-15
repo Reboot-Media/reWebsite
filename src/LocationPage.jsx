@@ -9,7 +9,31 @@ import { captureAttribution, initAnalytics, trackEvent } from './roofers/trackin
 
 export const NATIONWIDE_PATH = '/roofing-marketing-agency';
 export const TEXAS_PATH = '/texas-roofing-marketing';
+export const DFW_PATH = '/dallas-fort-worth-roofing-marketing';
+export const HOUSTON_PATH = '/houston-roofing-marketing';
+export const AUSTIN_PATH = '/austin-roofing-marketing';
+export const METRO_PATHS = [DFW_PATH, HOUSTON_PATH, AUSTIN_PATH];
 const COMPARE_PATH = '/roofing-marketing-companies';
+const BLOG_PATH = '/blog';
+
+// Texas metro pages (K go 2026-10-14, thread "Texas SEO and AI search plan").
+// Each one needs detail a city-swap page wouldn't have: how that metro's
+// weather and layout shape roofing demand, and the cities it covers.
+const metroLinks = (self) => [
+  { href: TEXAS_PATH, label: 'Roofing marketing in Texas' },
+  ...[
+    [DFW_PATH, 'Dallas-Fort Worth'],
+    [HOUSTON_PATH, 'Houston'],
+    [AUSTIN_PATH, 'Austin'],
+  ]
+    .filter(([href]) => href !== self)
+    .map(([href, name]) => ({ href, label: `Roofing marketing in ${name}` })),
+  { href: COMPARE_PATH, label: 'How roofing marketing companies compare' },
+  { href: BLOG_PATH, label: 'Answers for roofing company owners' },
+];
+
+const howItWorks = (metro) =>
+  `Ads run in your company’s name, only in the parts of ${metro} you actually serve. Homeowners answer a few questions about their roof, then pick their own time to meet you, so you know the job before you get there. Every week you see which appointments turned into signed jobs.`;
 
 export const LOCATION_PAGES = {
   [NATIONWIDE_PATH]: {
@@ -88,16 +112,118 @@ export const LOCATION_PAGES = {
       {
         title: 'Areas we cover in Texas',
         text: 'Austin, Round Rock, Georgetown, San Marcos, San Antonio, New Braunfels, Dallas, Fort Worth, Plano, Frisco, Houston, The Woodlands, Katy, Sugar Land, Waco, Killeen, College Station, and the rest of the state.',
+        links: [
+          { href: DFW_PATH, label: 'Dallas-Fort Worth' },
+          { href: HOUSTON_PATH, label: 'Houston' },
+          { href: AUSTIN_PATH, label: 'Austin' },
+        ],
       },
     ],
     links: [
       { href: VISIBILITY_LINK.href, label: 'Get a free Visibility Check for your Texas city' },
       { href: '/roofing-marketing-questions', label: 'Questions roofers ask us' },
+      { href: BLOG_PATH, label: 'Answers for roofing company owners' },
     ],
     faqs: [
       { q: 'Are you actually in Texas?', a: 'Yes, we’re based in Austin.' },
       { q: 'Is my area taken?', a: 'Tell us your service area when you book and we’ll check before the call.' },
       { q: 'Do you only do storm work?', a: 'No. The point is steady months, not only storm months.' },
+    ],
+  },
+  [DFW_PATH]: {
+    event: 'metro_dfw_view',
+    area: { '@type': 'City', name: 'Dallas-Fort Worth, TX' },
+    eyebrow: 'Dallas-Fort Worth roofing companies',
+    h1: 'Roofing marketing for Dallas-Fort Worth roofing companies',
+    intro: [
+      'DFW is hail country. Spring storms bring a flood of calls, every roofer in the metroplex chases the same homeowners, and then the calls slow down while crews wait for the next storm.',
+      'We build and run ads in your company’s name so homeowners in your part of DFW book onto your calendar all year, not only after hail.',
+    ],
+    sections: [
+      {
+        title: 'What makes DFW different',
+        text: 'It’s a crowded market spread across dozens of cities. After every hailstorm, homeowners get knocks on the door from crews they’ve never heard of, so they look for a company with a local name, real reviews and an easy way to book. And a homeowner in Frisco wants a roofer who works in Frisco, not one whose ads talk about the whole metro.',
+      },
+      { title: 'How it works in DFW', text: howItWorks('DFW'), link: { href: NATIONWIDE_PATH, label: 'How our roofing marketing works' } },
+      {
+        title: 'Is your part of DFW open?',
+        text: 'We work with one roofer per service area, and parts of DFW are already taken. Tell us where you work when you book and we’ll check before the call.',
+      },
+      {
+        title: 'Cities we cover in DFW',
+        text: 'Dallas, Fort Worth, Arlington, Plano, Frisco, McKinney, Allen, Irving, Garland, Mesquite, Grand Prairie, Carrollton, Lewisville, Denton, Flower Mound, Keller, Southlake, Mansfield, Rockwall, Weatherford and Waxahachie.',
+      },
+    ],
+    links: [{ href: VISIBILITY_LINK.href, label: 'Get a free Visibility Check for your DFW city' }, ...metroLinks(DFW_PATH)],
+    faqs: [
+      { q: 'Do you work with more than one roofer in DFW?', a: 'Only one per service area. DFW is big enough to hold several service areas, so tell us yours and we’ll check if it’s open.' },
+      { q: 'Do you only do hail work?', a: 'No. Hail brings the rush. The system is built to keep the calendar full in the months between storms.' },
+      { q: 'Who owns the ad account?', a: 'You do. The history and the results stay with your company.' },
+      { q: 'Are you local?', a: 'We’re based in Austin and work with roofing companies across Texas.' },
+    ],
+  },
+  [HOUSTON_PATH]: {
+    event: 'metro_houston_view',
+    area: { '@type': 'City', name: 'Houston, TX' },
+    eyebrow: 'Houston roofing companies',
+    h1: 'Roofing marketing for Houston roofing companies',
+    intro: [
+      'Houston roofs take it from both sides. Hurricane season runs June through November, and the heat and humidity wear roofs down the rest of the year. Calls spike after a big storm, then go quiet.',
+      'We build and run ads in your company’s name so homeowners in your part of Houston book onto your calendar every month, not only after a storm.',
+    ],
+    sections: [
+      {
+        title: 'What makes Houston different',
+        text: 'The metro is huge and spread out. A homeowner in Katy and one in Pasadena are an hour apart, and each one searches for a roofer near them, not near downtown. After a named storm, crews from out of state pour in, so homeowners look for a company with a local name and real reviews before they let anyone on the roof.',
+      },
+      { title: 'How it works in Houston', text: howItWorks('Houston'), link: { href: NATIONWIDE_PATH, label: 'How our roofing marketing works' } },
+      {
+        title: 'Is your part of Houston open?',
+        text: 'We work with one roofer per service area. Tell us where you work when you book and we’ll check before the call.',
+      },
+      {
+        title: 'Cities we cover in Greater Houston',
+        text: 'Houston, Katy, Sugar Land, Richmond, Missouri City, Pearland, Friendswood, League City, Clear Lake, Pasadena, Baytown, Humble, Kingwood, Spring, The Woodlands, Conroe, Cypress, Tomball and Galveston.',
+      },
+    ],
+    links: [{ href: VISIBILITY_LINK.href, label: 'Get a free Visibility Check for your Houston-area city' }, ...metroLinks(HOUSTON_PATH)],
+    faqs: [
+      { q: 'Do you only do hurricane and storm work?', a: 'No. Storms bring the rush. The system is built to keep the calendar full in the months between.' },
+      { q: 'Do you work with my competitors?', a: 'No. One roofer per service area. If your area is open, it’s yours.' },
+      { q: 'Who owns the ad account?', a: 'You do. The history and the results stay with your company.' },
+      { q: 'Am I locked into a long contract?', a: 'No. We start with 90 days, then it’s month to month.' },
+    ],
+  },
+  [AUSTIN_PATH]: {
+    event: 'metro_austin_view',
+    area: { '@type': 'City', name: 'Austin, TX' },
+    eyebrow: 'Austin roofing companies',
+    h1: 'Roofing marketing for Austin roofing companies',
+    intro: [
+      'We’re based in Austin, so this is our home market. Central Texas gets spring hail and wind, and the metro keeps growing, with new neighborhoods going up from Georgetown to Kyle.',
+      'We build and run ads in your company’s name so homeowners in your part of Austin book onto your calendar every month.',
+    ],
+    sections: [
+      {
+        title: 'What makes Austin different',
+        text: 'A lot of homeowners here are new to the area and don’t know a roofer yet. So they search, read reviews and compare a few companies before they call. The roofer they find first, with an easy way to book, usually gets the inspection.',
+      },
+      { title: 'How it works in Austin', text: howItWorks('Austin'), link: { href: NATIONWIDE_PATH, label: 'How our roofing marketing works' } },
+      {
+        title: 'Is your part of Austin open?',
+        text: 'We work with one roofer per service area. Tell us where you work when you book and we’ll check before the call.',
+      },
+      {
+        title: 'Cities we cover around Austin',
+        text: 'Austin, Round Rock, Georgetown, Cedar Park, Leander, Liberty Hill, Pflugerville, Hutto, Taylor, Manor, Bastrop, Kyle, Buda, San Marcos, Dripping Springs, Bee Cave and Lakeway.',
+      },
+    ],
+    links: [{ href: VISIBILITY_LINK.href, label: 'Get a free Visibility Check for your Austin-area city' }, ...metroLinks(AUSTIN_PATH)],
+    faqs: [
+      { q: 'Are you actually in Austin?', a: 'Yes. Austin is home.' },
+      { q: 'Do you only do storm work?', a: 'No. The point is steady months, not only storm months.' },
+      { q: 'Do you work with my competitors?', a: 'No. One roofer per service area. If your area is open, it’s yours.' },
+      { q: 'Who owns the ad account?', a: 'You do. The history and the results stay with your company.' },
     ],
   },
 };
@@ -171,6 +297,16 @@ export default function LocationPage({ path = window.location.pathname }) {
                     </div>
                   )}
                   {s.after && <p className={`mt-6 ${bodyText}`}>{s.after}</p>}
+                  {s.links && (
+                    <p className={`mt-4 ${bodyText}`}>
+                      {s.links.map((l, i) => (
+                        <span key={l.href}>
+                          {i > 0 && ' · '}
+                          <a href={l.href} className={linkClass}>{l.label}</a>
+                        </span>
+                      ))}
+                    </p>
+                  )}
                   {s.link && (
                     <p className="mt-4">
                       <a href={s.link.href} className={linkClass}>{s.link.label}</a>
