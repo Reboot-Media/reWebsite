@@ -18,7 +18,12 @@
 //      a payload that lacks the qualifier keys, wiping those fields on
 //      the contact.
 //
-// All secrets (META_CAPI_TOKEN, META_DATASET_ID, META_TEST_EVENT_CODE,
+//   3. Copies every payload (Lead AND Schedule) to the Reboot CRM
+//      (crm-form edge function on Supabase) when CRM_FORM_SECRET is set, so
+//      form fills and site bookings land in crm.rebootmedia.us. GHL keeps
+//      getting its copy until the GHL cutover; this runs alongside it.
+//
+// All secrets (META_CAPI_TOKEN, META_DATASET_ID, META_TEST_EVENT_CODE, CRM_FORM_SECRET,
 // GHL_WEBHOOK_URL, legacy ZAPIER_WEBHOOK_URL) are read from context.env — set them in the
 // Cloudflare Pages dashboard (Settings → Environment variables), never
 // commit them. The dataset ID default below ('943826127904095') is the
@@ -168,6 +173,31 @@ async function forwardToCrm(payload, context) {
   }
 }
 
+const DEFAULT_CRM_FORM_URL = 'https://fqlgfmuiedrdowxnvcjv.supabase.co/functions/v1/crm-form'
+
+/**
+ * Copy the payload to the Reboot CRM. Lead and Schedule both go: a Schedule
+ * marks the roofer booked there. Skips silently without CRM_FORM_SECRET.
+ * Never throws.
+ */
+async function forwardToRebootCrm(payload, context) {
+  const secret = context.env.CRM_FORM_SECRET
+  if (!secret) return
+  try {
+    const res = await fetch(context.env.CRM_FORM_URL || DEFAULT_CRM_FORM_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-form-secret': secret },
+      body: JSON.stringify({ ...payload, event_name: resolveEventName(payload) }),
+    })
+    if (!res.ok) {
+      const responseText = await res.text().catch(() => '<unreadable response body>')
+      console.error('[lead] Reboot CRM forward rejected', res.status, responseText)
+    }
+  } catch (err) {
+    console.error('[lead] Reboot CRM forward failed', err)
+  }
+}
+
 export async function onRequestPost(context) {
   let payload
   try {
@@ -197,6 +227,7 @@ export async function onRequestPost(context) {
     tasks.push(sendCapiEvent(payload, context))
   }
   tasks.push(forwardToCrm(payload, context))
+  tasks.push(forwardToRebootCrm(payload, context))
 
   context.waitUntil(Promise.allSettled(tasks))
 
