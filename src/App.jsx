@@ -403,9 +403,12 @@ export function Footer({ links = [] }) {
         <a href="mailto:hello@rebootmedia.us" className={`inline-flex min-h-[48px] items-center hover:text-roof-ink hover:underline ${focusRing}`}>
           hello@rebootmedia.us
         </a>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <a href="/privacy.html" className={`inline-flex min-h-[48px] items-center px-2 hover:text-roof-ink hover:underline ${focusRing}`}>
             Privacy
+          </a>
+          <a href="/terms" className={`inline-flex min-h-[48px] items-center px-2 hover:text-roof-ink hover:underline ${focusRing}`}>
+            Terms
           </a>
           <SocialLinks location="footer" />
           <span>© 2026</span>
