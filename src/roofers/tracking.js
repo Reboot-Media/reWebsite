@@ -162,6 +162,18 @@ export function trackSchedule(eventId) {
 }
 
 /**
+ * Click IDs and UTMs saved by the CRM tracking snippet (loaded via GTM).
+ * Missing or broken snippet returns {} so the lead still sends.
+ */
+function savedAttribution() {
+  try {
+    return window.rbAttribution?.() || {}
+  } catch {
+    return {}
+  }
+}
+
+/**
  * Shared fire-and-forget POST to the same-origin /api/lead endpoint (a
  * Cloudflare Pages Function — see functions/api/lead.js), which fires the
  * server-side Meta CAPI event and forwards to the CRM (GoHighLevel) webhook. Never throws, never
@@ -174,8 +186,8 @@ function postToLeadEndpoint(payload, label) {
       method: 'POST',
       keepalive: true,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-      keepalive: true,
+      // Form fields win on a key clash so the snippet can't overwrite tags.
+      body: JSON.stringify({ ...savedAttribution(), ...payload }),
     }).catch((err) => {
       console.error(`[tracking] ${label} network error`, err)
     })
