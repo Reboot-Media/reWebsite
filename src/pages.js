@@ -5,10 +5,12 @@ import Blog, { BLOG_PATH, POST_PATHS } from './Blog.jsx'
 import LocationPage, { METRO_PATHS, NATIONWIDE_PATH, TEXAS_PATH } from './LocationPage.jsx'
 import Questions, { QUESTIONS_PATH } from './Questions.jsx'
 import VisibilityCheck from './VisibilityCheck.jsx'
+import FieldNotes, { FIELD_NOTES_PATH } from './FieldNotes.jsx'
 
 const PAGES = {
   '/before-your-call': BeforeCall,
   '/visibility-check': VisibilityCheck,
+  [FIELD_NOTES_PATH]: FieldNotes,
   [COMPARE_PATH]: Compare,
   [NATIONWIDE_PATH]: LocationPage,
   [TEXAS_PATH]: LocationPage,
