@@ -74,6 +74,12 @@ export const ROUTES = {
   '/before-your-call': { title: 'Before your call | Reboot Media', description: DEFAULT_DESCRIPTION, index: false },
   '/grow': { title: 'Reboot Media | More signed jobs for roofing companies', description: DEFAULT_DESCRIPTION, index: false },
   '/scale': { title: 'Reboot Media | Signed jobs in every market you grow into', description: DEFAULT_DESCRIPTION, index: false },
+  // Instagram link-in-bio page for the Field Notes series.
+  '/field-notes': {
+    title: 'Field Notes: The Winter Pipeline Checklist | Reboot Partners',
+    description: 'The checklist roofing companies use to stay busy through winter: leads, repairs, estimates, calendar and numbers, plus 3 texts you can copy today.',
+    index: false,
+  },
   '/commercial': { title: 'Reboot Media | More commercial roofing bids', description: DEFAULT_DESCRIPTION, index: false },
 };
 
